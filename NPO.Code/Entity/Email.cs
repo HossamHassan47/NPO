@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace NPO.Code.Entity
+
 {
     public class Email
     {
@@ -13,6 +9,8 @@ namespace NPO.Code.Entity
         public string Subject { get; set; }
 
         public string Body { get; set; }
+
+        public string BodyHtml { get; set; }
 
         public string From { get; set; }
 
@@ -25,5 +23,10 @@ namespace NPO.Code.Entity
         public int TicketId { get; set; }
 
         public bool IsMain { get; set; }
+
+        public string DateTimeReceived { get; set; }
+
+
+
     }
 }
