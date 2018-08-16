@@ -18,7 +18,7 @@ namespace NPO.Service
 
             try
             {
-                _service.Credentials = new NetworkCredential("Your Email", "Password");
+                _service.Credentials = new NetworkCredential(Program.userName, Program.password);
             }
             catch
             {

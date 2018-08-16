@@ -7,6 +7,10 @@ namespace NPO.Service
 
         public static string mailBackUpPath = @"E:\NPO\MailBackUp";
 
+        public static string userName = "NPOtest@outlook.com";
+
+        public static string password = "npo@123456";
+
         static void Main()
         {
             ServiceBase[] ServicesToRun;
