@@ -14,6 +14,10 @@ namespace NPO.Service
 
         public void StartRead()
         {
+            //test site table
+            //SiteRepository s = new SiteRepository();
+            //s.InsertNewSite();
+
             ExchangeService _service = new ExchangeService(ExchangeVersion.Exchange2013_SP1); ;
 
             try
@@ -91,12 +95,10 @@ namespace NPO.Service
             email.Subject = item.Subject;
             email.Body = item.TextBody.ToString();
             //  email.BodyHtml = item.Body.Text;
-            email.From = item.From.ToString();
-            email.To = item.ToRecipients.ToString();
+            email.From = item.From.Address.ToString();
+            email.To = item.DisplayTo.ToString();
             email.CC = item.DisplayCc;
-            email.DateTimeReceived = item.DateTimeReceived.ToString();
-
-
+            email.DateTimeReceived = item.DateTimeReceived;
             return email;
         }
     }

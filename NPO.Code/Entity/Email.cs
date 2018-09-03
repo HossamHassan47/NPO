@@ -1,7 +1,13 @@
 ﻿
+using System;
+
 namespace NPO.Code.Entity
 
 {
+
+    // 1. order mails
+    // recived date, html body
+    // 2. Object data source custom pageing
     public class Email
     {
         public int EmailId { get; set; }
@@ -24,7 +30,7 @@ namespace NPO.Code.Entity
 
         public bool IsMain { get; set; }
 
-        public string DateTimeReceived { get; set; }
+        public DateTime DateTimeReceived { get; set; }
 
 
 

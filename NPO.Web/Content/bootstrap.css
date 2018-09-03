@@ -314,7 +314,7 @@ body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
   line-height: 1.428571429;
-  color: #333333;
+  color: #000000;
   background-color: #ffffff;
 }
 
@@ -759,8 +759,8 @@ pre code {
 .container {
   padding-right: 15px;
   padding-left: 15px;
-  margin-right: auto;
-  margin-left: auto;
+  margin-right: 20px;
+  margin-left: 20px;
 }
 
 .container:before,
@@ -4135,7 +4135,7 @@ textarea.input-group-sm > .input-group-btn > .btn {
     margin-left: -15px;
   }
   .navbar-collapse .navbar-nav.navbar-right:last-child {
-    margin-right: -15px;
+    margin-right: -180px;
   }
   .navbar-collapse .navbar-text:last-child {
     margin-right: 0;
@@ -4168,10 +4168,11 @@ textarea.input-group-sm > .input-group-btn > .btn {
 
 .navbar-fixed-top,
 .navbar-fixed-bottom {
-  position: fixed;
-  right: 0;
-  left: 0;
-  border-width: 0 0 1px;
+    position: fixed;
+    right: 6px;
+    left: -6px;
+    background-color: ;
+    border-width: 0 0 1px;
 }
 
 @media (min-width: 768px) {
@@ -4182,7 +4183,7 @@ textarea.input-group-sm > .input-group-btn > .btn {
 }
 
 .navbar-fixed-top {
-  top: 0;
+  top: -6px;
   z-index: 1030;
 }
 
@@ -4193,9 +4194,11 @@ textarea.input-group-sm > .input-group-btn > .btn {
 
 .navbar-brand {
   float: left;
-  padding: 15px 15px;
-  font-size: 18px;
-  line-height: 20px;
+  padding: 12px 12px;
+  font-size: 20px;
+  line-height: 22px;
+  
+  
 }
 
 .navbar-brand:hover,
@@ -4501,33 +4504,33 @@ textarea.input-group-sm > .input-group-btn > .btn {
 }
 
 .navbar-inverse {
-  background-color: #222222;
-  border-color: #080808;
+    background-color: #003366;
+    border-color: #080808;
 }
 
 .navbar-inverse .navbar-brand {
-  color: #999999;
+  color: #FFFFFF;
 }
 
-.navbar-inverse .navbar-brand:hover,
-.navbar-inverse .navbar-brand:focus {
-  color: #ffffff;
-  background-color: transparent;
-}
+    .navbar-inverse .navbar-brand:hover,
+    .navbar-inverse .navbar-brand:focus {
+        color: #FFFFFF;
+        background-color: transparent;
+    }
 
-.navbar-inverse .navbar-text {
-  color: #999999;
-}
+    .navbar-inverse .navbar-text {
+        color: #FFFFFF;
+    }
 
-.navbar-inverse .navbar-nav > li > a {
-  color: #999999;
-}
+    .navbar-inverse .navbar-nav > li > a {
+        color: #FFFFFF;
+    }
 
-.navbar-inverse .navbar-nav > li > a:hover,
-.navbar-inverse .navbar-nav > li > a:focus {
-  color: #ffffff;
-  background-color: transparent;
-}
+        .navbar-inverse .navbar-nav > li > a:hover,
+        .navbar-inverse .navbar-nav > li > a:focus {
+            color: #FFFFFF;
+            background-color: transparent;
+        }
 
 .navbar-inverse .navbar-nav > .active > a,
 .navbar-inverse .navbar-nav > .active > a:hover,
