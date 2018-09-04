@@ -87,7 +87,7 @@
        
         <FooterStyle BackColor="#CCCCCC" ForeColor="Black" />
         <HeaderStyle BackColor="#003366" Font-Bold="True" ForeColor="White"  />
-        <PagerStyle BackColor="#999999" ForeColor="Black" HorizontalAlign="Center"  />
+        <PagerStyle BackColor="#003366" ForeColor="Black" HorizontalAlign="Center"  />
         <RowStyle BackColor="#EEEEEE" ForeColor="Black"  />
         <SelectedRowStyle BackColor="#008A8C" Font-Bold="True" ForeColor="White"/> 
         <SortedAscendingCellStyle BackColor="#F1F1F1" />

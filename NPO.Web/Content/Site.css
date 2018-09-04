@@ -352,7 +352,7 @@ input[type="select"] {
         .pagination-ys table > tbody > tr > td > span:hover,
         .pagination-ys table > tbody > tr > td > a:focus,
         .pagination-ys table > tbody > tr > td > span:focus {
-            color: #97310e;
-            background-color: #eeeeee;
-            border-color: #dddddd;
+            color: #000;
+            background-color: #dcdcdc;
+            border-color: #000;
         }

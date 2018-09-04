@@ -174,9 +174,13 @@
     <Content Include="Content\icSearch1.png" />
     <Content Include="Content\icSearch2.png" />
     <Content Include="Content\Site.css" />
+    <Content Include="Content\style.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="ManageContoller.aspx" />
     <Content Include="ManageEmails.aspx" />
+    <Content Include="ManageLogin.aspx" />
     <Content Include="ManageSite.aspx" />
+    <Content Include="ManageUsers.aspx" />
     <Content Include="packages.config" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
@@ -363,6 +367,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="ManageContoller.aspx.cs">
+      <DependentUpon>ManageContoller.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ManageContoller.aspx.designer.cs">
+      <DependentUpon>ManageContoller.aspx</DependentUpon>
+    </Compile>
     <Compile Include="ManageEmails.aspx.cs">
       <DependentUpon>ManageEmails.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -370,12 +381,26 @@
     <Compile Include="ManageEmails.aspx.designer.cs">
       <DependentUpon>ManageEmails.aspx</DependentUpon>
     </Compile>
+    <Compile Include="ManageLogin.aspx.cs">
+      <DependentUpon>ManageLogin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ManageLogin.aspx.designer.cs">
+      <DependentUpon>ManageLogin.aspx</DependentUpon>
+    </Compile>
     <Compile Include="ManageSite.aspx.cs">
       <DependentUpon>ManageSite.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="ManageSite.aspx.designer.cs">
       <DependentUpon>ManageSite.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ManageUsers.aspx.cs">
+      <DependentUpon>ManageUsers.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ManageUsers.aspx.designer.cs">
+      <DependentUpon>ManageUsers.aspx</DependentUpon>
     </Compile>
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -40,13 +40,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DBHelper.cs" />
+    <Compile Include="Entity\Controller.cs" />
     <Compile Include="Entity\Email.cs" />
+    <Compile Include="Entity\LoginEntity.cs" />
     <Compile Include="Entity\Site.cs" />
+    <Compile Include="Entity\User.cs" />
+    <Compile Include="FilterEntity\ControllerFilter.cs" />
     <Compile Include="FilterEntity\EmailFilter.cs" />
     <Compile Include="FilterEntity\SiteFilter.cs" />
+    <Compile Include="FilterEntity\UserFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\ControllerRepository.cs" />
     <Compile Include="Repository\EmailRepository.cs" />
+    <Compile Include="Repository\LoginRepository.cs" />
     <Compile Include="Repository\SiteRepository.cs" />
+    <Compile Include="Repository\UserRepository.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

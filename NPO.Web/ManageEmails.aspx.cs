@@ -19,21 +19,11 @@ namespace NPO.Web
         {
             if (!IsPostBack)
             {
-                BindEmailsGrid();
+                gvEmails.DataBind();
 
             }
         }
 
-        private void BindEmailsGrid()
-        {
-            //EmailRepository emailRep = new EmailRepository();
-            //DataTable dataTable = emailRep.GetEmails(GetFilter(), 1, 2);
-
-           // gvEmails.DataSource = DsGvEmails;
-            gvEmails.DataBind();
-
-
-        }
 
         private  EmailFilter GetFilter()
         {
@@ -49,7 +39,7 @@ namespace NPO.Web
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {
-            BindEmailsGrid();
+            gvEmails.DataBind();
 
         }
 
@@ -73,11 +63,6 @@ namespace NPO.Web
             }
         }
 
-        //protected void gvEmails_PageIndexChanging(object sender, GridViewPageEventArgs e)
-        //{
-        //    gvEmails.PageIndex = e.NewPageIndex;
-
-        // //   BindEmailsGrid(e.NewPageIndex, 10);
-        //}
+       
     }
 }
