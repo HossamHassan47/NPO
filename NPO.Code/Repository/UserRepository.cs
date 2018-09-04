@@ -34,7 +34,7 @@ namespace NPO.Code.Repository
 
         private string getSelectStatment(UserFilter filter)
         {
-            var Sql = "SELECT [FullName] ,[NokiaUserName]  ,EmailAddress ,IsAdmin ,IsActive FROM [NPODB].[dbo].[User] WHERE (1 = 1) ";
+            var Sql = "SELECT UserID ,[FullName] ,[NokiaUserName]  ,EmailAddress ,IsAdmin ,IsActive FROM [NPODB].[dbo].[User] WHERE (1 = 1) ";
 
             if (!string.IsNullOrEmpty(filter.FullName))
             {
@@ -72,13 +72,12 @@ namespace NPO.Code.Repository
                 cmd.Connection = sqlConnection;
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = "Sp_User_Insert";
-                cmd.Parameters.Add("@UserID", SqlDbType.Int).Value = user.UserID;
                 cmd.Parameters.Add("@FullName", SqlDbType.NVarChar).Value = user.FullName;
                 cmd.Parameters.Add("@NokiaUserName", SqlDbType.NVarChar).Value = user.NokiaUserName;
                 cmd.Parameters.Add("@EmailAddress", SqlDbType.NVarChar).Value = user.EmailAddress;
                 cmd.Parameters.Add("@Password", SqlDbType.NVarChar).Value = user.Password;
                 cmd.Parameters.Add("@IsAdmin", SqlDbType.Bit).Value = user.IsAdmin;
-                cmd.Parameters.Add("@IsActive", SqlDbType.Bit).Value = user.IsActive;
+               
                 SqlParameter outPutParameter = new SqlParameter();
                 outPutParameter.ParameterName = "@UserID";
                 outPutParameter.SqlDbType = SqlDbType.Int;

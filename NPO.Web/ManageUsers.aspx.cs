@@ -1,4 +1,5 @@
-﻿using NPO.Code.FilterEntity;
+﻿using NPO.Code.Entity;
+using NPO.Code.FilterEntity;
 using NPO.Code.Repository;
 using System;
 using System.Collections.Generic;
@@ -64,5 +65,45 @@ namespace NPO.Web
             BindUsersGrid();
         }
 
+        private User GetVaulesAddUser()
+        {
+            User entity = new User();
+            entity.FullName = txtNameAdd.Text.ToString();
+            entity.NokiaUserName = txtNokiaNameAdd.Text.ToString();
+            entity.EmailAddress = txtEmailAddressAdd.Text.ToString();
+            entity.Password = txtPasswordAdd.Text.ToString();
+            if (!(CheckBoxIsAdmin.Checked))
+            {
+                entity.IsAdmin = false;
+
+            }
+            else
+            {
+                entity.IsAdmin = true;
+
+            }
+            return entity;
+        }
+        protected void btnSave_Click(object sender, EventArgs e)
+        {
+            UserRepository userRep = new UserRepository();
+            int idUser = userRep.InsertNewUser(GetVaulesAddUser());
+            if(idUser > 0)
+            {
+                BindUsersGrid();
+            }
+            else
+            {
+
+            }
+        }
+
+        protected void gvUsers_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "edituser")
+            {
+               
+            }
+        }
     }
 }
