@@ -11,7 +11,7 @@ namespace NPO.Code.Repository
 {
     public class LoginRepository
     {
-        public DataTable IsValid(LoginEntity emailAndPassword)
+        public bool IsValid(LoginEntity emailAndPassword)
 
         {
             using (SqlConnection conDatabase = new SqlConnection(DBHelper.strConnString))
@@ -22,13 +22,23 @@ namespace NPO.Code.Repository
                 cmd.Connection = conDatabase;
                 conDatabase.Open();
 
-                DataTable dataTable = new DataTable();
+                DataSet ds = new DataSet();
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(dataTable);
+                da.Fill(ds);
                 conDatabase.Close();
 
+                bool loginSuccessful = ((ds.Tables.Count > 0) && (ds.Tables[0].Rows.Count > 0));
 
-                return dataTable;
+                if (loginSuccessful)
+                {
+
+                    return true;
+                }
+                else
+                {
+                   // Console.WriteLine("Invalid Email Address or Password");
+                    return false;
+                }
             }
             
            

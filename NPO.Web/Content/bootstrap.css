@@ -1655,8 +1655,6 @@ label {
   display: inline-block;
   margin-bottom: 5px;
   font-weight: bold;
-    height: 27px;
-    width: 88px;
 }
 
 input[type="search"] {
@@ -4137,8 +4135,7 @@ textarea.input-group-sm > .input-group-btn > .btn {
     margin-left: -15px;
   }
   .navbar-collapse .navbar-nav.navbar-right:last-child {
-    margin-right: -150px;
-    margin-top:10px
+    margin-right: -180px;
   }
   .navbar-collapse .navbar-text:last-child {
     margin-right: 0;
