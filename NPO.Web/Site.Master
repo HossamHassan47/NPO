@@ -58,8 +58,7 @@
                     <asp:LoginView runat="server" ViewStateMode="Disabled">
                         <AnonymousTemplate>
                             <ul class="nav navbar-nav navbar-right">
-                                <li><a runat="server" href="~/Account/Register">Register</a></li>
-                                <li><a runat="server" href="~/Account/Login">Log in</a></li>
+                                <asp:Button ID="LogOut" runat="server" Height="35px" OnClick="LogOut" Text="Log Out" Width="80px" CssClass="btn btn-default btnLogOut " />
                             </ul>
                         </AnonymousTemplate>
                         <LoggedInTemplate>

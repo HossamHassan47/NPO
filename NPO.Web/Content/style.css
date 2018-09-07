@@ -6,14 +6,19 @@
 }
 
 body {
-    background: #2471A3;
+    background: #124191;
     font-family: "Lato";
 }
-
+div.image {
+    content: url(nokia_white_logo.png);
+    margin-left:80px;
+}
 .wrap {
-    width: 350px height: auto;
+    width: 350px ;
+    height: auto;
     margin: auto;
-    margin-top: 10%;
+    height:-10px;
+   
 }
 
 .avatar {
@@ -57,7 +62,7 @@ body {
 
     .bar i {
         width: 95%;
-        margin: auto;
+        margin: auto auto 3px 301px;
         height: 1px;
         display: block;
         background: #d1d1d1;
@@ -85,7 +90,6 @@ body {
     width: 100%;
     border-radius: 7px;
     background: #b6ee65;
-    text-decoration: center;
     border: none;
     color: #51771a;
     margin-top: -5px;
@@ -101,7 +105,6 @@ body {
     width: 100%;
     border-radius: 7px;
     background: #b6ee65;
-    text-decoration: center;
     border: none;
     color: #51771a;
     margin-top: -5px;
@@ -128,4 +131,19 @@ body {
         padding-left: 10px;
         width: 300px;
         height: 140px;
+    }
+    input[type=text] {
+    width: 100%;
+    border: 2px solid #aaa;
+    border-radius: 4px;
+    margin: 8px 0;
+    outline: none;
+    padding: 8px;
+    box-sizing: border-box;
+    transition: .3s;
+}
+
+    input[type=text]:focus {
+        border-color: dodgerblue;
+        box-shadow: 0 0 8px 0 dodgerblue;
     }
