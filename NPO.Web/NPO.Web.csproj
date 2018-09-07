@@ -170,8 +170,6 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\icAddNew.png" />
-    <Content Include="Content\icDelete.png" />
-    <Content Include="Content\icEdit.png" />
     <Content Include="Content\icSave.png" />
     <Content Include="Content\icSearch1.png" />
     <Content Include="Content\icSearch2.png" />

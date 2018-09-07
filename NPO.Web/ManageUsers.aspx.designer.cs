@@ -112,15 +112,6 @@ namespace NPO.Web {
         protected global::AjaxControlToolkit.ModalPopupExtender btnAdd_ModalPopupExtender;
         
         /// <summary>
-        /// DoneOrNot control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label DoneOrNot;
-        
-        /// <summary>
         /// PanelAdd control.
         /// </summary>
         /// <remarks>
@@ -128,33 +119,6 @@ namespace NPO.Web {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel PanelAdd;
-        
-        /// <summary>
-        /// labelUser control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label labelUser;
-        
-        /// <summary>
-        /// txtid control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtid;
-        
-        /// <summary>
-        /// l1 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label l1;
         
         /// <summary>
         /// txtNameAdd control.
@@ -166,15 +130,6 @@ namespace NPO.Web {
         protected global::System.Web.UI.WebControls.TextBox txtNameAdd;
         
         /// <summary>
-        /// l2 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label l2;
-        
-        /// <summary>
         /// txtNokiaNameAdd control.
         /// </summary>
         /// <remarks>
@@ -184,15 +139,6 @@ namespace NPO.Web {
         protected global::System.Web.UI.WebControls.TextBox txtNokiaNameAdd;
         
         /// <summary>
-        /// l3 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label l3;
-        
-        /// <summary>
         /// txtEmailAddressAdd control.
         /// </summary>
         /// <remarks>
@@ -200,15 +146,6 @@ namespace NPO.Web {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtEmailAddressAdd;
-        
-        /// <summary>
-        /// l4 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label l4;
         
         /// <summary>
         /// txtPasswordAdd control.
@@ -227,15 +164,6 @@ namespace NPO.Web {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox CheckBoxIsAdmin;
-        
-        /// <summary>
-        /// CheckBoxIsActive control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox CheckBoxIsActive;
         
         /// <summary>
         /// btnSave control.

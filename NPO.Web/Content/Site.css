@@ -40,23 +40,6 @@ input[type="select"] {
 
 
 /* styles for buttons */
-.btnLogOut {
-    background-repeat: no-repeat;
-    background-position: 3px 5px;
-    background-color: #003366;
-    position: center;
-    color: #fff8f8;
-    border-color: #ffffff;
-    text-align:center;
-
-}
-
-    .btnSearch:hover {
-        background-image: url('icSearch2.png');
-        background-repeat: no-repeat;
-        background-position: 3px 5px;
-        padding-left: 26px;
-    }
 
 /* 01. Search button */
 .btnSearch {
@@ -73,7 +56,6 @@ input[type="select"] {
         background-position: 3px 5px;
         padding-left: 26px;
     }
-
 
 /* 02. Save button */
 .btnSave {
@@ -381,7 +363,6 @@ input[type="select"] {
     filter: alpha(opacity=50);
     opacity: 0.7;
 }
-           
 
 .HellowWorldPopup
 {

@@ -20,6 +20,7 @@ namespace NPO.Web
             if (!IsPostBack)
             {
                 gvEmails.DataBind();
+
             }
         }
 
