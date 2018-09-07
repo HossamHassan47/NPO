@@ -68,13 +68,28 @@ namespace NPO.Web
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!IsPostBack)
+            {
+                if (Session["CurrentUser"] == null)
+                {
+                    Response.Redirect("~/ManageLogin", false);
 
+                }
+            }
         }
-
         protected void Unnamed_LoggingOut(object sender, LoginCancelEventArgs e)
         {
             Context.GetOwinContext().Authentication.SignOut();
         }
+
+        protected void LogOut(object sender, EventArgs e)
+        {
+            Session["CurrentUser"] = null;
+            Session.RemoveAll();
+            Session.Clear();
+            Response.Redirect("ManageLogin.aspx");
+        }
+
     }
 
 }
