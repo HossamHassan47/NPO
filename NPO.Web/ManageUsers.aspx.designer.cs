@@ -148,6 +148,15 @@ namespace NPO.Web {
         protected global::System.Web.UI.WebControls.TextBox txtid;
         
         /// <summary>
+        /// UpdatePanel1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel UpdatePanel1;
+        
+        /// <summary>
         /// l1 control.
         /// </summary>
         /// <remarks>
@@ -202,24 +211,6 @@ namespace NPO.Web {
         protected global::System.Web.UI.WebControls.TextBox txtEmailAddressAdd;
         
         /// <summary>
-        /// l4 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label l4;
-        
-        /// <summary>
-        /// txtPasswordAdd control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPasswordAdd;
-        
-        /// <summary>
         /// CheckBoxIsAdmin control.
         /// </summary>
         /// <remarks>
@@ -236,6 +227,15 @@ namespace NPO.Web {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox CheckBoxIsActive;
+        
+        /// <summary>
+        /// lblCheckEmail control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblCheckEmail;
         
         /// <summary>
         /// btnSave control.

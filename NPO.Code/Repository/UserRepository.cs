@@ -11,14 +11,14 @@ using NPO.Code.Entity;
 
 namespace NPO.Code.Repository
 {
-   public  class UserRepository
-    { 
+    public class UserRepository
+    {
         public List<User> GetAllUsers()
         {
             return new List<User>();
         }
 
-        public DataTable GetUsers (UserFilter filter)
+        public DataTable GetUsers(UserFilter filter)
         {
             DataTable dataTable = new DataTable();
             var sql = getSelectStatment(filter);
@@ -42,7 +42,7 @@ namespace NPO.Code.Repository
             }
             if (!string.IsNullOrEmpty(filter.NokiaUserName))
             {
-                Sql += " AND [NokiaUserName] LIKE '%" + filter.NokiaUserName+ "%'";
+                Sql += " AND [NokiaUserName] LIKE '%" + filter.NokiaUserName + "%'";
             }
             if (!string.IsNullOrEmpty(filter.EmailAddress))
             {
@@ -56,15 +56,15 @@ namespace NPO.Code.Repository
             {
                 Sql += " AND IsActive = 1  ";
             }
-           
+
 
 
             return Sql;
-         
+
         }
 
 
-        public int InsertNewUser (User user)
+        public int InsertNewUser(User user)
         {
             SqlCommand cmd = new SqlCommand();
             int UserID = 0;
@@ -99,9 +99,23 @@ namespace NPO.Code.Repository
                     return -1;
                 }
             }
-            
+
 
         }
+
+        public string GetPassword()
+        {
+            const string valid = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+            StringBuilder res = new StringBuilder();
+            Random rnd = new Random();
+            int length = 7;
+            while (0 < length--)
+            {
+                res.Append(valid[rnd.Next(valid.Length)]);
+            }
+            return res.ToString();
+        }
+
 
         public bool UpdateUser(User user)
         {
@@ -117,7 +131,7 @@ namespace NPO.Code.Repository
                 cmd.Parameters.Add("@FullName", SqlDbType.NVarChar).Value = user.FullName;
                 cmd.Parameters.Add("@NokiaUserName", SqlDbType.NVarChar).Value = user.NokiaUserName;
                 cmd.Parameters.Add("@EmailAddress", SqlDbType.NVarChar).Value = user.EmailAddress;
-                cmd.Parameters.Add("@Password", SqlDbType.NVarChar).Value = user.Password;
+                //cmd.Parameters.Add("@Password", SqlDbType.NVarChar).Value = user.Password;
                 cmd.Parameters.Add("@IsAdmin", SqlDbType.Bit).Value = user.IsAdmin;
                 cmd.Parameters.Add("@IsActive", SqlDbType.Bit).Value = user.IsActive;
                 try
@@ -127,12 +141,12 @@ namespace NPO.Code.Repository
                     cmd.Parameters.Clear();
                     return true;
                 }
-                catch 
+                catch
                 {
                     return false;
                 }
             }
-            
+
         }
         public bool DeleteUser(User user)
         {
@@ -145,7 +159,7 @@ namespace NPO.Code.Repository
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = "Sp_User_Delete";
                 cmd.Parameters.Add("@UserID", SqlDbType.NVarChar).Value = user.UserID;
-             
+
                 try
                 {
                     sqlConnection.Open();

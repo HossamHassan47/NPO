@@ -68,13 +68,13 @@ namespace NPO.Web
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
+           
+            if (Session["CurrentUser"] == null)
             {
-                if (Session["CurrentUser"] == null)
-                {
-                    Response.Redirect("~/ManageLogin", false);
-
-                }
+                Response.Redirect("~/ManageLogin", false);
+            }else
+            {
+                UserName.Text = Session["UserName"].ToString();
             }
         }
         protected void Unnamed_LoggingOut(object sender, LoginCancelEventArgs e)
@@ -85,8 +85,7 @@ namespace NPO.Web
         protected void LogOut(object sender, EventArgs e)
         {
             Session["CurrentUser"] = null;
-            Session.RemoveAll();
-            Session.Clear();
+
             Response.Redirect("ManageLogin.aspx");
         }
 

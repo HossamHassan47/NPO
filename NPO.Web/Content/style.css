@@ -9,16 +9,16 @@ body {
     background: #124191;
     font-family: "Lato";
 }
+
 div.image {
-    content: url(nokia_white_logo.png);
-    margin-left:80px;
+    content: url(../Content/nokia_white_logo.png);
 }
+
 .wrap {
-    width: 350px ;
+    width: 379px;
     height: auto;
     margin: auto;
-    height:-10px;
-   
+    height: 295px;
 }
 
 .avatar {
@@ -115,24 +115,25 @@ div.image {
     border-bottom: 3px solid #307d63;
     cursor: pointer;
 }
-.modalBackground
-    {
-        background-color: Black;
-       // filter: alpha(opacity=90);
-        opacity: 0.8;
-    }
-    .modalPopup
-    {
-        background-color: #FFFFFF;
-        border-width: 3px;
-        border-style: solid;
-        border-color: black;
-        padding-top: 10px;
-        padding-left: 10px;
-        width: 300px;
-        height: 140px;
-    }
-    input[type=text] {
+
+.modalBackground {
+    background-color: Black;
+    // filter: alpha(opacity=90);
+    opacity: 0.8;
+}
+
+.modalPopup {
+    background-color: #FFFFFF;
+    border-width: 3px;
+    border-style: solid;
+    border-color: black;
+    padding-top: 10px;
+    padding-left: 10px;
+    width: 300px;
+    height: 140px;
+}
+
+input[type=text] {
     width: 100%;
     border: 2px solid #aaa;
     border-radius: 4px;
@@ -146,4 +147,41 @@ div.image {
     input[type=text]:focus {
         border-color: dodgerblue;
         box-shadow: 0 0 8px 0 dodgerblue;
+    }
+
+.ForgetPanalStyle {
+    text-align: center;
+    background-color: #fff;
+    margin-top: 60px;
+    border-radius: 30px 30px 30px 30px;
+    margin-bottom: 0px;
+    Width: 500px;
+    Height: 450px;
+    border-color: #666666;
+    border-style: Solid;
+}
+
+.btnForget {
+    width: 30%;
+    border-radius: 7px;
+    background: #2471a3;
+    border: none;
+    color: #ffffff;
+    margin-top: -5px;
+    margin-left: 20px;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    outline: none;
+    font-size: 13px;
+    font-weight: bold;
+    margin-top: 50px;
+
+}
+
+    .btnForget:hover {
+       background: #fff;
+       color: Black;
+       border:solid;
+       border-color:black;
+
     }

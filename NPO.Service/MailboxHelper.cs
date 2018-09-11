@@ -1,4 +1,5 @@
 ﻿using Microsoft.Exchange.WebServices.Data;
+using NPO.Code;
 using NPO.Code.Entity;
 using NPO.Code.Repository;
 using System;
@@ -14,23 +15,8 @@ namespace NPO.Service
 
         public void StartRead()
         {
-            //test site table
-            //SiteRepository s = new SiteRepository();
-            //s.InsertNewSite();
+            ExchangeService _service = MailHelper.Exchange_Service();
 
-            ExchangeService _service = new ExchangeService(ExchangeVersion.Exchange2013_SP1); ;
-
-            try
-            {
-                _service.Credentials = new NetworkCredential(Program.userName, Program.password);
-            }
-            catch
-            {
-                return;
-            }
-
-            // This is the office365 webservice URL
-            _service.Url = new Uri("https://outlook.office365.com/EWS/Exchange.asmx");
 
             FindItemsResults<Item> findResults = _service.FindItems(WellKnownFolderName.Inbox, new ItemView(100));
 
@@ -90,11 +76,11 @@ namespace NPO.Service
         {
             Email email = new Email();
             item.Load(new PropertySet(BasePropertySet.FirstClassProperties, ItemSchema.TextBody));
-            //   item.Load(new PropertySet(BasePropertySet.FirstClassProperties, ItemSchema.Body));
+           //  item.Load(new PropertySet(BasePropertySet.FirstClassProperties, ItemSchema.Body));
 
             email.Subject = item.Subject;
             email.Body = item.TextBody.ToString();
-            //  email.BodyHtml = item.Body.Text;
+            email.BodyHtml = item.Body.Text;
             email.From = item.From.Address.ToString();
             email.To = item.DisplayTo.ToString();
             email.CC = item.DisplayCc;

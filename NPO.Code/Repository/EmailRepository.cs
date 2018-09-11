@@ -1,6 +1,7 @@
 ﻿using NPO.Code.Entity;
 using NPO.Code.FilterEntity;
 using System;
+using System.Web;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -18,13 +19,18 @@ namespace NPO.Code.Repository
             var sql = @"
 SELECT * 
 from (
-    SELECT ROW_NUMBER() OVER ( ORDER BY EmailId DESC ) ROWNUMBER,
-            [Subject] ,
-            [From] ,
-            [To] ,
-            [CC] , 
-            DateTimeReceived 
-    FROM [NPODB].[dbo].[Email]  
+    SELECT ROW_NUMBER() OVER ( ORDER BY Email.EmailId DESC ) ROWNUMBER,
+            Email.EmailId,
+            Email.[Subject] ,
+            Email.[From] ,
+            Email.[To] ,
+            Email.[CC] , 
+            Email.DateTimeReceived ,
+            Email.ControllerId,
+			dbo.Controller.ControllerName,
+			dbo.Controller.TechnologyId
+    FROM [NPODB].[dbo].[Email] 
+	left outer join dbo.Controller on Controller.ControllerId = Email.ControllerId
     WHERE (1 = 1)  ";
 
             sql += getFilterString(filter);
@@ -46,7 +52,11 @@ from (
         {
             int count;
 
-            var sql = "SELECT COUNT(*) FROM Email where (1=1)" + getFilterString(filter);
+            var sql = @"
+SELECT COUNT(*) 
+FROM Email 
+left outer join dbo.Controller on Controller.ControllerId = Email.ControllerId                
+where (1=1)" + getFilterString(filter);
 
 
             using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
@@ -68,6 +78,9 @@ from (
             }
             return count;
         }
+
+       
+
         private static string getFilterString(EmailFilter filter )
         {
             string sql = ""; 
@@ -119,6 +132,8 @@ from (
                 cmd.Parameters.Add("@CC", SqlDbType.NVarChar).Value = email.CC;
                 cmd.Parameters.Add("@Path", SqlDbType.NVarChar).Value = email.Path;
                 cmd.Parameters.Add("@DateTimeReceived", SqlDbType.NVarChar).Value = email.DateTimeReceived;
+                cmd.Parameters.Add("@HtmlBody", SqlDbType.NVarChar).Value = email.BodyHtml;
+
                 // cmd.Parameters.Add("@TicketID", SqlDbType.Int).Value = email.TicketId;
                 //  cmd.Parameters.Add("@IsMain", SqlDbType.Bit).Value = email.IsMain;
                 SqlParameter outPutParameter = new SqlParameter();
@@ -147,6 +162,8 @@ from (
 
         }
 
+      
+
         public int UpdateEmail(Email email)
         {
             // Update email then return the ID
@@ -158,6 +175,94 @@ from (
             // Delete email
             return true;
         }
+
+        public string GetHtmlBody(int id)
+        {
+            string sql = "select [HtmlBody] from Email where EmailId = @id";
+            string htmlBody = string.Empty;
+            using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
+            {
+                sqlConnection.Open();
+                SqlCommand sqlcomm = new SqlCommand(sql , sqlConnection);
+                sqlcomm.Parameters.AddWithValue("@id", id);
+
+                using (SqlDataReader sqldr = sqlcomm.ExecuteReader())
+                {
+                    if (sqldr.Read())
+                    {
+                        htmlBody = sqldr["HtmlBody"].ToString();
+                    }
+                }
+            }
+
+            return htmlBody;
+            
+        }
+        public void DownloadMail(int id)
+        {
+            string sql = "select [Path] from Email where EmailId = @id";
+            string path = string.Empty;
+            using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
+            {
+                sqlConnection.Open();
+                SqlCommand sqlcomm = new SqlCommand(sql, sqlConnection);
+                sqlcomm.Parameters.AddWithValue("@id", id);
+
+                using (SqlDataReader sqldr = sqlcomm.ExecuteReader())
+                {
+                    if (sqldr.Read())
+                    {
+                        path = sqldr["Path"].ToString();
+                    }
+                }
+            }
+
+
+        }
+        #region Assign
+        public DataTable GetControllerAssignUsers(int controllerId)
+        {
+            DataTable dataTable = new DataTable();
+            string sql = @"
+                select dbo.[User].UserID,
+                    dbo.[User].FullName,
+	                dbo.[User].EmailAddress
+                from ControllerUser
+                inner join dbo.[User] on dbo.[User].UserID = ControllerUser.UserId
+                where ControllerUser.ControllerId = @controllerId";
+            using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
+            {
+                sqlConnection.Open();
+                SqlCommand sqlcomm = new SqlCommand(sql, sqlConnection);
+                sqlcomm.Parameters.AddWithValue("@controllerId", controllerId);
+                using(SqlDataAdapter sqlAdapter = new SqlDataAdapter(sqlcomm))
+                {
+                    sqlAdapter.Fill(dataTable);
+                }
+                return dataTable;
+            }
+
+        }
+
+        public bool UpdateControllerId(int controllerId , int emailId)
+        {
+            
+            string sql = @"
+                Update Email
+                Set ControllerId = @ControllerId
+                where EmailId = @EmailId";
+            using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
+            {
+                sqlConnection.Open();
+                SqlCommand sqlcomm = new SqlCommand(sql, sqlConnection);
+                sqlcomm.Parameters.AddWithValue("@controllerId", controllerId);
+                sqlcomm.Parameters.AddWithValue("@EmailId", emailId);
+                sqlcomm.ExecuteNonQuery();
+            }
+            return true;
+        }
+
+        #endregion
 
 
     }

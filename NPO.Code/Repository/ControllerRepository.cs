@@ -132,6 +132,26 @@ namespace NPO.Code.Repository
         }
 
 
+        public DataTable GetControllerAssign(int techId)
+        {
+            DataTable dataTable = new DataTable();
+            var sql = "SELECT [ControllerId] , [ControllerName] from Controller where [TechnologyId] = @techId ";
+            using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
+            {
+                sqlConnection.Open();
+                SqlCommand sqlcomm = new SqlCommand(sql, sqlConnection);
+                sqlcomm.Parameters.AddWithValue("@techId", techId);
+                using(SqlDataReader dr = sqlcomm.ExecuteReader())
+                {
+                    dataTable.Load(dr);
+
+                }
+            }
+
+            return dataTable;
+        }
+
+
 
     }
 }

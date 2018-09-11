@@ -47,16 +47,15 @@ input[type="select"] {
     position: center;
     color: #fff8f8;
     border-color: #ffffff;
-    text-align:center;
-
+    text-align: center;
 }
 
-    .btnSearch:hover {
-        background-image: url('icSearch2.png');
-        background-repeat: no-repeat;
-        background-position: 3px 5px;
-        padding-left: 26px;
-    }
+.btnSearch:hover {
+    background-image: url('icSearch2.png');
+    background-repeat: no-repeat;
+    background-position: 3px 5px;
+    padding-left: 26px;
+}
 
 /* 01. Search button */
 .btnSearch {
@@ -97,6 +96,8 @@ input[type="select"] {
     background-repeat: no-repeat;
     background-position: 3px 5px;
     padding-left: 26px;
+    Width: 200px;
+    font-weight: bold;
 }
 
     .btnAddNew:hover {
@@ -247,11 +248,17 @@ input[type="select"] {
     -webkit-box-shadow: 0 1px 1px #ccc;
     -moz-box-shadow: 0 1px 1px #ccc;
     box-shadow: 0 1px 1px #ccc;
+    font: bold;
 }
 
     .zebra td, .zebra th {
         padding: 10px;
         border-bottom: 1px solid #f2f2f2;
+        font-size: small;
+        color: #000000;
+        font-weight: bold;
+        width: auto;
+        height: auto;
     }
 
     .zebra tbody tr:nth-child(even) {
@@ -312,7 +319,8 @@ input[type="select"] {
 
         .zebra tfoot td:only-child {
             -moz-border-radius: 0 0 6px 6px;
-            -webkit-border-radius: 0 0 6px 6px border-radius: 0 0 6px 6px;
+            -webkit-border-radius: 0 0 6px 6px;
+            border-radius: 0 0 6px 6px;
         }
 
 .pagination-ys {
@@ -375,17 +383,75 @@ input[type="select"] {
             border-color: #000;
         }
 
-        .ModalPopupBG
-{
+.PanelAddStyle {
+    text-align: center;
+    background-color: #f5f5f5;
+    margin-top: 60px;
+    border-radius: 30px 30px 30px 30px;
+    margin-bottom: 0px;
+    Width: 500px;
+    Height: 400px;
+    border-color: #666666;
+    border-style: Solid;
+}
+
+    .PanelAddStyle td {
+        font-size: small;
+        color: #000000;
+        font-style: normal;
+        font-weight: bold;
+        width: 174px;
+        height: 70px;
+    }
+
+.PanelBodyStyle {
+     text-align: center;
+    background-color: #f5f5f5;
+    margin-top: 10px;
+    border-radius: 30px 30px 30px 30px;
+    margin-bottom: 0px;
+    padding:50px;
+    Width: auto;
+    Height: auto;
+    border-color: #666666;
+    border-style: Solid;
+}
+.PanelBodyStylebutton{
+     float:right;
+ }
+.PanalAssignStyle {
+     text-align: center;
+    background-color: #f5f5f5;
+    margin-top: 10px;
+    border-radius: 30px 30px 30px 30px;
+    padding:20px;
+    Width: 500px;
+    Height: 200px;
+    border-color: #666666;
+    border-style: Solid;
+}
+.PanelAssignStylebutton{
+     float:right;
+     padding:15px;
+ }
+
+
+
+.ModalPopupBG {
     background-color: #666699;
     filter: alpha(opacity=50);
     opacity: 0.7;
 }
-           
 
-.HellowWorldPopup
-{
-    min-width:200px;
-    min-height:150px;
-    background:white;
+
+.HellowWorldPopup {
+    min-width: 200px;
+    min-height: 150px;
+    background: white;
+}
+
+.UserNameLable {
+    color: white;
+    font-weight: bold;
+    padding: 15px;
 }

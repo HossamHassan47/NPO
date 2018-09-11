@@ -1,8 +1,11 @@
-﻿using NPO.Code.Entity;
+﻿using Microsoft.Exchange.WebServices.Data;
+using NPO.Code;
+using NPO.Code.Entity;
 using NPO.Code.FilterEntity;
 using NPO.Code.Repository;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Linq;
 using System.Web;
@@ -18,8 +21,8 @@ namespace NPO.Web
             DoneOrNot.Text = "";
             if (!IsPostBack)
             {
-                 BindUsersGrid();
-              
+                BindUsersGrid();
+
             }
         }
 
@@ -72,11 +75,12 @@ namespace NPO.Web
 
         private User GetVaules()
         {
+            UserRepository userReb = new UserRepository();
             User entity = new User();
             entity.FullName = txtNameAdd.Text.ToString();
             entity.NokiaUserName = txtNokiaNameAdd.Text.ToString();
             entity.EmailAddress = txtEmailAddressAdd.Text.ToString();
-            entity.Password = txtPasswordAdd.Text.ToString();
+            entity.Password = userReb.GetPassword();
             if (!(CheckBoxIsAdmin.Checked))
             {
                 entity.IsAdmin = false;
@@ -88,44 +92,74 @@ namespace NPO.Web
 
             }
 
-          
+
             return entity;
         }
-
 
         private User GetUpdateVaules(int id)
         {
             User entity = new User();
-            entity.UserID = id; 
+            entity.UserID = id;
             entity.FullName = txtNameAdd.Text.ToString();
             entity.NokiaUserName = txtNokiaNameAdd.Text.ToString();
             entity.EmailAddress = txtEmailAddressAdd.Text.ToString();
-            entity.Password = txtPasswordAdd.Text.ToString();
+            //entity.Password = txtPasswordAdd.Text.ToString();
 
             if (!(CheckBoxIsAdmin.Checked))
             { entity.IsAdmin = false; }
-            else { entity.IsAdmin = true;}
+            else { entity.IsAdmin = true; }
             if (!(CheckBoxIsActive.Checked))
             { entity.IsActive = false; }
-            else{entity.IsActive = true;}
+            else { entity.IsActive = true; }
             return entity;
         }
 
-
         protected void btnCancel_Click(object sender, EventArgs e)
         {
+            Page.Response.Redirect(Page.Request.Url.ToString(), true);
+
             setTextBoxesNull();
         }
+
+
+      
         protected void btnSave_Click(object sender, EventArgs e)
         {
-            UserRepository userRep = new UserRepository();
-            int id = Convert.ToInt32(txtid.Text);
-            if ( id < 0 )
+            bool s = new EmailAddressAttribute().IsValid(txtEmailAddressAdd.Text.ToString().Trim());
+            if (!s)
             {
-                int idUser = userRep.InsertNewUser(GetVaules());
+                lblCheckEmail.Text = "Email Address isn't correct please confirm and try again";
+                return;
+            }
+            UserRepository userRep = new UserRepository();
+            User user = GetVaules();
+            if (txtEmailAddressAdd.ToString().Trim() != string.Empty)
+            {
+                EntityEmail email = new EntityEmail();
+                email.To = txtEmailAddressAdd.Text.ToString().Trim();
+                email.Subject = "Welcome into NPO tool";
+                email.Body = @"
+                                Welcome " +
+                              user.FullName + @"
+                              , you have now new account in NPO tool <br/> EmailAddress :
+                            " + txtEmailAddressAdd.Text.ToString().Trim() + @"<br/> 
+                            password :" + user.Password;
+                bool sended = MailHelper.SendMail(email);
+                if (!sended)
+                {
+                   lblCheckEmail.Text = "Check you internet connction";
+                    return;
+                }
+            }
+            int id = Convert.ToInt32(txtid.Text);
+            if (id < 0)
+            {
+                int idUser = userRep.InsertNewUser(user);
                 if (idUser > 0)
                 {
                     BindUsersGrid();
+                    lblCheckEmail.Text = "Done you can call user to check your Email";
+
                     setTextBoxesNull();
                 }
                 else
@@ -137,7 +171,7 @@ namespace NPO.Web
             else
             {
 
-                bool idUser =  userRep.UpdateUser(GetUpdateVaules(id));
+                bool idUser = userRep.UpdateUser(GetUpdateVaules(id));
                 if (idUser)
                 {
                     BindUsersGrid();
@@ -152,9 +186,6 @@ namespace NPO.Web
 
             }
         }
-
-
-
 
         protected void gvUsers_RowCommand(object sender, GridViewCommandEventArgs e)
         {
@@ -174,17 +205,18 @@ namespace NPO.Web
                 txtEmailAddressAdd.Text = row.Cells[3].Text;
 
                 DataTable dataTable = BindUsersGrid();
-                txtPasswordAdd.Text = dataTable.Rows[index][4].ToString();
+                //txtPasswordAdd.Text = dataTable.Rows[index][4].ToString();
 
                 if (Convert.ToInt32(dataTable.Rows[index][5]) == 1)
                 {
                     CheckBoxIsAdmin.Checked = true;
-                }else
+                }
+                else
                 {
                     CheckBoxIsAdmin.Checked = false;
                 }
 
-                if (Convert.ToInt32(dataTable.Rows[index][6])==1)
+                if (Convert.ToInt32(dataTable.Rows[index][6]) == 1)
                 {
                     CheckBoxIsActive.Checked = true;
                 }
@@ -195,7 +227,7 @@ namespace NPO.Web
                 }
 
                 btnAdd_ModalPopupExtender.Show();
-               
+
             }
 
 
@@ -206,28 +238,29 @@ namespace NPO.Web
             {
                 UserRepository userRep = new UserRepository();
                 int id = Convert.ToInt32(e.CommandArgument);
-                bool isUser = userRep.DeleteUser(GetUpdateVaules(id));
-                if (isUser)
+                if (id == 30)
                 {
-                    BindUsersGrid();
-                    DoneOrNot.Text = "Done";
+                    DoneOrNot.Text = "you cannot delete this user because he is tool admin ي بهايم يا بهايم  ";
+
                 }
                 else
                 {
-                    BindUsersGrid();
-                    DoneOrNot.Text = "YOu have problem";
+                    bool isUser = userRep.DeleteUser(GetUpdateVaules(id));
+                    if (isUser)
+                    {
+                        BindUsersGrid();
+                        DoneOrNot.Text = "Done";
+                    }
+                    else
+                    {
+                        BindUsersGrid();
+                        DoneOrNot.Text = "You have problem";
+                    }
                 }
-
 
             }
 
-
-
-
         }
-        
-
-
 
         private void setTextBoxesNull()
         {
@@ -235,7 +268,7 @@ namespace NPO.Web
             txtNameAdd.Text = "";
             txtNokiaNameAdd.Text = "";
             txtEmailAddressAdd.Text = "";
-            txtPasswordAdd.Text = "";
+            //txtPasswordAdd.Text = "";
         }
         // Fixed Colume Width  gridView
         protected void gvUsers_RowDataBound(object sender, GridViewRowEventArgs e)

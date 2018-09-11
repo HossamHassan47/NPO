@@ -15,5 +15,6 @@ namespace NPO.Code.Entity
         public string Password { get; set; }
         public bool IsAdmin { get; set; }
         public bool IsActive { get; set; }
+
     }
 }

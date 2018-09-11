@@ -55,11 +55,17 @@
                         <li><a runat="server" href="~/ManageUsers">Users</a></li>
                         <li><a runat="server" href="~/ManageContoller">Contollers</a></li>
                     </ul>
+                    
+                      <ul class="nav navbar-nav navbar-right" style="margin-top:15px; margin-right:50px">
+                         <asp:label ID="UserName" runat="server" CssClass="UserNameLable" ></asp:label>
+                       </ul> 
                     <asp:LoginView runat="server" ViewStateMode="Disabled">
                         <AnonymousTemplate>
+                            
                             <ul class="nav navbar-nav navbar-right">
                                 <asp:Button ID="LogOut" runat="server" Height="35px" OnClick="LogOut" Text="Log Out" Width="80px" CssClass="btn btn-default btnLogOut " />
-                            </ul>
+                            </ul> 
+                            
                         </AnonymousTemplate>
                         <LoggedInTemplate>
                             <ul class="nav navbar-nav navbar-right">
