@@ -51,9 +51,6 @@
         </tr>
        
     </table>
-
-
-    <br />
     <br />
     <asp:Button ID="btnExtendBody" runat="server" Style="display: none" />
     <ajaxToolkit:ModalPopupExtender

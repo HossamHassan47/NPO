@@ -8,14 +8,14 @@
 
         <tr>
             <td>
-                <asp:Label ID="Label2" runat="server" Text="Site Code : " ForeColor="Black"></asp:Label>
+                <asp:Label ID="Label2" runat="server" Text="Site Code : "></asp:Label>
             </td>
 
             <td>
                 <asp:TextBox ID="txtSiteCode" runat="server" Width="299px"></asp:TextBox>
             </td>
             <td>
-                <asp:Label ID="Label1" runat="server" Text="Site Name : " ForeColor="Black"></asp:Label>
+                <asp:Label ID="Label1" runat="server" Text="Site Name : " ></asp:Label>
             </td>
             <td>
                 <asp:TextBox ID="txtSiteName" runat="server" Width="300px"></asp:TextBox>
@@ -24,7 +24,7 @@
         </tr>
         <tr>
             <td >
-                <asp:Label ID="Label3" runat="server" Text="City : " ForeColor="Black"></asp:Label>
+                <asp:Label ID="Label3" runat="server" Text="City : "></asp:Label>
             </td>
             <td >
                 <asp:DropDownList ID="ddlCity" runat="server" Width="300px">
@@ -32,13 +32,13 @@
             </td>
 
             <td >
-                <asp:CheckBox ID="_2g" runat="server" Width="110px" Text="2G" Checked="false" Font-Bold="True" Font-Size="Small" ForeColor="Black" Height="21px"></asp:CheckBox>
+                <asp:CheckBox ID="_2g" runat="server" Text="2G"></asp:CheckBox>
             </td>
 
             <td>
 
-                <asp:CheckBox ID="_3g" runat="server" Width="142px" Text="3G" Checked="false" Font-Bold="True" Font-Size="Small" ForeColor="Black" Height="18px"></asp:CheckBox>
-                <asp:CheckBox ID="_4g" runat="server" Width="142px" Text="4G" Checked="false" Font-Bold="True" Font-Size="Small" ForeColor="Black" Height="18px" Style="margin-bottom: 0px"></asp:CheckBox>
+                <asp:CheckBox ID="_3g" runat="server"  Text="3G" Checked="false" Font-Bold="True"></asp:CheckBox>
+                <asp:CheckBox ID="_4g" runat="server"  Text="4G" Checked="false" Font-Bold="True"></asp:CheckBox>
 
             </td>
            
@@ -58,7 +58,7 @@
         </tr>
 
     </table>
- <br />
+ 
     <asp:Button ID="btnExtender" runat="server" Style="display: none" />
     <ajaxToolKit:ModalPopupExtender
         ID="btnAdd_ModalPopupExtender" runat="server"

@@ -2,6 +2,7 @@
 using NPO.Code.Repository;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Linq;
 using System.Web;
@@ -62,7 +63,13 @@ namespace NPO.Web
 
         protected void SendMail_Click(object sender, EventArgs e)
         {
+            bool CheckMailVaild = new EmailAddressAttribute().IsValid(txtEmail.Text.ToString().Trim());
 
+            if (!CheckMailVaild)
+            {
+                LabelErrorMsg.Text = "Email Address isn't correct please confirm and try again";
+                return;
+            }
             if (string.IsNullOrWhiteSpace(txtEmail.Text.ToString().Trim()))
             {
                 LabelErrorMsg.Text = "Please enter your email address";

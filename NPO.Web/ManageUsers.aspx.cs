@@ -122,16 +122,8 @@ namespace NPO.Web
         }
 
 
-      
-        protected void btnSave_Click(object sender, EventArgs e)
+      private void SendMailPassword()
         {
-            bool s = new EmailAddressAttribute().IsValid(txtEmailAddressAdd.Text.ToString().Trim());
-            if (!s)
-            {
-                lblCheckEmail.Text = "Email Address isn't correct please confirm and try again";
-                return;
-            }
-            UserRepository userRep = new UserRepository();
             User user = GetVaules();
             if (txtEmailAddressAdd.ToString().Trim() != string.Empty)
             {
@@ -144,14 +136,23 @@ namespace NPO.Web
                               , you have now new account in NPO tool <br/> EmailAddress :
                             " + txtEmailAddressAdd.Text.ToString().Trim() + @"<br/> 
                             password :" + user.Password;
-                bool sended = MailHelper.SendMail(email);
-                if (!sended)
-                {
-                   lblCheckEmail.Text = "Check you internet connction";
-                    
-                    return;
-                }
+                MailHelper.SendMail(email);
+               
             }
+        }
+        protected void btnSave_Click(object sender, EventArgs e)
+        {
+            bool CheckMailVaild = new EmailAddressAttribute().IsValid(txtEmailAddressAdd.Text.ToString().Trim());
+            
+            if (!CheckMailVaild)
+            {
+                lblCheckEmail.Text = "Email Address isn't correct please confirm and try again";
+                return;
+            }
+
+            UserRepository userRep = new UserRepository();
+            User user = GetVaules();
+
             int id = Convert.ToInt32(txtid.Text);
             if (id < 0)
             {
@@ -159,8 +160,8 @@ namespace NPO.Web
                 if (idUser > 0)
                 {
                     BindUsersGrid();
-                    lblCheckEmail.Text = "Done you can call user to check your Email";
-
+                    SendMailPassword();
+                    lblCheckEmail.Text = "User add successfuly.";
                     setTextBoxesNull();
                 }
                 else
@@ -241,7 +242,7 @@ namespace NPO.Web
                 int id = Convert.ToInt32(e.CommandArgument);
                 if (id == 30)
                 {
-                    DoneOrNot.Text = "you cannot delete this user because he is tool admin ي بهايم يا بهايم  ";
+                    DoneOrNot.Text = "you cannot delete this user because he is tool admin";
 
                 }
                 else

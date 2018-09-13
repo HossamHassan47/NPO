@@ -130,6 +130,15 @@ namespace NPO.Web {
         protected global::System.Web.UI.WebControls.TextBox txtEmail;
         
         /// <summary>
+        /// SendMail control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button SendMail;
+        
+        /// <summary>
         /// PageUpdateProgress control.
         /// </summary>
         /// <remarks>
@@ -146,15 +155,6 @@ namespace NPO.Web {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label LabelErrorMsg;
-        
-        /// <summary>
-        /// SendMail control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button SendMail;
         
         /// <summary>
         /// Cancel control.

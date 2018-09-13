@@ -84,6 +84,10 @@
                     <asp:TextBox ID="txtEmail" runat="server" Width="300px" TextMode="Email" Height="29px" placeholder="Email address"></asp:TextBox>
                   
                     <br />
+                   
+                    <asp:Button ID="SendMail" runat="server" Text="Send Mail" CssClass="btnForget" OnClick="SendMail_Click" />
+                    <br />
+                    <br />
                     <br />
                     <asp:UpdateProgress runat="server" ID="PageUpdateProgress">
 
@@ -100,7 +104,7 @@
                     <br />
 
 
-                    <asp:Button ID="SendMail" runat="server" Text="Send Mail" CssClass="btnForget" OnClick="SendMail_Click" />
+                   
 
 
                 </ContentTemplate>

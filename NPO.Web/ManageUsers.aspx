@@ -4,38 +4,37 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
 
-    <br />
     <table class="zebra">
 
         <tr>
-            <td style="width: 156px">
-                <asp:Label ID="Label2" runat="server" Text="Nokia User Name : " ForeColor="Black"></asp:Label>
+            <td>
+                <asp:Label ID="Label2" runat="server" Text="Nokia User Name : "></asp:Label>
             </td>
 
             <td>
                 <asp:TextBox ID="txtMemberNokiaUserName" runat="server" Width="299px"></asp:TextBox>
             </td>
             <td>
-                <asp:Label ID="Label4" runat="server" Text="Full Name : " ForeColor="Black"></asp:Label>
-                <asp:TextBox ID="txtFullName" runat="server" Width="300px"></asp:TextBox>
+                <asp:Label ID="Label4" runat="server" Text="Full Name : " ></asp:Label>
+                
             </td>
-            <td></td>
+            <td><asp:TextBox ID="txtFullName" runat="server" Width="300px"></asp:TextBox></td>
 
         </tr>
         <tr>
             <td>
-                <asp:Label ID="Label3" runat="server" Text="Email Address : " ForeColor="Black"></asp:Label>
+                <asp:Label ID="Label3" runat="server" Text="Email Address : " ></asp:Label>
             </td>
             <td>
                 <asp:TextBox ID="TxtEmailAddress" runat="server" Width="300px"></asp:TextBox>
             </td>
 
             <td>
-                <asp:CheckBox ID="isadmin" runat="server" Width="142px" Text="Is Admin " Checked="false" Font-Bold="True" Font-Size="Small" ForeColor="Black" Height="18px"></asp:CheckBox>
+                <asp:CheckBox ID="isadmin" runat="server" Text="Is Admin" ></asp:CheckBox>
             </td>
 
             <td>
-                <asp:CheckBox ID="isactive" runat="server" Width="300px" Text=" Is Active " Checked="true" Font-Size="Small" ForeColor="Black"></asp:CheckBox>
+                <asp:CheckBox ID="isactive" runat="server" Text="Is Active " Checked="true" ></asp:CheckBox>
             </td>
         </tr>
         <tr>
@@ -56,8 +55,7 @@
 
 
     </table>
-    <br />
-  
+    
     <ajaxToolkit:ModalPopupExtender
         ID="btnAdd_ModalPopupExtender" runat="server"
         BehaviorID="btnAdd_ModalPopupExtender"
@@ -128,8 +126,6 @@
         CellSpacing="2" HorizontalAlign="Center" 
          OnRowDataBound="gvUsers_RowDataBound"
         OnRowCommand="gvUsers_RowCommand">
-       
-
         <Columns>
             <asp:TemplateField>
                 <ItemTemplate>
