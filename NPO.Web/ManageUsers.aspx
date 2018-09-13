@@ -19,7 +19,7 @@
                 <asp:Label ID="Label4" runat="server" Text="Full Name : " ForeColor="Black"></asp:Label>
                 <asp:TextBox ID="txtFullName" runat="server" Width="300px"></asp:TextBox>
             </td>
-            <td>&nbsp;</td>
+            <td></td>
 
         </tr>
         <tr>
@@ -41,10 +41,14 @@
         <tr>
             <td></td>
             <td></td>
-            <td style="color: #000000; font-size: small; font-style: normal; font-weight: bold; width: 436px;">
-                <asp:Button ID="btnSearch" runat="server" Text="Search" Width="203px"
-                    OnClick="btnSearch_Click" CssClass="btn btn-default btnSearch" Font-Bold="True"
-                    Font-Size="Small" ForeColor="Black" Height="33px" />
+            <td></td>
+            <td>
+                 <asp:Button ID="btnSearch" runat="server" Text="Search" Width="120px"
+                    CssClass="btn btn-default btnSearch" OnClick="btnSearch_Click" />
+
+                <asp:Button ID="btnAdd" runat="server" Text="ADD" Width="120px"
+                    CssClass="btn btn-default btnAddNew" Font-Bold="True"
+                    Font-Size="Small" ForeColor="Black" OnClick="btnAdd_Click" />
             </td>
 
 
@@ -53,9 +57,7 @@
 
     </table>
     <br />
-    <asp:Button ID="btnAdd" runat="server" Text="ADD" Width="203px"
-        CssClass="btn btn-default btnAddNew" Font-Bold="True"
-        Font-Size="Small" ForeColor="Black" Height="33px" OnClick="btnAdd_Click" />
+  
     <ajaxToolkit:ModalPopupExtender
         ID="btnAdd_ModalPopupExtender" runat="server"
         BehaviorID="btnAdd_ModalPopupExtender"
@@ -64,9 +66,8 @@
         BackgroundCssClass="ModalPopupBG">
     </ajaxToolkit:ModalPopupExtender>
     <asp:Label ID="DoneOrNot" runat="server"></asp:Label>
-    <br />
     <asp:Panel ID="PanelAdd" runat="server" CssClass="PanelAddStyle">
-        <div style="height: 30px; background-color: #2471a3; border-radius: 4000px 4000px 200px 200px; width: 100%; align-content: center">
+        <div style="height: 30px; background-color: #2471a3; width: 100%; align-content: center">
             <asp:Label ID="labelUser" runat="server" ForeColor="White" Text="Add User " Font-Bold="True" Font-Size="X-Large"></asp:Label>
         </div>
         <br />
@@ -113,15 +114,21 @@
             </ContentTemplate>
         </asp:UpdatePanel>
     </asp:Panel>
-
-
     <br />
-    <br />
-    <asp:GridView ID="gvUsers" runat="server" CellPadding="7" GridLines="Vertical" AutoGenerateColumns="False" Width="100%" OnRowDataBound="gvUsers_RowDataBound"
-        BorderWidth="1px" AllowCustomPaging="True" BackColor="White" BorderColor="#999999"
-        BorderStyle="Solid" PageSize="20" AllowPaging="True"
-        CellSpacing="2" HorizontalAlign="Center" OnRowCommand="gvUsers_RowCommand">
-        <AlternatingRowStyle BackColor="#E5E8E8" />
+    <asp:GridView ID="gvUsers" runat="server"
+         CellPadding="3" GridLines="Vertical" 
+        AutoGenerateColumns="False" Width="100%"    
+        BorderWidth="1px" 
+        AllowCustomPaging="True" 
+        BackColor="White" 
+        BorderColor="#999999"
+        BorderStyle="Solid" 
+        PageSize="20" 
+        AllowPaging="True"
+        CellSpacing="2" HorizontalAlign="Center" 
+         OnRowDataBound="gvUsers_RowDataBound"
+        OnRowCommand="gvUsers_RowCommand">
+       
 
         <Columns>
             <asp:TemplateField>
@@ -141,15 +148,17 @@
             <asp:CheckBoxField DataField="IsActive" HeaderText="Is Active" ReadOnly="true" />
         </Columns>
 
+        
         <FooterStyle BackColor="White" ForeColor="Black" BorderStyle="None" />
         <HeaderStyle BackColor="#2471A3" Font-Bold="True" ForeColor="White" />
-        <PagerStyle BackColor="#999999" ForeColor="Black" HorizontalAlign="Center" />
+        <PagerStyle BackColor="#003366" ForeColor="Black" HorizontalAlign="Center" />
         <RowStyle BackColor="#EEEEEE" ForeColor="Black" />
         <SelectedRowStyle BackColor="#008A8C" Font-Bold="True" ForeColor="White" />
         <SortedAscendingCellStyle BackColor="#F1F1F1" />
         <SortedAscendingHeaderStyle BackColor="#0000A9" />
         <SortedDescendingCellStyle BackColor="#CAC9C9" />
         <SortedDescendingHeaderStyle BackColor="#000065" />
+         <AlternatingRowStyle BackColor="#E5E8E8" />
 
     </asp:GridView>
 </asp:Content>

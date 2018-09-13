@@ -17,7 +17,16 @@ namespace NPO.Code.Repository
         public static DataTable GetControllers(ControllerFilter filter, int maximumRows, int startRowIndex)
         {
             DataTable dataTable = new DataTable();
-         var sql = "SELECT * from (SELECT ROW_NUMBER() OVER ( ORDER BY ControllerId  ) ROWNUMBER,[ControllerName] ,[TechnologyId] FROM [NPODB].[dbo].[Controller]  WHERE (1 = 1)  ";
+            var sql = @"
+SELECT * from (
+    SELECT ROW_NUMBER() OVER ( ORDER BY ControllerId  ) ROWNUMBER,
+            [dbo].[Controller].[ControllerId],
+            [dbo].[Controller].[ControllerName] ,
+            [dbo].[Controller].[TechnologyId],
+			dbo.Technology.TechnologyName
+    FROM [dbo].[Controller]
+    inner join dbo.Technology on [dbo].[Controller].TechnologyId = dbo.Technology.TechnologyId
+	WHERE (1 = 1)  ";
 
             sql += getFilterString(filter);
 
@@ -38,7 +47,10 @@ namespace NPO.Code.Repository
         {
             int count;
 
-            var sql = "SELECT COUNT(*) FROM Controller where (1=1)" + getFilterString(filter);
+            var sql = @"
+SELECT COUNT(*) FROM [dbo].[Controller]
+    inner join dbo.Technology on [dbo].[Controller].TechnologyId = dbo.Technology.TechnologyId
+where (1=1)" + getFilterString(filter);
 
 
             using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
@@ -67,27 +79,17 @@ namespace NPO.Code.Repository
 
             if (!string.IsNullOrEmpty(filter.ControllerName))
             {
-                sql += " AND [ControllerName] LIKE '%" + filter.ControllerName + "%'";
+                sql += " AND [Controller].[ControllerName] LIKE '%" + filter.ControllerName + "%'";
             }
-            if (!string.IsNullOrEmpty(filter.TechnologyId))
-            {
-                if (string.Equals(filter.TechnologyId,"2G"))
-                {
-                    sql += "AND TechnologyId = 1";
 
-                }else if(string.Equals(filter.TechnologyId, "3G"))
-                {
-                    sql += "AND TechnologyId = 2";
-                }
-                else
-                {
-                    sql += "AND TechnologyId = 3";
-                }
+            if (filter.TechnologyId > 0)
+            {
+                sql += "AND [Controller].[TechnologyId] = " + filter.TechnologyId;
             }
-            
+
             return sql;
         }
-        
+
         #endregion
 
         public List<Controller> GetAllControllers()
@@ -95,7 +97,7 @@ namespace NPO.Code.Repository
             return new List<Controller>();
         }
 
-        public int InsertNewController (Controller controller)
+        public int InsertNewController(Controller controller)
         {
             SqlCommand cmd = new SqlCommand();
             int ControllerId = 0;
@@ -106,13 +108,13 @@ namespace NPO.Code.Repository
                 cmd.CommandText = "SP_Controller_Insert";
                 cmd.Parameters.Add("@ControllerName", SqlDbType.NVarChar).Value = controller.ControllerName;
                 cmd.Parameters.Add("@TechnologyId", SqlDbType.NVarChar).Value = controller.TechnologyId;
-            
-            //Add the output parameter to the command object
-            SqlParameter outPutParameter = new SqlParameter();
-            outPutParameter.ParameterName = "@ControlerId";
-            outPutParameter.SqlDbType = SqlDbType.Int;
-            outPutParameter.Direction = ParameterDirection.Output;
-            cmd.Parameters.Add(outPutParameter);
+
+                //Add the output parameter to the command object
+                SqlParameter outPutParameter = new SqlParameter();
+                outPutParameter.ParameterName = "@ControllerId";
+                outPutParameter.SqlDbType = SqlDbType.Int;
+                outPutParameter.Direction = ParameterDirection.Output;
+                cmd.Parameters.Add(outPutParameter);
 
                 try
                 {
@@ -131,6 +133,130 @@ namespace NPO.Code.Repository
             return ControllerId;
         }
 
+        public DataTable GetUsers()
+        {
+            var sql = "SELECT UserID , FullName , EmailAddress FROM [NPODB].[dbo].[User] WHERE (1 = 1) ";
+
+            DataTable dataTable = new DataTable();
+            using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
+            {
+                sqlConnection.Open();
+                SqlDataAdapter sqlAdapter = new SqlDataAdapter(sql, sqlConnection);
+                sqlAdapter.Fill(dataTable);
+            }
+
+            return dataTable;
+        }
+
+        public bool UpdateController(Controller controller)
+        {
+            SqlCommand cmd = new SqlCommand();
+
+
+            using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
+            {
+                cmd.Connection = sqlConnection;
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "Sp_Controller_Update";
+                cmd.Parameters.Add("@ControllerId", SqlDbType.Int).Value = controller.ControllerId;
+                cmd.Parameters.Add("@ControllerName", SqlDbType.NVarChar).Value = controller.ControllerName;
+                cmd.Parameters.Add("@TechnologyId", SqlDbType.Int).Value = controller.TechnologyId;
+                try
+                {
+                    sqlConnection.Open();
+                    cmd.ExecuteNonQuery();
+                    cmd.Parameters.Clear();
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+
+        }
+
+        public void DeleteUserController(int conUserId)
+        {
+            var sql = "  DELETE  FROM ControllerUser WHERE ID = @ID ";
+
+            using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
+            {
+                sqlConnection.Open();
+                SqlCommand sqlcomm = new SqlCommand(sql, sqlConnection);
+                sqlcomm.Parameters.AddWithValue("@ID", conUserId);
+               
+                sqlcomm.ExecuteNonQuery();
+
+            }
+        }
+
+        //public DataTable GetUsersController(int controllerId)
+        //{
+        //    DataTable dataTable = new DataTable();
+        //    string sql = @"
+        //        select dbo.[User].UserID,
+        //            dbo.[User].FullName,
+        //         dbo.[User].EmailAddress
+        //        from ControllerUser
+        //        inner join dbo.[User] on dbo.[User].UserID = ControllerUser.UserId
+        //        where ControllerUser.ControllerId = @controllerId";
+        //    using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
+        //    {
+        //        sqlConnection.Open();
+        //        SqlCommand sqlcomm = new SqlCommand(sql, sqlConnection);
+        //        sqlcomm.Parameters.AddWithValue("@controllerId", controllerId);
+        //        using (SqlDataAdapter sqlAdapter = new SqlDataAdapter(sqlcomm))
+        //        {
+        //            sqlAdapter.Fill(dataTable);
+        //        }
+        //        return dataTable;
+        //    }
+        //}
+
+        public void AddUserController(int userId, int controllerId)
+        {
+            var sql = "Insert into ControllerUser Values(@userId,@controllerId)";
+
+                using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
+                {
+                    sqlConnection.Open();
+                    SqlCommand sqlcomm = new SqlCommand(sql, sqlConnection);
+                    sqlcomm.Parameters.AddWithValue("@userId", userId);
+                    sqlcomm.Parameters.AddWithValue("@controllerId", controllerId);
+
+                    sqlcomm.ExecuteNonQuery();
+
+                }
+          
+        }
+
+        public bool DeleteController(Controller controller)
+        {
+            SqlCommand cmd = new SqlCommand();
+
+
+            using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
+            {
+                cmd.Connection = sqlConnection;
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "Sp_Controller_Delete";
+                cmd.Parameters.Add("@ControllerId", SqlDbType.NVarChar).Value = controller.ControllerId;
+
+                try
+                {
+                    sqlConnection.Open();
+                    cmd.ExecuteNonQuery();
+                    cmd.Parameters.Clear();
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+
+        }
 
         public DataTable GetControllerAssign(int techId)
         {

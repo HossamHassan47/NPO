@@ -12,7 +12,7 @@ namespace NPO.Code.Repository
     {
 
         #region ObjectDataSource
-        public static DataTable GetEmails(EmailFilter filter, int maximumRows, int startRowIndex)
+        public static DataTable GetEmails(EmailFilter filter, int maximumRows, int startRowIndex, int userId, bool isAdmin)
         {
             DataTable dataTable = new DataTable();
             //  var sql = "SELECT [Subject] ,[Body]  ,[From] ,[To] ,[CC] FROM [NPODB].[dbo].[Email] WHERE (1 = 1) ";
@@ -30,8 +30,18 @@ from (
 			dbo.Controller.ControllerName,
 			dbo.Controller.TechnologyId
     FROM [NPODB].[dbo].[Email] 
-	left outer join dbo.Controller on Controller.ControllerId = Email.ControllerId
-    WHERE (1 = 1)  ";
+	left outer join dbo.Controller on Controller.ControllerId = Email.ControllerId ";
+            if (isAdmin)
+            {
+                sql += "WHERE (1 = 1)  ";
+            }
+            else
+            {
+                sql += @"
+                    left outer join dbo.ControllerUser on ControllerUser.ControllerId = Email.ControllerId
+                    left outer join dbo.[User] on [User].[UserID] = ControllerUser.[UserId]
+                WHERE  [User].[UserID] = " + userId;
+            }
 
             sql += getFilterString(filter);
 
@@ -48,20 +58,30 @@ from (
             return dataTable;
         }
 
-        public static int GetEmailsCount(EmailFilter filter)
+        public static int GetEmailsCount(EmailFilter filter, int userId, bool isAdmin)
         {
             int count;
 
             var sql = @"
-SELECT COUNT(*) 
-FROM Email 
-left outer join dbo.Controller on Controller.ControllerId = Email.ControllerId                
-where (1=1)" + getFilterString(filter);
-
+                SELECT COUNT(*) 
+                FROM Email 
+                left outer join dbo.Controller on Controller.ControllerId = Email.ControllerId ";
+            if (isAdmin)
+            {
+                sql += "where(1 = 1)";
+            }
+            else
+            {
+                sql += @" left outer join dbo.ControllerUser on ControllerUser.ControllerId = Email.ControllerId
+                    left outer join dbo.[User]
+                    on[User].[UserID] = ControllerUser.[UserId]
+                WHERE[User].[UserID] = " + userId;
+            }
+            sql += getFilterString(filter);
 
             using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
             {
-                SqlCommand sqlCommand = new SqlCommand(sql , sqlConnection);
+                SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection);
                 try
                 {
                     sqlConnection.Open();
@@ -79,11 +99,11 @@ where (1=1)" + getFilterString(filter);
             return count;
         }
 
-       
 
-        private static string getFilterString(EmailFilter filter )
+
+        private static string getFilterString(EmailFilter filter)
         {
-            string sql = ""; 
+            string sql = "";
 
             if (!string.IsNullOrEmpty(filter.To))
             {
@@ -99,17 +119,17 @@ where (1=1)" + getFilterString(filter);
             }
             if (!string.IsNullOrEmpty(filter.dateTimeReceived))
             {
-                
-                    sql += " AND Cast(DateTimeReceived AS DATE)" + filter.dateTimeReceivedOperater + " '" + filter.dateTimeReceived + " '";
-             
+
+                sql += " AND Cast(DateTimeReceived AS DATE)" + filter.dateTimeReceivedOperater + " '" + filter.dateTimeReceived + " '";
+
 
             }
             return sql;
         }
 
-    
 
-        
+
+
         #endregion
         public List<Email> GetAllEmails()
         {
@@ -121,7 +141,8 @@ where (1=1)" + getFilterString(filter);
             SqlCommand cmd = new SqlCommand();
             int EmailId = 0;
 
-            using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString)) {
+            using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
+            {
                 cmd.Connection = sqlConnection;
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = "Sp_Email_Insert";
@@ -154,15 +175,15 @@ where (1=1)" + getFilterString(filter);
                     throw ex;
                 }
             }
-                
-           
+
+
             // Insert email into database then return the ID
-          
+
             return EmailId;
 
         }
 
-      
+
 
         public int UpdateEmail(Email email)
         {
@@ -183,7 +204,7 @@ where (1=1)" + getFilterString(filter);
             using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
             {
                 sqlConnection.Open();
-                SqlCommand sqlcomm = new SqlCommand(sql , sqlConnection);
+                SqlCommand sqlcomm = new SqlCommand(sql, sqlConnection);
                 sqlcomm.Parameters.AddWithValue("@id", id);
 
                 using (SqlDataReader sqldr = sqlcomm.ExecuteReader())
@@ -196,7 +217,7 @@ where (1=1)" + getFilterString(filter);
             }
 
             return htmlBody;
-            
+
         }
         public void DownloadMail(int id)
         {
@@ -226,7 +247,8 @@ where (1=1)" + getFilterString(filter);
             string sql = @"
                 select dbo.[User].UserID,
                     dbo.[User].FullName,
-	                dbo.[User].EmailAddress
+	                dbo.[User].EmailAddress,
+                    ID
                 from ControllerUser
                 inner join dbo.[User] on dbo.[User].UserID = ControllerUser.UserId
                 where ControllerUser.ControllerId = @controllerId";
@@ -235,7 +257,7 @@ where (1=1)" + getFilterString(filter);
                 sqlConnection.Open();
                 SqlCommand sqlcomm = new SqlCommand(sql, sqlConnection);
                 sqlcomm.Parameters.AddWithValue("@controllerId", controllerId);
-                using(SqlDataAdapter sqlAdapter = new SqlDataAdapter(sqlcomm))
+                using (SqlDataAdapter sqlAdapter = new SqlDataAdapter(sqlcomm))
                 {
                     sqlAdapter.Fill(dataTable);
                 }
@@ -244,9 +266,9 @@ where (1=1)" + getFilterString(filter);
 
         }
 
-        public bool UpdateControllerId(int controllerId , int emailId)
+        public bool UpdateControllerId(int controllerId, int emailId)
         {
-            
+
             string sql = @"
                 Update Email
                 Set ControllerId = @ControllerId

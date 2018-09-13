@@ -75,7 +75,14 @@ namespace NPO.Web
             }else
             {
                 UserName.Text = Session["UserName"].ToString();
+                if (!(bool)Session["isAdmin"])
+                {
+                    liManageSite.Visible = false;
+                    liManageUsers.Visible = false;
+                    liManageController.Visible = false;
+                }
             }
+           
         }
         protected void Unnamed_LoggingOut(object sender, LoginCancelEventArgs e)
         {

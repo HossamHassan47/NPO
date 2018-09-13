@@ -43,17 +43,13 @@
                 <asp:TextBox ID="txtEmailDate" runat="server" Width="235px"></asp:TextBox>
                 <ajaxToolkit:CalendarExtender ID="CalendarExtender1" runat="server" TargetControlID="txtEmailDate" Format="MM-dd-yyyy" />
             </td>
+             <td>  <asp:Button ID="Button1" runat="server" Text="Search" Width="120px"
+                    CssClass="btn btn-default btnSearch" OnClick="btnSearch_Click" />
 
-
-        </tr>
-
-        <tr>
-            <td></td>
-            <td>
-                <asp:Button ID="btnSearch" runat="server" Text="Search" Width="187px"
-                    OnClick="btnSearch_Click" CssClass="btn btn-default btnSearch" />
             </td>
+
         </tr>
+       
     </table>
 
 
@@ -140,21 +136,33 @@
     </asp:Panel>
 
 
-    <asp:GridView ID="gvEmails" runat="server" CellPadding="3" GridLines="Vertical" AutoGenerateColumns="False"
-        BorderWidth="1px" BackColor="White" BorderColor="#999999" BorderStyle="Solid" AllowPaging="True" OnRowDataBound="gvEmails_RowDataBound"
+    <asp:GridView ID="gvEmails" runat="server"
+         CellPadding="3" GridLines="Vertical" 
+        AutoGenerateColumns="False" Width="100%"    
+        BorderWidth="1px" 
+        AllowCustomPaging="True" 
+        BackColor="White" 
+        BorderColor="#999999"
+        BorderStyle="Solid" 
+        PageSize="20" 
+        AllowPaging="True"
+        CellSpacing="2" 
+        HorizontalAlign="Center" 
+         OnRowDataBound="gvEmails_RowDataBound"
         EmptyDataText="No Data Found"
-        DataSourceID="DsGvEmails" HeaderStyle-Wrap="false" Width="100%" PageSize="20" OnRowCommand="gvEmail_RowCommand">
+        DataSourceID="DsGvEmails" 
+         OnRowCommand="gvEmail_RowCommand">
 
         <AlternatingRowStyle BackColor="#DCDCDC" />
         <PagerStyle CssClass="pagination-ys" />
 
         <Columns>
 
-            <asp:TemplateField HeaderText="Assign">
+            <asp:TemplateField>
                 <ItemTemplate>
                     <asp:ImageButton ID="btnAssign" runat="server" ImageUrl='<%#Eval("ControllerId").ToString() == ""? "~/Content/icNotAssign.png":"~/Content/icAssigned.png" %>' CommandName="Assign"
                          CommandArgument='<%# Eval("EmailId").ToString() +"," + Eval("ControllerId").ToString() +"," + Eval("TechnologyId").ToString() %>'
-                        AlternateText="Body" />
+                        AlternateText="Body" ToolTip="Assign" />
                 </ItemTemplate>
             </asp:TemplateField>
 
@@ -169,16 +177,17 @@
 
             <asp:BoundField DataField="CC" HeaderText="CC" />
 
-            <asp:TemplateField HeaderText="Body">
+            <asp:TemplateField>
                 <ItemTemplate>
                     <asp:ImageButton ID="btnBody" runat="server" ImageUrl="~/Content/icRightArrow.png" CommandName="showBody" CommandArgument='<%#Eval("EmailId")%>'
-                        AlternateText="Body" />
+                        AlternateText="Body" Width="20px" Height="20px" ToolTip="View body" />
                 </ItemTemplate>
             </asp:TemplateField>
 
-            <asp:TemplateField HeaderText="Download">
+            <asp:TemplateField>
                 <ItemTemplate>
-                    <asp:ImageButton ID="btnDownload" runat="server" ImageUrl="~/Content/icDownload.png" CommandName="download" CommandArgument='<%#Eval("EmailId")%>' />
+                    <asp:ImageButton ID="btnDownload" runat="server" ImageUrl="~/Content/icDownload.png" CommandName="download" 
+                        CommandArgument='<%#Eval("EmailId")%>'  Width="20px" Height="20px" ToolTip="Download Email" />
                 </ItemTemplate>
             </asp:TemplateField>
 
@@ -186,8 +195,10 @@
 
         </Columns>
 
-        <FooterStyle BackColor="#CCCCCC" ForeColor="Black" />
-        <HeaderStyle BackColor="#003366" Font-Bold="True" ForeColor="White" />
+    
+
+        <FooterStyle BackColor="White" ForeColor="Black" BorderStyle="None" />
+        <HeaderStyle BackColor="#2471A3" Font-Bold="True" ForeColor="White" />
         <PagerStyle BackColor="#003366" ForeColor="Black" HorizontalAlign="Center" />
         <RowStyle BackColor="#EEEEEE" ForeColor="Black" />
         <SelectedRowStyle BackColor="#008A8C" Font-Bold="True" ForeColor="White" />
@@ -195,6 +206,7 @@
         <SortedAscendingHeaderStyle BackColor="#0000A9" />
         <SortedDescendingCellStyle BackColor="#CAC9C9" />
         <SortedDescendingHeaderStyle BackColor="#000065" />
+         <AlternatingRowStyle BackColor="#E5E8E8" />
 
     </asp:GridView>
     <asp:ObjectDataSource ID="DsGvEmails"

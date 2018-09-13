@@ -61,32 +61,38 @@ namespace NPO.Web
             }
             if (e.CommandName == "Assign")
             {
-                // 1212,32,1
-                var values = e.CommandArgument.ToString().Split(',');
-
-                txtEmailId.Text = Convert.ToInt32(values[0]).ToString();
-                if (!(values[1] == ""))
+                if ((bool)Session["isAdmin"])
                 {
-                    DropDownListTech.SelectedValue = values[2];
-                    this.BindControllersList(values[2]);
-                    DropDownListControllers.SelectedValue = values[1];
-                    this.BindUsersList(values[1]);
-                }else
-                {
-                    DropDownListTech.SelectedIndex = 0;
-                    DropDownListControllers.SelectedIndex = 0;
-                    RepeaterAssignUsers.DataSource = null;
-                    RepeaterAssignUsers.DataBind();
+                    // 1212,32,1
+                    var values = e.CommandArgument.ToString().Split(',');
 
+                    txtEmailId.Text = Convert.ToInt32(values[0]).ToString();
+                    if (!(values[1] == ""))
+                    {
+                        DropDownListTech.SelectedValue = values[2];
+                        this.BindControllersList(values[2]);
+                        DropDownListControllers.SelectedValue = values[1];
+                        this.BindUsersList(values[1]);
+                    }
+                    else
+                    {
+                        DropDownListTech.SelectedIndex = 0;
+                        DropDownListControllers.SelectedIndex = 0;
+                        RepeaterAssignUsers.DataSource = null;
+                        RepeaterAssignUsers.DataBind();
+
+                    }
+
+                    btnPanalAssign_ModalPopupExtender.Show();
                 }
-
-                btnPanalAssign_ModalPopupExtender.Show();
             }
         }
 
         protected void DsGvEmails_Selecting(object sender, ObjectDataSourceSelectingEventArgs e)
         {
             e.InputParameters["filter"] = GetFilter();
+            e.InputParameters["userId"] = Convert.ToInt32(Session["UserId"]);
+            e.InputParameters["isAdmin"] =Session["isAdmin"];
 
         }
 
@@ -94,7 +100,7 @@ namespace NPO.Web
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                e.Row.Cells[0].Width = new Unit("5%");
+                e.Row.Cells[0].Width = new Unit("3%");
                 e.Row.Cells[1].Width = new Unit("10%");
                 e.Row.Cells[2].Width = new Unit("20%");
                 e.Row.Cells[3].Width = new Unit("30%");
@@ -129,6 +135,7 @@ namespace NPO.Web
             DropDownListControllers.Items.Insert(0, "--Select Controller--");
 
         }
+
         protected void DropDownListControllers_SelectedIndexChanged(object sender, EventArgs e)
         {
             this.BindUsersList(DropDownListControllers.SelectedValue);
@@ -166,7 +173,7 @@ namespace NPO.Web
             EntityEmail email = new EntityEmail();
 
             email.To = emails;
-            email.Body = "you have A new Assign";
+            email.Body = "you have a new Assign";
             email.Subject = "NPO Tool";
 
             MailHelper.SendMail(email);

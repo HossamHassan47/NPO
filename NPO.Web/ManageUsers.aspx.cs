@@ -148,6 +148,7 @@ namespace NPO.Web
                 if (!sended)
                 {
                    lblCheckEmail.Text = "Check you internet connction";
+                    
                     return;
                 }
             }

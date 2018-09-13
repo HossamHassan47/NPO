@@ -28,6 +28,8 @@ namespace NPO.Web
         private void MakeSession(User user)
         {
             Session["CurrentUser"] = user;
+            Session["UserId"] = user.UserID;
+            Session["isAdmin"] = user.IsAdmin;
             Session["UserName"] = user.FullName;
         }
 

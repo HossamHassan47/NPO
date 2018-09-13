@@ -9,6 +9,6 @@ namespace NPO.Code.FilterEntity
     public class ControllerFilter
     {
         public string ControllerName { get; set; }
-        public string TechnologyId { get; set; }
+        public int TechnologyId { get; set; }
     }
 }
