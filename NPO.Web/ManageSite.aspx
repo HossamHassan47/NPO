@@ -15,7 +15,7 @@
                 <asp:TextBox ID="txtSiteCode" runat="server" Width="299px"></asp:TextBox>
             </td>
             <td>
-                <asp:Label ID="Label1" runat="server" Text="Site Name : " ></asp:Label>
+                <asp:Label ID="Label1" runat="server" Text="Site Name : "></asp:Label>
             </td>
             <td>
                 <asp:TextBox ID="txtSiteName" runat="server" Width="300px"></asp:TextBox>
@@ -23,31 +23,37 @@
 
         </tr>
         <tr>
-            <td >
+            <td>
                 <asp:Label ID="Label3" runat="server" Text="City : "></asp:Label>
             </td>
-            <td >
+            <td>
                 <asp:DropDownList ID="ddlCity" runat="server" Width="300px">
                 </asp:DropDownList>
             </td>
 
-            <td >
+            <td>
                 <asp:CheckBox ID="_2g" runat="server" Text="2G"></asp:CheckBox>
             </td>
 
             <td>
 
-                <asp:CheckBox ID="_3g" runat="server"  Text="3G" Checked="false" Font-Bold="True"></asp:CheckBox>
-                <asp:CheckBox ID="_4g" runat="server"  Text="4G" Checked="false" Font-Bold="True"></asp:CheckBox>
+                <asp:CheckBox ID="_3g" runat="server" Text="3G" Checked="false" Font-Bold="True"></asp:CheckBox>
+                <asp:CheckBox ID="_4g" runat="server" Text="4G" Checked="false" Font-Bold="True"></asp:CheckBox>
 
             </td>
-           
+
         </tr>
         <tr>
+            <td>
+                <asp:Label ID="Label6" runat="server" Text="Upload Excel File"></asp:Label>
+
+            </td>
+            <td>
+                <asp:FileUpload ID="FileUpload1" runat="server" Font-Bold="True" accept=".xlsx" />
+
+            </td>
             <td></td>
-            <td></td>
-            <td></td>
-              <td >
+            <td>
                 <asp:Button ID="btnSearch" runat="server" Text="Search" Width="120px"
                     CssClass="btn btn-default btnSearch" OnClick="btnSearch_Click" />
                 <asp:Button ID="btnAdd" runat="server" Text="ADD" Width="120px"
@@ -57,8 +63,15 @@
 
         </tr>
 
+        <tr>
+            <td></td>
+            <td style="height: 49px">
+
+                <asp:Button ID="Button1" runat="server" Font-Bold="True" Text="Upload" OnClick="Button1_Click" />
+                <asp:Label ID="lblUploadResult" runat="server"></asp:Label>
+        </tr>
     </table>
- 
+
     <asp:Button ID="btnExtender" runat="server" Style="display: none" />
     <ajaxToolKit:ModalPopupExtender
         ID="btnAdd_ModalPopupExtender" runat="server"
@@ -69,8 +82,8 @@
     </ajaxToolKit:ModalPopupExtender>
     <asp:Label ID="DoneOrNot" runat="server"></asp:Label>
     <br />
-    <asp:Panel ID="PanelAdd" runat="server" Style="text-align: center; background-color: rgb(255, 251, 251); "
-        Width="470px" Height="430px" BackColor="#999999" BorderColor="#666666" BorderStyle="Solid">
+    <asp:Panel ID="PanelAdd" runat="server" Style="text-align: center; background-color: rgb(255, 251, 251);"
+        Width="470px" Height="500px" BackColor="#999999" BorderColor="#666666" BorderStyle="Solid">
 
         <div style="background-color: #006699;">
             <asp:Label ID="l1" runat="server" ForeColor="White" Text="Add Site " Font-Bold="True"
@@ -79,12 +92,12 @@
         <div>
             <asp:TextBox ID="txtid" runat="server" Visible="false" Text="-1"></asp:TextBox>
         </div>
-        
+
 
         <asp:UpdatePanel ID="UpdatePanel1" runat="server">
             <ContentTemplate>
 
-                <table class="zebra" style="align-items:center">
+                <table class="zebra" style="align-items: center">
 
                     <tr>
                         <td></td>
@@ -96,20 +109,20 @@
                             <asp:TextBox ID="txtAddSiteCode" runat="server" Width="299px"></asp:TextBox>
                         </td>
                     </tr>
-                      
-                    
+
+
                     <tr>
                         <td></td>
                         <td></td>
-                       
-                         <td>
+
+                        <td>
                             <asp:Label ID="L2" runat="server" Font-Bold="True" ForeColor="Black" Text="Site Name : "></asp:Label>
                         </td>
                         <td>
                             <asp:TextBox ID="txtAddSiteName" runat="server" Width="299px"></asp:TextBox>
                         </td>
                     </tr>
-                    
+
                     <tr>
                         <td></td>
                         <td></td>
@@ -122,7 +135,7 @@
                             </asp:DropDownList>
                         </td>
                     </tr>
-                    
+
                     <tr>
                         <td></td>
                         <td></td>
@@ -135,7 +148,22 @@
                             </asp:DropDownList>
                         </td>
                     </tr>
-                     
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <asp:Label ID="Label7" runat="server" Font-Bold="True" ForeColor="Black" Text="Type : "></asp:Label>
+                        </td>
+                        <td>
+                            <asp:DropDownList ID="ddlType" runat="server" AutoPostBack="true">
+                                <asp:ListItem Value="0">--Select Type--</asp:ListItem>
+                                <asp:ListItem Value="1">Micro</asp:ListItem>
+                                <asp:ListItem Value="2">Macro</asp:ListItem>
+
+                            </asp:DropDownList>
+                        </td>
+                    </tr>
+
                     <tr>
                         <td></td>
                         <td></td>
@@ -147,24 +175,24 @@
                             </asp:DropDownList>
                         </td>
                     </tr>
-                    
+
                     <tr>
                         <td></td>
                         <td></td>
                         <td>
-                            <asp:CheckBox ID="txt3G" runat="server" Checked="False" Text=" 3G " OnCheckedChanged="txt3G_CheckedChanged" AutoPostBack="true"/>
+                            <asp:CheckBox ID="txt3G" runat="server" Checked="False" Text=" 3G " OnCheckedChanged="txt3G_CheckedChanged" AutoPostBack="true" />
                         </td>
                         <td>
                             <asp:DropDownList ID="ddlControllers3g" runat="server" Visible="false">
                             </asp:DropDownList>
                         </td>
                     </tr>
-                      
+
                     <tr>
                         <td></td>
                         <td></td>
                         <td>
-                            <asp:CheckBox ID="txt4G" runat="server" Checked="False" Text=" 4G " OnCheckedChanged="txt4G_CheckedChanged" AutoPostBack="true"/>
+                            <asp:CheckBox ID="txt4G" runat="server" Checked="False" Text=" 4G " OnCheckedChanged="txt4G_CheckedChanged" AutoPostBack="true" />
 
                         </td>
                         <td>
@@ -189,22 +217,22 @@
             Style="margin-left: 31px" Text="Cancel" Width="123px" Font-Bold="True" OnClick="btnCancel_Click" />
 
     </asp:Panel>
-   
-    <asp:GridView ID="gvSites" runat="server"
-         CellPadding="3" GridLines="Vertical" 
-        AutoGenerateColumns="False" Width="100%"
-        BorderWidth="1px" 
-        AllowCustomPaging="True" 
-        BackColor="White" 
-        BorderColor="#999999"
-        BorderStyle="Solid" 
-        PageSize="20" 
-        AllowPaging="True"
-        CellSpacing="2" HorizontalAlign="Center" 
-        OnRowCommand="gvSites_RowCommand"
-         DataSourceID="DsGvSites">
 
-      
+    <asp:GridView ID="gvSites" runat="server"
+        CellPadding="3" GridLines="Vertical"
+        AutoGenerateColumns="False" Width="100%"
+        BorderWidth="1px"
+        AllowCustomPaging="True"
+        BackColor="White"
+        BorderColor="#999999"
+        BorderStyle="Solid"
+        PageSize="20"
+        AllowPaging="True"
+        CellSpacing="2" HorizontalAlign="Center"
+        OnRowCommand="gvSites_RowCommand"
+        DataSourceID="DsGvSites">
+
+
 
         <Columns>
 
@@ -227,7 +255,7 @@
 
         </Columns>
 
-        
+
         <FooterStyle BackColor="White" ForeColor="Black" BorderStyle="None" />
         <HeaderStyle BackColor="#2471A3" Font-Bold="True" ForeColor="White" />
         <PagerStyle BackColor="#003366" ForeColor="Black" HorizontalAlign="Center" />
@@ -237,7 +265,7 @@
         <SortedAscendingHeaderStyle BackColor="#0000A9" />
         <SortedDescendingCellStyle BackColor="#CAC9C9" />
         <SortedDescendingHeaderStyle BackColor="#000065" />
-         <AlternatingRowStyle BackColor="#E5E8E8" />
+        <AlternatingRowStyle BackColor="#E5E8E8" />
         <PagerStyle CssClass="pagination-ys" />
 
     </asp:GridView>

@@ -128,13 +128,13 @@ from (
 
                 sqlCommand.Parameters.Add("@SiteName", SqlDbType.VarChar).Value = site.SiteName;
 
-             //   sqlCommand.Parameters.Add("@RegionId", SqlDbType.Int).Value = site.RegionId;
+                sqlCommand.Parameters.Add("@RegionId", SqlDbType.Int).Value = site.RegionId;
 
                 sqlCommand.Parameters.Add("@CityId", SqlDbType.Int).Value = site.CityId;
 
                 sqlCommand.Parameters.Add("@ZoneId", SqlDbType.Int).Value = site.ZoneId;
 
-                //sqlCommand.Parameters.Add("@SiteType", SqlDbType.Int).Value = site.SiteType;
+                sqlCommand.Parameters.Add("@SiteType", SqlDbType.Int).Value = site.SiteType;
 
                 sqlCommand.Parameters.Add("@2g", SqlDbType.Bit).Value = site._2g;
 
@@ -207,6 +207,7 @@ from (
                 cmd.Parameters.Add("@2g", SqlDbType.Bit).Value = site._2g;
                 cmd.Parameters.Add("@3g", SqlDbType.Bit).Value = site._3g;
                 cmd.Parameters.Add("@4g", SqlDbType.Bit).Value = site._4g;
+                cmd.Parameters.Add("@SiteType", SqlDbType.Int).Value = site.SiteType;
                 cmd.Parameters.Add("@ControlerId2g", SqlDbType.Int).Value = site.ControlerId2g;
                 cmd.Parameters.Add("@ControlerId3g", SqlDbType.Int).Value = site.ControlerId3g;
                 cmd.Parameters.Add("@ControlerId4g", SqlDbType.Int).Value = site.ControlerId4g;
@@ -295,12 +296,12 @@ from (
 
         }
 
-        public DataTable CityZone(int id)
+        public DataTable CityZone(int cityId)
         {
 
             using (SqlConnection conDatabase = new SqlConnection(DBHelper.strConnString))
             {
-                SqlCommand com = new SqlCommand(@"select ZoneId , ZoneName from Zone where CityId = " + id , conDatabase);
+                SqlCommand com = new SqlCommand(@"select ZoneId , ZoneName from Zone Where CityId = "+ cityId , conDatabase);
                 com.Connection = conDatabase;
                 conDatabase.Open();
 
@@ -357,5 +358,384 @@ from (
             return liSites;
         }
 
+
+        #region UploadExcel
+        public bool UpdateDB_ExcelData(DataTable sites, out string message)
+        {
+            for (int row = 1; row < sites.Rows.Count; row++)
+            {
+                for (int col = 0; col < sites.Columns.Count ; col++)
+                {
+                    if (sites.Rows[row][col].ToString() == "")
+                    {
+                        message = "Missing Data in Row : " + (row+1) + " Col : " + (col+1) ;
+                        return false;
+                    }
+                }
+                
+            }
+
+            foreach (DataRow row in sites.Rows)
+            {
+
+                Site site = new Site();
+
+                site.RegionId = GetRegionId(row["Region"].ToString());
+                site.SiteName = row["Site_Name"].ToString();
+                site.SiteCode = row["Site_Code"].ToString();
+                site.CityId = GetCityId(row["City"].ToString(), site.RegionId);
+                site.ZoneId = GetCityZoneId(row["City_zone"].ToString(), site.CityId);
+                site.SiteType = GetTypeId(row["Type"].ToString());
+
+                if (row["BSC"].ToString() == "#N/A")
+                {
+                    site.ControlerId2g = 0;
+                }
+                else
+                {
+                    site.ControlerId2g = GetCOntrollerId_2G(row["BSC"].ToString());
+                }
+                if (row["RNC"].ToString() == "#N/A")
+                {
+                    site.ControlerId3g = 0;
+                }
+                else
+                {
+                    site.ControlerId3g = GetCOntrollerId_3G(row["RNC"].ToString());
+                }
+
+                if (row["LTE_City"].ToString() == "#N/A")
+                {
+                    site.ControlerId4g = 0;
+                }
+                else
+                {
+                    site.ControlerId4g = GetCOntrollerId_4G(row["LTE_City"].ToString());
+                }
+
+                site._2g = Convert.ToBoolean((row["2G"]));
+                site._3g = Convert.ToBoolean((row["3G"]));
+                site._4g = Convert.ToBoolean((row["LTE"]));
+
+                int check = CheckSiteExist(row["Site_Code"].ToString());
+
+                if (check > -1)
+                {
+                    site.SiteId = check;
+
+                    UpdateSite(site);
+                }
+                else
+                {
+                    InsertNewSite(site);
+                }
+            }
+            message = "Done";
+            return true;
+        }
+
+        private int GetCOntrollerId_4G(string ControllerN)
+        {
+            var ControllerId = -1;
+            var sql = "select ControllerId from Controller where ControllerName = @ControllerN ";
+
+            using (SqlConnection con = new SqlConnection(DBHelper.strConnString))
+            {
+                SqlCommand cmd = new SqlCommand(sql, con);
+                cmd.Parameters.AddWithValue("@ControllerN", ControllerN);
+                con.Open();
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    if (dr.Read())
+                    {
+                        ControllerId = Convert.ToInt32(dr["ControllerId"]);
+                    }
+
+                }
+            }
+            if (ControllerId == -1)
+            {
+                //ControllerRepository controllerRepository = new ControllerRepository();
+                var SqlInsert = "insert into Controller values(@ControllerN,4);";
+                using (SqlConnection con = new SqlConnection(DBHelper.strConnString))
+                {
+                    SqlCommand cmd = new SqlCommand(SqlInsert, con);
+                    cmd.Parameters.AddWithValue("@ControllerN", ControllerN);
+                    ;
+
+                    con.Open();
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        if (dr.Read())
+                        {
+                            ControllerId = Convert.ToInt32(dr["ControllerId"]);
+                        }
+                    }
+                }
+
+
+
+            }
+
+            return ControllerId;
+        }
+
+        private int GetCOntrollerId_3G(string ControllerN)
+        {
+            var ControllerId = -1;
+            var sql = "select ControllerId from Controller where ControllerName = @ControllerN ";
+
+            using (SqlConnection con = new SqlConnection(DBHelper.strConnString))
+            {
+                SqlCommand cmd = new SqlCommand(sql, con);
+                cmd.Parameters.AddWithValue("@ControllerN", ControllerN);
+                con.Open();
+
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    if (dr.Read())
+                    {
+                        ControllerId = Convert.ToInt32(dr["ControllerId"]);
+                        return ControllerId;
+                    }
+                }
+            }
+            if (ControllerId == -1)
+            {
+                //ControllerRepository controllerRepository = new ControllerRepository();
+                var SqlInsert = "insert into Controller values(@ControllerN,3);";
+                using (SqlConnection con = new SqlConnection(DBHelper.strConnString))
+                {
+                    SqlCommand cmd = new SqlCommand(SqlInsert, con);
+                    cmd.Parameters.AddWithValue("@ControllerN", ControllerN);
+                    ;
+
+                    con.Open();
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        if (dr.Read())
+                        {
+                            ControllerId = Convert.ToInt32(dr["ControllerId"]);
+                        }
+                    }
+                }
+
+
+
+            }
+            return ControllerId;
+        }
+
+        private int GetCOntrollerId_2G(string ControllerN)
+        {
+            var ControllerId = -1;
+            var sql = "select ControllerId from Controller where ControllerName = @ControllerN ";
+
+            using (SqlConnection con = new SqlConnection(DBHelper.strConnString))
+            {
+                SqlCommand cmd = new SqlCommand(sql, con);
+                cmd.Parameters.AddWithValue("@ControllerN", ControllerN);
+                con.Open();
+
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    if (dr.Read())
+                    {
+                        ControllerId = Convert.ToInt32(dr["ControllerId"]);
+                    }
+                }
+            }
+            if (ControllerId == -1)
+            {
+                //ControllerRepository controllerRepository = new ControllerRepository();
+                var SqlInsert = "insert into Controller values(@ControllerN,2);";
+                using (SqlConnection con = new SqlConnection(DBHelper.strConnString))
+                {
+                    SqlCommand cmd = new SqlCommand(SqlInsert, con);
+                    cmd.Parameters.AddWithValue("@ControllerN", ControllerN);
+                    ;
+
+                    con.Open();
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        if (dr.Read())
+                        {
+                            ControllerId = Convert.ToInt32(dr["ControllerId"]);
+                        }
+                    }
+                }
+
+
+
+            }
+            return ControllerId;
+        }
+
+        private int GetTypeId(string Type)
+        {
+            var TypeId = -1;
+            var sql = "select TypeId from SiteType where Type = @Type";
+
+            using (SqlConnection con = new SqlConnection(DBHelper.strConnString))
+            {
+                SqlCommand cmd = new SqlCommand(sql, con);
+                cmd.Parameters.AddWithValue("@Type", Type);
+                con.Open();
+
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    if (dr.Read())
+                    {
+                        TypeId = Convert.ToInt32(dr["TypeId"]);
+                    }
+                }
+            }
+
+            return TypeId;
+        }
+
+        private int GetCityZoneId(string cityZoneName, int cityId)
+        {
+            var CityZoneid = -1;
+            var sql = "select ZoneId from Zone where ZoneName = @cityZoneName And CityId = @cityId  ";
+
+            using (SqlConnection con = new SqlConnection(DBHelper.strConnString))
+            {
+                SqlCommand cmd = new SqlCommand(sql, con);
+                cmd.Parameters.AddWithValue("@cityZoneName", cityZoneName);
+                cmd.Parameters.AddWithValue("@cityId", cityId);
+
+                con.Open();
+
+
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    if (dr.Read())
+                    {
+                        CityZoneid = Convert.ToInt32(dr["ZoneId"]);
+                    }
+                }
+            }
+
+            if (CityZoneid == -1)
+            {
+                var SqlInsert = "insert into Zone values (@cityZoneName,@cityId);";
+                using (SqlConnection con = new SqlConnection(DBHelper.strConnString))
+                {
+                    SqlCommand cmd = new SqlCommand(SqlInsert, con);
+                    cmd.Parameters.AddWithValue("@cityZoneName", cityZoneName);
+                    cmd.Parameters.AddWithValue("@cityId", cityId);
+
+
+                    con.Open();
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        if (dr.Read())
+                        {
+                            CityZoneid = Convert.ToInt32(dr["CityId"]);
+                        }
+                    }
+                }
+
+            }
+
+            return CityZoneid;
+        }
+
+        private int GetCityId(string CityN, int Regionid)
+        {
+            var Cityid = -1;
+            var sql = "select CityId from City where CityName = @CityN ";
+
+            using (SqlConnection con = new SqlConnection(DBHelper.strConnString))
+            {
+                SqlCommand cmd = new SqlCommand(sql, con);
+                cmd.Parameters.AddWithValue("@CityN", CityN);
+
+                con.Open();
+
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    if (dr.Read())
+                    {
+                        Cityid = Convert.ToInt32(dr["CityId"]);
+                    }
+                }
+            }
+            if (Cityid == -1)
+            {
+                var SqlInsert = "insert into City values (@CityN,@Regionid);";
+                using (SqlConnection con = new SqlConnection(DBHelper.strConnString))
+                {
+                    SqlCommand cmd = new SqlCommand(SqlInsert, con);
+                    cmd.Parameters.AddWithValue("@CityN", CityN);
+                    cmd.Parameters.AddWithValue("@Regionid", Regionid);
+
+                    con.Open();
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        if (dr.Read())
+                        {
+                            Cityid = Convert.ToInt32(dr["CityId"]);
+                        }
+                    }
+                }
+
+            }
+
+            return Cityid;
+        }
+
+        private int GetRegionId(string RegionN)
+        {
+            var Regionid = -1;
+            var sql = "select RegionId from Region where RegionName = @RegionN";
+
+            using (SqlConnection con = new SqlConnection(DBHelper.strConnString))
+            {
+                SqlCommand cmd = new SqlCommand(sql, con);
+                cmd.Parameters.AddWithValue("@RegionN", RegionN);
+                con.Open();
+
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    if (dr.Read())
+                    {
+                        Regionid = Convert.ToInt32(dr["RegionId"]);
+                    }
+                }
+            }
+            return Regionid;
+        }
+
+        private int CheckSiteExist(string sitecode)
+        {
+            var siteid = -1;
+            var sql = "select SiteId from [Site] where SiteCode = @sitecode";
+
+            using (SqlConnection con = new SqlConnection(DBHelper.strConnString))
+            {
+                SqlCommand cmd = new SqlCommand(sql, con);
+                cmd.Parameters.AddWithValue("@sitecode", sitecode);
+                con.Open();
+
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    if (dr.Read())
+                    {
+                        siteid = Convert.ToInt32(dr["SiteId"]);
+                    }
+                }
+            }
+            return siteid;
+        }
     }
+    #endregion
+
 }
+

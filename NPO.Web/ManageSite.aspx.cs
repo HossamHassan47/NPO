@@ -3,6 +3,7 @@ using NPO.Code.FilterEntity;
 using NPO.Code.Repository;
 using System;
 using System.Data;
+using System.Drawing;
 using System.Web.UI.WebControls;
 
 namespace NPO.Web
@@ -11,6 +12,7 @@ namespace NPO.Web
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            
             if (!IsPostBack)
             {
                 BindCityList();
@@ -60,7 +62,9 @@ namespace NPO.Web
 
             entity.SiteName = txtAddSiteName.Text.ToString();
             entity.SiteCode = txtAddSiteCode.Text.ToString();
-
+            entity.RegionId = 5;
+            if (ddlType.SelectedIndex != 0) entity.CityId = Convert.ToInt32(ddlType.SelectedValue);
+            else { entity.SiteType = 0; }
             if (ddlAddCityName.SelectedIndex != 0) entity.CityId = Convert.ToInt32(ddlAddCityName.SelectedValue);
             else { entity.CityId = 0; }
             if (ddlAddCityZone.SelectedIndex != 0) entity.ZoneId = Convert.ToInt32(ddlAddCityZone.SelectedValue);
@@ -142,6 +146,7 @@ namespace NPO.Web
                 {
                     ddlAddCityName.SelectedValue = dataTable.Rows[index][4].ToString();
                 }
+
                 BindCityZonePopPanel();
                 if (Convert.ToUInt32(dataTable.Rows[index][5]) == 0)
                 {
@@ -149,7 +154,16 @@ namespace NPO.Web
                 }
                 else
                 {
-                    ddlAddCityZone.SelectedValue = dataTable.Rows[index][5].ToString();
+                    string s = dataTable.Rows[index][5].ToString();
+                    ddlAddCityZone.SelectedValue = s;
+                }
+                if (Convert.ToUInt32(dataTable.Rows[index][6]) == 0)
+                {
+                    ddlAddCityName.SelectedIndex = 0;
+                }
+                else
+                {
+                    ddlType.SelectedValue = dataTable.Rows[index][6].ToString();
                 }
 
                 BindControllersList();
@@ -213,7 +227,7 @@ namespace NPO.Web
                 else
                 {
                     gvSites.DataBind();
-                    DoneOrNot.Text = "YOu have problem";
+                    DoneOrNot.Text = "You have problem";
                 }
 
             }
@@ -271,13 +285,15 @@ namespace NPO.Web
         {
             SiteRepository siteRepository = new SiteRepository();
 
+           
+            int selectedValue;
+            if (ddlAddCityName.SelectedIndex != 0) { selectedValue = Convert.ToInt32(ddlAddCityName.SelectedValue); }
+            else { selectedValue = 0; }
+            ddlAddCityZone.DataSource = siteRepository.CityZone(selectedValue);
             ddlAddCityZone.DataTextField = "ZoneName";
             ddlAddCityZone.DataValueField = "ZoneId";
-            int selectedValue = 0;
-            if (ddlAddCityName.SelectedIndex != 0) { selectedValue = Convert.ToInt32(ddlAddCityName.SelectedValue); }
-            ddlAddCityZone.DataSource = siteRepository.CityZone(selectedValue);
             ddlAddCityZone.DataBind();
-            ddlAddCityZone.Items.Insert(0, "--Select Zone");
+            ddlAddCityZone.Items.Insert(0, "--Select Zone--");
 
         }
 
@@ -323,6 +339,8 @@ namespace NPO.Web
         {
             BindControllersList();
             BindCityListPopPanel();
+            BindCityZonePopPanel();
+            ddlType.SelectedValue = "0";
             setTextBoxesNull();
             btnAdd_ModalPopupExtender.Show();
         }
@@ -423,5 +441,118 @@ namespace NPO.Web
         }
         #endregion
 
+
+
+
+
+        private bool IsTemplateValid(DataTable sitesTemplate, out string message)
+        {
+            if (!sitesTemplate.Columns.Contains("Site_Code"))
+            {
+                message = "Error: Site_Code is missing.";
+                return false;
+            }
+
+            else if (!sitesTemplate.Columns.Contains("Site_Name"))
+            {
+                message = "Error: Site_Name is missing.";
+                return false;
+            }
+
+            else if (!sitesTemplate.Columns.Contains("City"))
+            {
+                message = "Error: City is missing.";
+                return false;
+            }
+
+            else if (!sitesTemplate.Columns.Contains("City_Zone"))
+            {
+                message = "Error: City_Zone is missing.";
+                return false;
+            }
+
+            else if (!sitesTemplate.Columns.Contains("Type"))
+            {
+                message = "Error: Type is missing.";
+                return false;
+            }
+
+            else if (!sitesTemplate.Columns.Contains("BSC"))
+            {
+                message = "Error: BSC is missing.";
+                return false;
+            }
+
+            else if (!sitesTemplate.Columns.Contains("RNC"))
+            {
+                message = "Error: Type is missing.";
+                return false;
+            }
+
+            else if (!sitesTemplate.Columns.Contains("LTE_City"))
+            {
+                message = "Error: LTE_City is missing.";
+                return false;
+            }
+
+            else if (!sitesTemplate.Columns.Contains("2G"))
+            {
+                message = "Error: 2G is missing.";
+                return false;
+            }
+
+            else if (!sitesTemplate.Columns.Contains("3G"))
+            {
+                message = "Error: 3G is missing.";
+                return false;
+            }
+            
+
+            else if (!sitesTemplate.Columns.Contains("LTE"))
+            {
+                message = "Error: LTE is missing.";
+                return false;
+            }
+
+            message = "OK";
+            return true;
+        }
+
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+            if (!FileUpload1.HasFile)
+            {
+                lblUploadResult.Text = "Please, select file to upload.";
+                lblUploadResult.ForeColor = Color.Red;
+                return;
+            }
+
+            // Save file to Temp folder
+            string filePath = @"~/Temp/Sites_" + DateTime.Now.Ticks + @".xlsx";
+            FileUpload1.SaveAs(Server.MapPath(filePath));
+
+            // Read file from temp folder
+            var eppLusExcel = new EppLusExcel();
+
+            var sites = eppLusExcel.GetDataSetFromExcel(Server.MapPath(filePath)).Tables[0];
+
+            // Validate template
+            string message;
+            bool isValid = this.IsTemplateValid(sites, out message);
+            // Upload sites
+            if (isValid) {
+                SiteRepository siteRepository = new SiteRepository();
+                bool update = siteRepository.UpdateDB_ExcelData(sites, out message);
+                if (update)
+                {
+                    gvSites.DataBind();
+                    lblUploadResult.Text = "";
+
+                }
+            }
+            // display upload result
+            lblUploadResult.Text = message;
+
+        }
     }
 }
