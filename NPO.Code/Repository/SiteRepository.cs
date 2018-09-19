@@ -12,10 +12,7 @@ namespace NPO.Code.Repository
 {
     public class SiteRepository
     {
-        public List<Site> GetAllSites()
-        {
-            return new List<Site>();
-        }
+      
 
 
         #region ObjectDataSource
@@ -334,7 +331,31 @@ from (
 
             return dataTable;
         }
+        public List<Site> GetAllSites()
+        {
+            List<Site> liSites = new List<Site>();
+            var sql = "select SiteId , SiteCode , SiteName  from [Site]";
 
+            using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
+            {
+                sqlConnection.Open();
+                SqlCommand sqlcomm = new SqlCommand(sql, sqlConnection);
+                using (SqlDataReader reader = sqlcomm.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Site site = new Site();
+                        site.SiteName = reader["SiteName"].ToString();
+                        site.SiteCode = reader["SiteCode"].ToString();
+                        site.SiteId = Convert.ToInt32(reader["SiteId"]);
+                        liSites.Add(site);
+                    }
+
+                }
+            }
+
+            return liSites;
+        }
 
     }
 }

@@ -14,6 +14,10 @@ namespace NPO.Code.FilterEntity
 
         public string dateTimeReceived { get; set; }
 
+        public string EmailRef { get; set; }
+
+        public int Status { get; set; }
+
         public string dateTimeReceivedOperater { get; set; }
 
 

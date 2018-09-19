@@ -54,6 +54,8 @@
                         <li><a id="liManageSite" runat="server" href="~/ManageSite">Sites</a></li>
                         <li><a id="liManageUsers" runat="server" href="~/ManageUsers">Users</a></li>
                         <li><a id="liManageController" runat="server" href="~/ManageContoller">Contollers</a></li>
+                        <li><a runat="server" href="~/ChangePassword">Change Password</a></li>
+
                     </ul>
                     
                       <ul class="nav navbar-nav navbar-right" style="margin-top:15px; margin-right:50px">

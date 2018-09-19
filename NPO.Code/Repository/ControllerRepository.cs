@@ -25,7 +25,7 @@ SELECT * from (
             [dbo].[Controller].[TechnologyId],
 			dbo.Technology.TechnologyName
     FROM [dbo].[Controller]
-    inner join dbo.Technology on [dbo].[Controller].TechnologyId = dbo.Technology.TechnologyId
+left outer join dbo.Technology on [dbo].[Controller].TechnologyId = dbo.Technology.TechnologyId
 	WHERE (1 = 1)  ";
 
             sql += getFilterString(filter);
@@ -49,7 +49,7 @@ SELECT * from (
 
             var sql = @"
 SELECT COUNT(*) FROM [dbo].[Controller]
-    inner join dbo.Technology on [dbo].[Controller].TechnologyId = dbo.Technology.TechnologyId
+    left outer join dbo.Technology on [dbo].[Controller].TechnologyId = dbo.Technology.TechnologyId
 where (1=1)" + getFilterString(filter);
 
 
@@ -92,10 +92,7 @@ where (1=1)" + getFilterString(filter);
 
         #endregion
 
-        public List<Controller> GetAllControllers()
-        {
-            return new List<Controller>();
-        }
+     
 
         public int InsertNewController(Controller controller)
         {
@@ -147,6 +144,8 @@ where (1=1)" + getFilterString(filter);
 
             return dataTable;
         }
+
+      
 
         public bool UpdateController(Controller controller)
         {
@@ -277,7 +276,54 @@ where (1=1)" + getFilterString(filter);
             return dataTable;
         }
 
+        
+        public List<Controller> GetAllControllers()
+        {
+            List<Controller> liController = new List<Controller>();
+            var sql = "SELECT [ControllerId] , [ControllerName] from Controller";
+            using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
+            {
+                sqlConnection.Open();
+                SqlCommand sqlcomm = new SqlCommand(sql, sqlConnection);
+                using (SqlDataReader reader = sqlcomm.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Controller con = new Controller();
+                        con.ControllerId = Convert.ToInt32(reader["ControllerId"]);
+                        con.ControllerName = reader["ControllerName"].ToString();
+                        liController.Add(con);
+                    }
+                    
+                }
+            }
 
+            return liController;
+        }
 
+        public List<int> GetControllerIdsBySiteId(int siteId)
+        {
+            List<int> conId = new List<int>();
+            var sql = @"Select ControlerId2g , ControlerId3g , ControlerId4g from [Site]  where [Site].SiteId = @siteId";
+            using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
+            {
+                sqlConnection.Open();
+                SqlCommand sqlcomm = new SqlCommand(sql, sqlConnection);
+                sqlcomm.Parameters.AddWithValue("@siteId", siteId);
+                using (SqlDataReader dr = sqlcomm.ExecuteReader())
+                {
+                    if (dr.Read())
+                    {
+                        conId.Add(Convert.ToInt32(dr["ControlerId2g"].ToString()));
+                        conId.Add(Convert.ToInt32(dr["ControlerId3g"].ToString()));
+                        conId.Add(Convert.ToInt32(dr["ControlerId4g"].ToString()));
+
+                    }
+                }
+            }
+
+            return conId;
+        }
+     
     }
 }

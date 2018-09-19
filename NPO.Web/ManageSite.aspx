@@ -52,7 +52,7 @@
                     CssClass="btn btn-default btnSearch" OnClick="btnSearch_Click" />
                 <asp:Button ID="btnAdd" runat="server" Text="ADD" Width="120px"
                     CssClass="btn btn-default btnAddNew" Font-Bold="True"
-                    Font-Size="Small" ForeColor="Black" />
+                    Font-Size="Small" ForeColor="Black" OnClick="btnAdd_Click" />
             </td>
 
         </tr>
@@ -69,24 +69,22 @@
     </ajaxToolKit:ModalPopupExtender>
     <asp:Label ID="DoneOrNot" runat="server"></asp:Label>
     <br />
-    <asp:Panel ID="PanelAdd" runat="server" Style="text-align: center; background-color: rgb(255, 251, 251); margin-top: 60px; margin-bottom: 0px;"
-        Width="515px" Height="530px" BackColor="#999999" BorderColor="#666666" BorderStyle="Solid">
+    <asp:Panel ID="PanelAdd" runat="server" Style="text-align: center; background-color: rgb(255, 251, 251); "
+        Width="470px" Height="430px" BackColor="#999999" BorderColor="#666666" BorderStyle="Solid">
 
         <div style="background-color: #006699;">
             <asp:Label ID="l1" runat="server" ForeColor="White" Text="Add Site " Font-Bold="True"
                 Font-Size="X-Large"></asp:Label>
         </div>
-        <br />
-
         <div>
             <asp:TextBox ID="txtid" runat="server" Visible="false" Text="-1"></asp:TextBox>
         </div>
-        <br />
+        
 
         <asp:UpdatePanel ID="UpdatePanel1" runat="server">
             <ContentTemplate>
 
-                <table>
+                <table class="zebra" style="align-items:center">
 
                     <tr>
                         <td></td>
@@ -98,6 +96,8 @@
                             <asp:TextBox ID="txtAddSiteCode" runat="server" Width="299px"></asp:TextBox>
                         </td>
                     </tr>
+                      
+                    
                     <tr>
                         <td></td>
                         <td></td>
@@ -109,6 +109,7 @@
                             <asp:TextBox ID="txtAddSiteName" runat="server" Width="299px"></asp:TextBox>
                         </td>
                     </tr>
+                    
                     <tr>
                         <td></td>
                         <td></td>
@@ -121,9 +122,7 @@
                             </asp:DropDownList>
                         </td>
                     </tr>
-                    <tr>
-                        <td></td>
-                    </tr>
+                    
                     <tr>
                         <td></td>
                         <td></td>
@@ -136,9 +135,7 @@
                             </asp:DropDownList>
                         </td>
                     </tr>
-                    <tr>
-                        <td></td>
-                    </tr>
+                     
                     <tr>
                         <td></td>
                         <td></td>
@@ -150,9 +147,7 @@
                             </asp:DropDownList>
                         </td>
                     </tr>
-                    <tr>
-                        <td></td>
-                    </tr>
+                    
                     <tr>
                         <td></td>
                         <td></td>
@@ -164,9 +159,7 @@
                             </asp:DropDownList>
                         </td>
                     </tr>
-                    <tr>
-                        <td></td>
-                    </tr>
+                      
                     <tr>
                         <td></td>
                         <td></td>

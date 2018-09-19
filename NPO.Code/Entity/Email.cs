@@ -28,6 +28,8 @@ namespace NPO.Code.Entity
 
         public int TicketId { get; set; }
 
+        public string EmailRef { get; set; }
+
         public bool IsMain { get; set; }
 
         public DateTime DateTimeReceived { get; set; }

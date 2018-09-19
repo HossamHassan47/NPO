@@ -2,11 +2,7 @@
 using NPO.Code.FilterEntity;
 using NPO.Code.Repository;
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
 using System.Web.UI.WebControls;
 
 namespace NPO.Web
@@ -113,7 +109,6 @@ namespace NPO.Web
 
             return entity;
         }
-
 
         protected void DsGvSites_Selecting(object sender, ObjectDataSourceSelectingEventArgs e)
         {
@@ -242,6 +237,7 @@ namespace NPO.Web
             ddlControllers3g.Visible = false;
             ddlControllers4g.Visible = false;
         }
+
         #region DDlBind
 
         private void BindCityList()
@@ -426,9 +422,6 @@ namespace NPO.Web
             }
         }
         #endregion
-
-
-       
 
     }
 }

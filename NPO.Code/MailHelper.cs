@@ -30,9 +30,7 @@ namespace NPO.Code
 
             return _service;
         }
-
-
-
+    
         public static bool SendMail(EntityEmail email)
         {
             try

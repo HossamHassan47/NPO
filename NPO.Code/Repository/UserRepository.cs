@@ -32,6 +32,8 @@ namespace NPO.Code.Repository
             return dataTable;
         }
 
+       
+
         private string getSelectStatment(UserFilter filter)
         {
             var Sql = "SELECT * FROM [NPODB].[dbo].[User] WHERE (1 = 1) ";
@@ -174,7 +176,43 @@ namespace NPO.Code.Repository
             }
 
         }
+        public bool ChangePassword(string oldPassword, string newPassword,int userID)
+        {
+            int userId = CheckoldPassword(oldPassword, userID);
+            if (userId != -1 )
+            {
+                var sql = "Update [User] Set Password = '" + newPassword + "' Where UserID = " + userId; 
+                using (SqlConnection con = new SqlConnection(DBHelper.strConnString))
+                {
+                    SqlCommand sqlcomm = new SqlCommand(sql, con);
+                    con.Open();
+                    sqlcomm.ExecuteNonQuery();
+                }
+                return true;
 
+            }
 
+            return false;
+        }
+
+        private int CheckoldPassword(string oldPassword , int userID)
+        {
+            var sql = "Select UserID from [User] where Password = '" + oldPassword + "' AND UserID = "+ userID ;
+            int emailId = -1; 
+            using(SqlConnection con = new SqlConnection(DBHelper.strConnString))
+            {
+                SqlCommand sqlcomm = new SqlCommand(sql,con);
+                con.Open();
+                using (SqlDataReader dr = sqlcomm.ExecuteReader())
+                {
+                    if (dr.Read())
+                    {
+                        emailId = Convert.ToInt32(dr["UserID"]);
+                        return emailId; 
+                    }
+                }
+            }
+            return -1;
+        }
     }
 }
