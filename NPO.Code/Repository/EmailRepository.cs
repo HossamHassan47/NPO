@@ -40,7 +40,7 @@ from (
                     left outer join dbo.[ControllerUser] on [ControllerUser].[ControllerId] = EmailController.[ControllerId]
                     left outer join dbo.[User] on [User].[UserID] = ControllerUser.[UserId]
                     left outer join EmailStatus on EmailStatus.ID = Email.EmailStatus
-                    inner join EmailUser on Email.EmailId = EmailUser.EmailId;
+                    
 
                 WHERE  ParentEmailId IS NULL  AND  [User].[UserID] = " + userId;
             }else
