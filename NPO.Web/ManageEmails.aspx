@@ -109,52 +109,122 @@
         BehaviorID="btnPanalAssign_ModalPopupExtender"
         TargetControlID="btnPanalAssign"
         ID="btnPanalAssign_ModalPopupExtender"
-        PopupControlID="PanalAssign" BackgroundCssClass="ModalPopupBG"
+        PopupControlID="PanalAssign"  BackgroundCssClass="ModalPopupBG"
         CancelControlID="btnCancelAssign">
     </ajaxToolkit:ModalPopupExtender>
     <asp:Panel ID="PanalAssign" runat="server" BackColor="White" CssClass="PanalAssignStyle" Height="400px">
         <asp:ImageButton ID="btnCancelAssign" runat="server" ImageUrl="~/Content/icExit.png" CssClass="PanelBodyStylebutton" />
-        <asp:TextBox ID="txtEmailId" Style="display: none" runat="server" Text="-1"></asp:TextBox>
+        <asp:TextBox ID="txtEmailId" style="display:none" runat="server" Text="-1"></asp:TextBox>
         <asp:UpdatePanel ID="UpdatePanel1" runat="server">
             <ContentTemplate>
                 <table class="zebra">
-
                     <tr>
-                        <td>Controller:</td>
+                        <td>Controllers:</td>
                         <td>
-                            <asp:DropDownList ID="DropDownListControllers" runat="server" Width="300px"
-                                OnSelectedIndexChanged="DropDownListControllers_SelectedIndexChanged" AutoPostBack="true">
-                                <asp:ListItem Value="0">"--Select Controller--"</asp:ListItem>
+                            <asp:DropDownList runat="server" ID="ddlContrcoller" Width="300px">
+                               <asp:ListItem Value="0">"--Select Controller--"</asp:ListItem>
                             </asp:DropDownList>
                         </td>
+                        <td>
+                            <asp:TextBox ID="txtConId" style="display:none" runat="server" Text="-1"></asp:TextBox>
+                                    <asp:Button ID="AddController" runat="server" Text="Add" OnClick="AddController_Click" />
+                        </td>
                     </tr>
+                   
                 </table>
                 <br />
-                <asp:Repeater ID="RepeaterAssignUsers" runat="server">
+                <asp:Repeater ID="RepeaterController" runat="server">
                     <HeaderTemplate>
                         <table class="zebra">
                             <tr style="font-weight: bold;">
-                                <td>User Name</td>
-                                <td>User Email</td>
-
+                   
+                                <td>Controller Name</td>
+                                <td>Delete</td>
                             </tr>
                     </HeaderTemplate>
                     <ItemTemplate>
                         <tr>
-                            <td><%#Eval("FullName")%></td>
-                            <td><%#Eval("EmailAddress")%></td>
+                            
+        
+                           
+                            <td><%#Eval("ControllerName")%></td>
+                           <td><asp:ImageButton ID="DeleteController" runat="server" ImageUrl="~/Content/icExit.png" OnClick="DeleteController_Click" CommandArgument='<%#Eval("EmailControllerId")%>'/> 
 
-
+                           </td> 
                         </tr>
                     </ItemTemplate>
                     <FooterTemplate>
                         </table>
                     </FooterTemplate>
                 </asp:Repeater>
+
             </ContentTemplate>
         </asp:UpdatePanel>
 
-        <asp:Button runat="server" Text="Assign" ID="btnAssign" OnClick="btnAssign_Click" />
+        <asp:Button runat="server" Text="Assign" ID="btnAssign"  OnClick="btnAssign_Click"/>
+    </asp:Panel>
+
+    <asp:Button ID="btnExAddUsers" runat="server" Style="display:none" />
+    <ajaxToolkit:ModalPopupExtender 
+        runat="server" 
+        BehaviorID="btnExAddUsers_ModalPopupExtender"
+         TargetControlID="btnExAddUsers" 
+        ID="btnExAddUsers_ModalPopupExtender"
+        PopupControlID="PanalAddUsers"
+        >
+
+    </ajaxToolkit:ModalPopupExtender>
+
+    <asp:Panel ID="PanalAddUsers" runat="server" BackColor="White" CssClass="PanalAssignStyle" Height="400px">
+        <asp:ImageButton ID="ImageButton1" runat="server" ImageUrl="~/Content/icExit.png" CssClass="PanelBodyStylebutton" />
+        
+
+        <asp:UpdatePanel ID="UpdatePanel2" runat="server">
+            <ContentTemplate>
+
+                <table class="zebra">
+                    <tr>
+                        <td>Users:</td>
+                        <td>
+                            <asp:DropDownList runat="server" ID="ddlUsers" Width="300px">
+                               <asp:ListItem Value="0">"--Select User--"</asp:ListItem>
+                            </asp:DropDownList>
+                        </td>
+                        <td>
+                            <asp:TextBox ID="txtEId" style="display:none" runat="server" Text="-1"></asp:TextBox>
+                                    <asp:Button ID="AddUserEmail" runat="server" Text="Add" OnClick="AddUserEmail_Click" />
+                        </td>
+                    </tr>
+                   
+                </table>
+                <br />
+                <asp:Repeater ID="RepeaterUsersEmail" runat="server">
+                    <HeaderTemplate>
+                        <table class="zebra">
+                            <tr style="font-weight: bold;">
+                                <td>User Name</td>
+                                <td>User Email</td>
+                                <td>Delete</td>
+                            </tr>
+                    </HeaderTemplate>
+                    <ItemTemplate>
+                        <tr>
+                            <td><%#Eval("FullName")%></td>
+                            <td><%#Eval("EmailAddress")%></td>
+                           <td><asp:ImageButton ID="DeleteUserEmail" runat="server" ImageUrl="~/Content/icExit.png" OnClick="DeleteUserEmail_Click" CommandArgument='<%#Eval("EmailUserId")%>'/> 
+
+                           </td> 
+                        </tr>
+                    </ItemTemplate>
+                    <FooterTemplate>
+                        </table>
+                    </FooterTemplate>
+                </asp:Repeater>
+
+            </ContentTemplate>
+        </asp:UpdatePanel>
+
+        <asp:Button ID="btnAssign1" runat="server" OnClick="btnAssign1_Click" Text="Assign" />
     </asp:Panel>
 
     <asp:GridView ID="gvEmails" runat="server"
@@ -182,8 +252,16 @@
             <asp:TemplateField>
                 <ItemTemplate>
                     <asp:ImageButton ID="btnAssign" runat="server" ImageUrl='<%#(bool)Eval("IsAssign") ? "~/Content/icAssigned.png":"~/Content/icNotAssign.png" %>' CommandName="Assign"
-                        CommandArgument='<%# Eval("EmailId").ToString()%>'
+                        CommandArgument='<%# Eval("EmailId").ToString()+","+Eval("IsAssign").ToString()%>'
                         AlternateText="Body" ToolTip="Assign" />
+                      
+                </ItemTemplate>
+            </asp:TemplateField>
+              <asp:TemplateField>
+                <ItemTemplate>
+                     <asp:ImageButton ID="btnUser" runat="server" ImageUrl="~/Content/icAddUser.png" CommandName="UserAdd" 
+                        CommandArgument='<%#Eval("EmailId") %>' />
+
                       
                 </ItemTemplate>
             </asp:TemplateField>
@@ -220,7 +298,7 @@
             <asp:TemplateField>
                 <ItemTemplate>
                     <asp:ImageButton ID="btnDownload" runat="server" ImageUrl="~/Content/icDownload.png" CommandName="download"
-                        CommandArgument='<%#Eval("EmailId")%>' Width="20px" Height="20px" ToolTip="Download Email" />
+                        CommandArgument='<%#Eval("EmailId")%>' Width="20px" Height="20px" ToolTip="Download Email"  />
                 </ItemTemplate>
             </asp:TemplateField>
 

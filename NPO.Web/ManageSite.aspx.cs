@@ -12,7 +12,7 @@ namespace NPO.Web
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            
+
             if (!IsPostBack)
             {
                 BindCityList();
@@ -171,7 +171,7 @@ namespace NPO.Web
                 if (Convert.ToInt32(dataTable.Rows[index][7]) == 1)
                 {
                     txt2G.Checked = true;
-                    if(Convert.ToInt32(dataTable.Rows[index][10]) == 0) { ddlControllers2g.SelectedIndex = 0; }
+                    if (Convert.ToInt32(dataTable.Rows[index][10]) == 0) { ddlControllers2g.SelectedIndex = 0; }
                     else
                     {
                         ddlControllers2g.SelectedValue = dataTable.Rows[index][10].ToString();
@@ -187,7 +187,7 @@ namespace NPO.Web
                 {
                     txt3G.Checked = true;
                     if (Convert.ToInt32(dataTable.Rows[index][11]) == 0) { ddlControllers3g.SelectedIndex = 0; }
-                    else  ddlControllers3g.SelectedValue = dataTable.Rows[index][11].ToString();
+                    else ddlControllers3g.SelectedValue = dataTable.Rows[index][11].ToString();
 
                     ddlControllers3g.Visible = true;
 
@@ -285,7 +285,7 @@ namespace NPO.Web
         {
             SiteRepository siteRepository = new SiteRepository();
 
-           
+
             int selectedValue;
             if (ddlAddCityName.SelectedIndex != 0) { selectedValue = Convert.ToInt32(ddlAddCityName.SelectedValue); }
             else { selectedValue = 0; }
@@ -506,7 +506,7 @@ namespace NPO.Web
                 message = "Error: 3G is missing.";
                 return false;
             }
-            
+
 
             else if (!sitesTemplate.Columns.Contains("LTE"))
             {
@@ -530,7 +530,6 @@ namespace NPO.Web
             // Save file to Temp folder
             string filePath = @"~/Temp/Sites_" + DateTime.Now.Ticks + @".xlsx";
             FileUpload1.SaveAs(Server.MapPath(filePath));
-
             // Read file from temp folder
             var eppLusExcel = new EppLusExcel();
 
@@ -540,9 +539,10 @@ namespace NPO.Web
             string message;
             bool isValid = this.IsTemplateValid(sites, out message);
             // Upload sites
-            if (isValid) {
+            if (isValid)
+            {
                 SiteRepository siteRepository = new SiteRepository();
-                bool update = siteRepository.UpdateDB_ExcelData(sites, out message);
+                bool update = UpdateDB_ExcelData(sites, out message);
                 if (update)
                 {
                     gvSites.DataBind();
@@ -553,6 +553,125 @@ namespace NPO.Web
             // display upload result
             lblUploadResult.Text = message;
 
+        }
+
+        public bool UpdateDB_ExcelData(DataTable sites, out string message)
+        {
+
+            SiteRepository siteRep = new SiteRepository();
+            sites.Columns.Add("Result", typeof(string));
+            foreach (DataRow row in sites.Rows)
+            {
+
+                Site site = new Site();
+              
+                site.RegionId = siteRep.GetRegionId(row["Region"].ToString().Trim());
+                site.SiteName = row["Site_Name"].ToString().Trim();
+                site.SiteCode = row["Site_Code"].ToString().Trim();
+                site.CityId = siteRep.GetCityId(row["City"].ToString().Trim(), site.RegionId);
+                site.ZoneId = siteRep.GetCityZoneId(row["City_zone"].ToString().Trim(), site.CityId);
+                site.SiteType = siteRep.GetTypeId(row["Type"].ToString().Trim());
+
+                if (row["BSC"].ToString().Trim() == "#N/A" || row["BSC"].ToString().Trim() == "" || row["BSC"].ToString().Trim() == "NaN")
+                {
+                    site.ControlerId2g = 0;
+                }
+                else
+                {
+                    site.ControlerId2g = siteRep.GetCOntrollerId_2G(row["BSC"].ToString());
+                }
+                if (row["RNC"].ToString().Trim() == "#N/A" || row["RNC"].ToString().Trim() == "" || row["RNC"].ToString().Trim() == "NaN")
+                {
+                    site.ControlerId3g = 0;
+                }
+                else
+                {
+                    site.ControlerId3g = siteRep.GetCOntrollerId_3G(row["RNC"].ToString());
+                }
+
+                if (row["LTE_City"].ToString().Trim() == "#N/A" || (row["LTE_City"].ToString().Trim() == "") || (row["LTE_City"].ToString().Trim() == "NaN"))
+                {
+                    site.ControlerId4g = 0;
+                }
+                else
+                {
+                    site.ControlerId4g = siteRep.GetCOntrollerId_4G(row["LTE_City"].ToString());
+                }
+
+                site._2g = Convert.ToBoolean((row["2G"]));
+                site._3g = Convert.ToBoolean((row["3G"]));
+                site._4g = Convert.ToBoolean((row["LTE"]));
+
+
+                if (site.RegionId < 0)
+                {
+                    row["Result"] = "Missing region";
+                    continue;
+                }
+                if (site.CityId < 0)
+                {
+                    row["Result"] = "Missing city";
+                    continue;
+                }
+                if (site.ZoneId < 0)
+                {
+                    row["Result"] = "Missing zone";
+                    continue;
+                }
+                if (site._2g && site.ControlerId2g == 0)
+                {
+                    row["Result"] = "Missing controller 2G name";
+                    continue;
+                }
+                if (site._3g && site.ControlerId3g == 0)
+                {
+                    row["Result"] = "Missing  controller 3G name";
+                    continue;
+                }
+                if (site._4g && site.ControlerId4g == 0)
+                {
+                    row["Result"] = "Missing  controller 4G name";
+                    continue;
+                }
+
+                int check = siteRep.CheckSiteExist(row["Site_Code"].ToString());
+
+                if (check > -1)
+                {
+                    site.SiteId = check;
+                    bool updated = siteRep.UpdateSite(site);
+                    if (updated)
+                    {
+                        row["Result"] = "Updated successfully";
+                    }
+                    else
+                    {
+                        row["Result"] = "";
+
+                    }
+                }
+                else
+                {
+                    int inserted = siteRep.InsertNewSite(site);
+                    if (inserted != -1)
+                    {
+                        row["Result"] = "Inserted successfully";
+
+                    }
+                    else
+                    {
+                        row["Result"] = "";
+
+                    }
+                }
+
+            }
+            message = "Done";
+            lblUploadResult.Text = message;
+            gvSites.DataBind();
+            EppLusExcel down = new EppLusExcel();
+            down.ExporttoExcel(sites, "Sheet1");
+            return true;
         }
     }
 }

@@ -28,16 +28,7 @@ namespace NPO.Web {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl txtEmailAddress;
-        
-        /// <summary>
-        /// EmailAddressFormatValidator control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RegularExpressionValidator EmailAddressFormatValidator;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtEmailAddress;
         
         /// <summary>
         /// txtPassword control.

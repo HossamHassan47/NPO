@@ -8,7 +8,9 @@ namespace NPO.Code.Entity
 {
    public  class LoginEntity
     {
-        public string EmailAdress { get; set; }
+        public string UserName { get; set; }
         public string Password { get; set; }
+
+       
     }
 }

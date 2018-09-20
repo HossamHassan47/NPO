@@ -17,16 +17,17 @@ namespace NPO.Web
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["isAdmin"] != null) { 
-            if ((bool)Session["isAdmin"])
+            if (Session["isAdmin"] != null)
             {
-                gvEmails.Columns[1].Visible = false;
-            }
-            else
-            {
-                gvEmails.Columns[0].Visible = false;
-
-             }
+                if ((bool)Session["isAdmin"])
+                {
+                    gvEmails.Columns[2].Visible = false;
+                }
+                else
+                {
+                    gvEmails.Columns[0].Visible = false;
+                    gvEmails.Columns[1].Visible = false;
+                }
             }
             if (!IsPostBack)
             {
@@ -80,31 +81,31 @@ namespace NPO.Web
                 EmailRepository downloadMail = new EmailRepository();
                 downloadMail.DownloadMail(id);
             }
+            if (e.CommandName == "UserAdd")
+            {
+                txtEId.Text = e.CommandArgument.ToString();
+
+                BindDDlUser();
+                BindRepeater();
+                btnExAddUsers_ModalPopupExtender.Show();
+            }
             if (e.CommandName == "Assign")
             {
                 if ((bool)Session["isAdmin"])
                 {
-                    int emailId = Convert.ToInt32(e.CommandArgument);
+                    // 1212,32,1
+                    var values = e.CommandArgument.ToString().Split(',');
 
-                    //// 1212,32,1
-                    //var values = e.CommandArgument.ToString().Split(',');
+                    txtEmailId.Text = Convert.ToInt32(values[0]).ToString();
+                    BindDDlController();
+                    BindControllerRepeater();
+                    if (values[1] == "1")
+                    {
+                    }
+                    else
+                    {
 
-                    //txtEmailId.Text = Convert.ToInt32(values[0]).ToString();
-                    //if (!(values[1] == ""))
-                    //{
-                    //    DropDownListTech.SelectedValue = values[2];
-                    //    this.BindControllersList(values[2]);
-                    //    DropDownListControllers.SelectedValue = values[1];
-                    //    this.BindUsersList(values[1]);
-                    //}
-                    //else
-                    //{
-                    //    DropDownListTech.SelectedIndex = 0;
-                    //    DropDownListControllers.SelectedIndex = 0;
-                    //    RepeaterAssignUsers.DataSource = null;
-                    //    RepeaterAssignUsers.DataBind();
-
-                    //}
+                    }
 
                     btnPanalAssign_ModalPopupExtender.Show();
                 }
@@ -114,7 +115,8 @@ namespace NPO.Web
                 var arg = e.CommandArgument.ToString().Split(',');
                 if (!(bool)Session["isAdmin"])
                 {
-                    if (!(arg[1] == "3")) {
+                    if (!(arg[1] == "3"))
+                    {
                         int emailId = Convert.ToInt32(arg[0]);
                         EmailRepository changeStatus = new EmailRepository();
                         changeStatus.ChangeStatusInprogress(emailId);
@@ -135,19 +137,20 @@ namespace NPO.Web
 
         protected void gvEmails_RowDataBound(object sender, GridViewRowEventArgs e)
         {
-          
+
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
                 e.Row.Cells[0].Width = new Unit("3%");
                 e.Row.Cells[1].Width = new Unit("3%");
-                e.Row.Cells[2].Width = new Unit("10%");
-                e.Row.Cells[3].Width = new Unit("20%");
-                e.Row.Cells[4].Width = new Unit("30%");
-                e.Row.Cells[5].Width = new Unit("20%");
+                e.Row.Cells[2].Width = new Unit("5%");
+                e.Row.Cells[3].Width = new Unit("10%");
+                e.Row.Cells[4].Width = new Unit("20%");
+                e.Row.Cells[5].Width = new Unit("30%");
                 e.Row.Cells[6].Width = new Unit("20%");
-                e.Row.Cells[7].Width = new Unit("3%");
+                e.Row.Cells[7].Width = new Unit("20%");
                 e.Row.Cells[8].Width = new Unit("3%");
                 e.Row.Cells[9].Width = new Unit("3%");
+                e.Row.Cells[10].Width = new Unit("3%");
 
 
             }
@@ -168,17 +171,17 @@ namespace NPO.Web
 
             dataTable = controllers.GetControllerAssign(int.Parse(technologyId));
 
-            DropDownListControllers.DataValueField = "ControllerId";
-            DropDownListControllers.DataTextField = "ControllerName";
-            DropDownListControllers.DataSource = dataTable;
-            DropDownListControllers.DataBind();
-            DropDownListControllers.Items.Insert(0, "--Select Controller--");
+            ddlContrcoller.DataValueField = "ControllerId";
+            ddlContrcoller.DataTextField = "ControllerName";
+            ddlContrcoller.DataSource = dataTable;
+            ddlContrcoller.DataBind();
+            ddlContrcoller.Items.Insert(0, "--Select Controller--");
 
         }
 
         protected void DropDownListControllers_SelectedIndexChanged(object sender, EventArgs e)
         {
-            this.BindUsersList(DropDownListControllers.SelectedValue);
+            this.BindUsersList(ddlContrcoller.SelectedValue);
 
             btnPanalAssign_ModalPopupExtender.Show();
 
@@ -190,8 +193,8 @@ namespace NPO.Web
         {
             EmailRepository getControllerAssignUsers = new EmailRepository();
             DataTable dataTable = getControllerAssignUsers.GetControllerAssignUsers(Convert.ToInt32(controllerId));
-            RepeaterAssignUsers.DataSource = dataTable;
-            RepeaterAssignUsers.DataBind();
+            RepeaterUsersEmail.DataSource = dataTable;
+            RepeaterUsersEmail.DataBind();
 
         }
 
@@ -222,6 +225,103 @@ namespace NPO.Web
 
         }
 
+        protected void btnAssign1_Click(object sender, EventArgs e)
+        {
+            int EmailId = Convert.ToInt32(txtEId.Text);
+            // int UserID = Convert.ToInt32(ddlUsers.SelectedValue);
+            EmailRepository emailReb = new EmailRepository();
+            // bool updated = emailReb.UpdateControllerId(UserId, EmailId);
+            gvEmails.DataBind();
+            DataTable dataTable = emailReb.GetEmailAssignUsers(EmailId);
+            string emails = "";
+            for (int i = 0; i < dataTable.Rows.Count; i++)
+            {
+                emails += dataTable.Rows[i][2].ToString() + ",";
 
+            }
+
+            EntityEmail email = new EntityEmail();
+
+            email.To = emails;
+            email.Body = "you have a new Assign";
+            email.Subject = "NPO Tool";
+
+            MailHelper.SendMail(email);
+
+
+        }
+
+
+        private void BindRepeater()
+        {
+            EmailRepository EmailUserReb = new EmailRepository();
+            DataTable dataTable = EmailUserReb.GetEmailAssignUsers(Convert.ToInt32(txtEId.Text));
+            RepeaterUsersEmail.DataSource = dataTable;
+            RepeaterUsersEmail.DataBind();
+
+        }
+        private void BindDDlUser()
+        {
+            EmailRepository users = new EmailRepository();
+            DataTable Users = users.GetUsers();
+
+            ddlUsers.DataValueField = "UserID";
+            ddlUsers.DataTextField = "FullName";
+            ddlUsers.DataSource = Users;
+            ddlUsers.DataBind();
+            ddlUsers.Items.Insert(0, "--Select User--");
+        }
+        protected void AddUserEmail_Click(object sender, EventArgs e)
+        {
+            EmailRepository EmailUserReb = new EmailRepository();
+            EmailUserReb.AddUserEmail(Convert.ToInt32(ddlUsers.SelectedValue), Convert.ToInt32(txtEId.Text));
+            BindRepeater();
+        }
+
+        protected void DeleteUserEmail_Click(object sender, ImageClickEventArgs e)
+        {
+            var btn = (ImageButton)sender;
+            int EmailUserId = Convert.ToInt32(btn.CommandArgument);
+            EmailRepository EmailUserReb = new EmailRepository();
+            EmailUserReb.DeleteUserEmail(EmailUserId);
+            BindRepeater();
+        }
+
+        private void BindControllerRepeater()
+        {
+            EmailRepository EmailControllerReb = new EmailRepository();
+            DataTable dataTable = EmailControllerReb.GetEmailAssignController(Convert.ToInt32(txtEmailId.Text));
+            RepeaterController.DataSource = dataTable;
+            RepeaterController.DataBind();
+
+        }
+
+        private void BindDDlController()
+        {
+            EmailRepository controllers = new EmailRepository();
+            DataTable Controllers = controllers.GetControllers();
+
+            ddlContrcoller.DataValueField = "ControllerId";
+            ddlContrcoller.DataTextField = "ControllerName";
+            ddlContrcoller.DataSource = Controllers;
+            ddlContrcoller.DataBind();
+            ddlContrcoller.Items.Insert(0, "--Select Controller--");
+        }
+
+        protected void AddController_Click(object sender, EventArgs e)
+        {
+            EmailRepository ControllerReb = new EmailRepository();
+            ControllerReb.AddEmailController(Convert.ToInt32(ddlContrcoller.SelectedValue), Convert.ToInt32(txtEmailId.Text));
+            BindControllerRepeater();
+        }
+        protected void DeleteController_Click(object sender, ImageClickEventArgs e)
+        {
+            var btn = (ImageButton)sender;
+            int EmailConId = Convert.ToInt32(btn.CommandArgument);
+            EmailRepository EmailControllerReb = new EmailRepository();
+            EmailControllerReb.DeleteEmailController(EmailConId);
+            BindControllerRepeater();
+
+        }
     }
 }

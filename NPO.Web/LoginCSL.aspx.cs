@@ -20,7 +20,7 @@ namespace NPO.Web
         private LoginEntity GetLoginEntity()
         {
             LoginEntity entity = new LoginEntity();
-            entity.EmailAdress = txtEmailAddress.Value.ToString();
+            entity.UserName = txtEmailAddress.Value.ToString();
             entity.Password = txtPassword.Value.ToString();
 
             return entity;

@@ -19,8 +19,8 @@ namespace NPO.Code.Repository
         {
             using (SqlConnection conDatabase = new SqlConnection(DBHelper.strConnString))
             {
-                SqlCommand cmd = new SqlCommand("select * from dbo.[User] where  EmailAddress = @emailAdress and Password = @password;");
-                cmd.Parameters.AddWithValue("@emailAdress",emailAndPassword.EmailAdress);
+                SqlCommand cmd = new SqlCommand("select * from dbo.[User] where  NokiaUserName = @emailAdress and Password = @password;");
+                cmd.Parameters.AddWithValue("@emailAdress",emailAndPassword.UserName);
                 cmd.Parameters.AddWithValue("@password",emailAndPassword.Password);
                 cmd.Connection = conDatabase;
                 conDatabase.Open();

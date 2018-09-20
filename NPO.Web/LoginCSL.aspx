@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ManageLogin.aspx.cs" Inherits="NPO.Web.ManageLogin" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="LoginCSL.aspx.cs" Inherits="NPO.Web.ManageLogin" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
 <!DOCTYPE html>
@@ -39,14 +39,8 @@
         </div>
         <div class="wrap">
 
-            <input type="email" placeholder="Email Address" runat="server" id="txtEmailAddress">
-            <asp:RegularExpressionValidator ID="EmailAddressFormatValidator" runat="server"
-                ControlToValidate="txtEmailAddress"
-                ErrorMessage="RegularExpressionValidator"
-                Display="Dynamic"
-                ValidationExpression="\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*\s*"
-                EnableClientScript="False">Email Address is not valid.<br />       
-            </asp:RegularExpressionValidator>
+            <input type="text" placeholder="User Name" runat="server" id="txtEmailAddress">
+            
             <br />
             <input type="password" placeholder="Password" runat="server" id="txtPassword">
 
@@ -81,7 +75,7 @@
             <asp:UpdatePanel ID="UpdatePanel1" runat="server" style="height: 300px;">
                 <ContentTemplate>
                     <asp:Label ID="l1" runat="server" ForeColor="Black" Text="Your Email :  " Font-Bold="True"></asp:Label>
-                    <asp:TextBox ID="txtEmail" runat="server" Width="300px" TextMode="Email" Height="29px" placeholder="Email address"></asp:TextBox>
+                    <asp:TextBox ID="txtEmail" runat="server" Width="300px" Height="29px" placeholder="Email address"></asp:TextBox>
                   
                     <br />
                    

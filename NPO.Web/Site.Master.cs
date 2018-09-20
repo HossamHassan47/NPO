@@ -93,7 +93,7 @@ namespace NPO.Web
         {
             Session["CurrentUser"] = null;
 
-            Response.Redirect("ManageLogin.aspx");
+            Response.Redirect("LoginCSL.aspx");
         }
 
     }

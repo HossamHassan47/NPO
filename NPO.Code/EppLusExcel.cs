@@ -9,7 +9,7 @@ using System.Drawing;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
-
+using System.Web;
 
 public class EppLusExcel
 {
@@ -278,12 +278,44 @@ public class EppLusExcel
 
         var file = new FileInfo(filepath);
 
-        using (var pck = new ExcelPackage(file))
+        //using (var pck = new ExcelPackage(file))
+        //{
+        //    var sheet = pck.Workbook.Worksheets.Add("ForecastPlanned");
+        //    this.AddTableToSheet(sheet, dt);
+        //    pck.Save();
+        //}
+        using (ExcelPackage pck = new ExcelPackage(file))
         {
-            var sheet = pck.Workbook.Worksheets.Add("ForecastPlanned");
-            this.AddTableToSheet(sheet, dt);
+            ExcelWorksheet ws = pck.Workbook.Worksheets.Add("Accounts");
+            ws.Cells["A1"].LoadFromDataTable(dt, true);
             pck.Save();
         }
+    }
+    public void ExporttoExcel(DataTable table, string filename)
+    {
+        HttpContext.Current.Response.Clear();
+        HttpContext.Current.Response.ClearContent();
+        HttpContext.Current.Response.ClearHeaders();
+        HttpContext.Current.Response.Buffer = true;
+        HttpContext.Current.Response.ContentEncoding = System.Text.Encoding.UTF8;
+        HttpContext.Current.Response.Cache.SetCacheability(HttpCacheability.NoCache);
+        HttpContext.Current.Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        HttpContext.Current.Response.AddHeader("content-disposition", "attachment;filename=SitesUploadResult.xlsx");
+
+
+        using (ExcelPackage pack = new ExcelPackage())
+        {
+            ExcelWorksheet ws = pack.Workbook.Worksheets.Add(filename);
+            
+            ws.Cells["A1"].LoadFromDataTable(table, true);
+            var ms = new System.IO.MemoryStream();
+            pack.SaveAs(ms);
+            ms.WriteTo(HttpContext.Current.Response.OutputStream);
+        }
+
+        HttpContext.Current.Response.Flush();
+        HttpContext.Current.Response.End();
+
     }
 
     public void WriteToExistFile(DataTable dt, string filepath, string sheetName)
@@ -309,7 +341,7 @@ public class EppLusExcel
         {
             return;
         }
-
+         
         var file = new FileInfo(filepath);
 
         using (var pck = new ExcelPackage(file))
@@ -1097,7 +1129,7 @@ public class EppLusExcel
             }
 
             // Add new Column to save error list             
-            resultDataTable.Columns.Add("ListOfEpPlusErrorType", typeof(List<EpPlusErrorType>));
+           // resultDataTable.Columns.Add("ListOfEpPlusErrorType", typeof(List<EpPlusErrorType>));
 
             // Read Rows
             var startRow = this.HasHeader ? 2 : 1;
@@ -1198,7 +1230,7 @@ public class EppLusExcel
                 }
 
                 // Set Errors Cell Value
-                row["ListOfEpPlusErrorType"] = lpErrors;
+             //   row["ListOfEpPlusErrorType"] = lpErrors;
 
                 // Add the Row to the final result data table
                 resultDataTable.Rows.Add(row);
