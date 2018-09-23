@@ -252,33 +252,32 @@ namespace NPO.Service
 
             EmailRepository updateEmail = new EmailRepository();
             string emailRef = "NPO#" + id;
+            string emails = "";
             updateEmail.UpdateStutes(emailRef, id);
-            for (int i = 0; i < controllerId.Count; i++)
-            {
-                if (controllerId[i] != 0)
+            if (controllerId.Count != 0) {
+                for (int i = 0; i < controllerId.Count; i++)
                 {
-                    updateEmail.AddControllerId(controllerId[i], id);
-                    DataTable dataTable = updateEmail.GetControllerAssignUsers(controllerId[i]);
-
-                    string emails = "";
-
-                    for (int rowNum = 0; rowNum < dataTable.Rows.Count; rowNum++)
+                    if (controllerId[i] != 0)
                     {
-                        emails += dataTable.Rows[rowNum][2].ToString() + ",";
+                        updateEmail.AddControllerId(controllerId[i], id);
+                        DataTable dataTable = updateEmail.GetControllerAssignUsers(controllerId[i]);
+                        foreach (DataRow item in dataTable.Rows)
+                        {
+                            updateEmail.AddUserEmail(Convert.ToInt32(item["UserId"]), id);
+                            emails += item["EmailAddress"].ToString() + ",";
+                        }
 
                     }
-                    EntityEmail sendEmail = new EntityEmail();
-
-                    sendEmail.To = emails;
-                    sendEmail.Body = "you have a new Assign search By Email Reference : " + emailRef;
-                    sendEmail.Subject = "NPO Tool";
-
-                    MailHelper.SendMail(sendEmail);
                 }
+
+                EntityEmail sendEmail = new EntityEmail();
+
+                sendEmail.To = emails;
+                sendEmail.Body = "you have a new Assign search By Email Reference : " + emailRef;
+                sendEmail.Subject = "NPO Tool";
+
+                MailHelper.SendMail(sendEmail);
             }
-
-
-
         }
 
         private List<int> SubContainsCon(EmailMessage email)

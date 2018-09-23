@@ -195,7 +195,7 @@
     <Content Include="ManageChildrenEmails.aspx" />
     <Content Include="ManageContoller.aspx" />
     <Content Include="ManageEmails.aspx" />
-    <Content Include="LoginCSL.aspx" />
+    <Content Include="CSLLogin.aspx" />
     <Content Include="ManageSite.aspx" />
     <Content Include="ManageUsers.aspx" />
     <Content Include="packages.config" />
@@ -412,12 +412,12 @@
     <Compile Include="ManageEmails.aspx.designer.cs">
       <DependentUpon>ManageEmails.aspx</DependentUpon>
     </Compile>
-    <Compile Include="LoginCSL.aspx.cs">
-      <DependentUpon>LoginCSL.aspx</DependentUpon>
+    <Compile Include="CSLLogin.aspx.cs">
+      <DependentUpon>CSLLogin.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="LoginCSL.aspx.designer.cs">
-      <DependentUpon>LoginCSL.aspx</DependentUpon>
+    <Compile Include="CSLLogin.aspx.designer.cs">
+      <DependentUpon>CSLLogin.aspx</DependentUpon>
     </Compile>
     <Compile Include="ManageSite.aspx.cs">
       <DependentUpon>ManageSite.aspx</DependentUpon>

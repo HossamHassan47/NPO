@@ -37,28 +37,28 @@ namespace NPO.Code.Repository
            
         }
 
-        public int SendEmail(string email)
+        public int SendEmail(string NokiaUserName)
 
         {
             ExchangeService _service = MailHelper.Exchange_Service();
 
             
 
-            string username = string.Empty;
+            string email = string.Empty;
             string password = string.Empty;
             
             using (SqlConnection con = new SqlConnection(DBHelper.strConnString))
             {
-                using (SqlCommand cmd = new SqlCommand("SELECT EmailAddress, [Password] FROM [User] WHERE EmailAddress = @EmailAddress"))
+                using (SqlCommand cmd = new SqlCommand("SELECT EmailAddress, [Password] , NokiaUserName FROM [User] WHERE NokiaUserName = @NokiaUserName"))
                 {
-                    cmd.Parameters.AddWithValue("@EmailAddress", email.Trim());
+                    cmd.Parameters.AddWithValue("@NokiaUserName", NokiaUserName.Trim());
                     cmd.Connection = con;
                     con.Open();
                     using (SqlDataReader sdr = cmd.ExecuteReader())
                     {
                         if (sdr.Read())
                         {
-                            username = sdr["EmailAddress"].ToString();
+                            email = sdr["EmailAddress"].ToString();
                             password = sdr["Password"].ToString();
                         }
                     }
@@ -70,7 +70,7 @@ namespace NPO.Code.Repository
                 EntityEmail sendemail = new EntityEmail();
                 sendemail.To = email.Trim();
                 sendemail.Subject = "Password Recovery";
-                sendemail.Body = string.Format("Hi {0},<br /><br />Your password is {1}.<br /><br />Thank You.", username, password);
+                sendemail.Body = string.Format("Hi {0},<br /><br />Your password is {1}.<br /><br />Thank You.", NokiaUserName, password);
                 bool check =MailHelper.SendMail(sendemail);
                 if (check)
                 {
@@ -81,12 +81,7 @@ namespace NPO.Code.Repository
                 }
                 
             }
-            else
-            {
-                return 3;
-                //lblMessage.ForeColor = Color.Red;
-                //lblMessage.Text = "This email address does not match our records.";
-            }
+            return 2;
         }
     }
    

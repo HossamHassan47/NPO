@@ -15,7 +15,7 @@ namespace NPO.Code.Repository
         public static DataTable GetEmails(EmailFilter filter, int maximumRows, int startRowIndex, int userId, bool isAdmin)
         {
             DataTable dataTable = new DataTable();
-            //  var sql = "SELECT [Subject] ,[Body]  ,[From] ,[To] ,[CC] FROM [NPODB].[dbo].[Email] WHERE (1 = 1) ";
+            //  var sql = "SELECT [Subject] ,[Body]  ,[From] ,[To] ,[CC] FROM [dbo].[Email] WHERE (1 = 1) ";
             var sql = @"
 SELECT * 
 from (
@@ -31,15 +31,15 @@ from (
             EmailStatus,
             EmailStatus.Status
             
-    FROM [NPODB].[dbo].[Email] ";
+    FROM [dbo].[Email] ";
             if (!isAdmin)
 
             {
                 sql += @" 
-                    left outer join dbo.[EmailController] on [Email].[EmailId] = EmailController.[EmailId]
-                    left outer join dbo.[ControllerUser] on [ControllerUser].[ControllerId] = EmailController.[ControllerId]
-                    left outer join dbo.[User] on [User].[UserID] = ControllerUser.[UserId]
+                     left outer join EmailUser on EmailUser.EmailId = Email.EmailId
+                    left outer join dbo.[User] on [User].[UserID] = EmailUser.[UserId]
                     left outer join EmailStatus on EmailStatus.ID = Email.EmailStatus
+                    
                     
 
                 WHERE  ParentEmailId IS NULL  AND  [User].[UserID] = " + userId;
@@ -78,13 +78,19 @@ from (
 
             {
                 sql += @"
-                    left outer join dbo.[EmailController] on [Email].[EmailId] = EmailController.[EmailId]
-                    left outer join dbo.[ControllerUser] on [ControllerUser].[ControllerId] = EmailController.[ControllerId]
-                    left outer join dbo.[User] on [User].[UserID] = ControllerUser.[UserId]
-                 WHERE ParentEmailId IS NULL AND  [User].[UserID] = " + userId;
-            }else
+                    left outer join EmailUser on EmailUser.EmailId = Email.EmailId
+                    left outer join dbo.[User] on [User].[UserID] = EmailUser.[UserId]
+                    left outer join EmailStatus on EmailStatus.ID = Email.EmailStatus
+                    
+                    
+
+                WHERE  ParentEmailId IS NULL  AND  [User].[UserID] = " + userId;
+            }
+            else
             {
-                sql += @" WHERE ParentEmailId IS NULL ";
+                sql += @"
+                    left outer join EmailStatus on EmailStatus.ID = Email.EmailStatus
+                WHERE ParentEmailId IS NULL";
             }
             sql += getFilterString(filter);
 
@@ -251,6 +257,8 @@ from (
 
         }
 
+    
+
         public int UpdateEmail(Email email)
         {
             // Update email then return the ID
@@ -326,13 +334,15 @@ from (
         {
             DataTable dataTable = new DataTable();
             string sql = @"
-                select dbo.[User].UserID,
-                    dbo.[User].FullName,
-	                dbo.[User].EmailAddress,
-                    ID
-                from ControllerUser
-                inner join dbo.[User] on dbo.[User].UserID = ControllerUser.UserId
-                where ControllerUser.ControllerId = @controllerId";
+                select [User].UserId ,
+                [user].EmailAddress,
+                [user].FullName,
+                ID
+             from [User]
+                 left outer join ControllerUser on ControllerUser.UserId = [User].UserID
+                 left outer join Controller on Controller.ControllerId = ControllerUser.ControllerId
+
+                 where Controller.ControllerId =@controllerId";
             using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
             {
                 sqlConnection.Open();
@@ -365,6 +375,7 @@ from (
             return true;
         }
 
+       
 
         public void UpdateStutes(string emailRef , int emailId)
         {
@@ -392,7 +403,7 @@ from (
             int emailId;
             var sql = @"
                 SELECT EmailId
-            FROM [NPODB].[dbo].[Email] where EmailRef =@emailRef ";
+            FROM [dbo].[Email] where EmailRef =@emailRef ";
           
 
             using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
@@ -442,7 +453,7 @@ from (
             int emailId;
             var sql = @"
                 SELECT EmailId
-            FROM [NPODB].[dbo].[Email] where Subject =@sub ";
+            FROM [dbo].[Email] where Subject =@sub ";
 
 
             using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
@@ -503,12 +514,12 @@ from (
         {
             DataTable dataTable = new DataTable();
             string sql = @"
-                select dbo.[User].UserID,
+                 select distinct dbo.[User].UserID,
                     dbo.[User].FullName,
 	                dbo.[User].EmailAddress,
                     EmailUserId
-                from EmailUser
-                left outer join dbo.[User] on dbo.[User].UserID = EmailUser.UserId
+                from [User]
+                left outer join dbo.EmailUser on [User].UserID = EmailUser.UserId
                 where EmailUser.EmailId = @EmailId";
             using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
             {
@@ -525,7 +536,7 @@ from (
         }
         public DataTable GetUsers()
         {
-            var sql = "SELECT UserID , FullName , EmailAddress FROM [NPODB].[dbo].[User] WHERE (1 = 1) ";
+            var sql = "SELECT UserID , FullName , EmailAddress FROM [dbo].[User] WHERE (1 = 1) ";
 
             DataTable dataTable = new DataTable();
             using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
@@ -541,33 +552,53 @@ from (
         public void AddUserEmail(int UserId, int EmailId)
         {
             var sql = "Insert into EmailUser Values(@EmailId,@UserId)";
-
-            using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
+            try
             {
-                sqlConnection.Open();
-                SqlCommand sqlcomm = new SqlCommand(sql, sqlConnection);
-                sqlcomm.Parameters.AddWithValue("@UserId", UserId);
-                sqlcomm.Parameters.AddWithValue("@EmailId", EmailId);
+                using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
+                {
+                    sqlConnection.Open();
+                    SqlCommand sqlcomm = new SqlCommand(sql, sqlConnection);
+                    sqlcomm.Parameters.AddWithValue("@UserId", UserId);
+                    sqlcomm.Parameters.AddWithValue("@EmailId", EmailId);
 
-                sqlcomm.ExecuteNonQuery();
+                    sqlcomm.ExecuteNonQuery();
+
+                }
+            }
+            catch
+            {
 
             }
 
         }
         public void DeleteUserEmail(int EmailUserId)
         {
-            var sql = "  DELETE  FROM EmailUser WHERE EmailUserId = @EmailUserId ";
+            var sql = "  DELETE  FROM EmailUser WHERE EmailUserId = @EmailUserId";
 
             using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
             {
                 sqlConnection.Open();
                 SqlCommand sqlcomm = new SqlCommand(sql, sqlConnection);
                 sqlcomm.Parameters.AddWithValue("@EmailUserId", EmailUserId);
-
                 sqlcomm.ExecuteNonQuery();
 
             }
         }
+        public void DeleteUserEmail(int EmailId , int userId)
+        {
+            var sql = "  DELETE  FROM EmailUser WHERE EmailId = @EmailId AND UserId = @userId";
+
+            using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
+            {
+                sqlConnection.Open();
+                SqlCommand sqlcomm = new SqlCommand(sql, sqlConnection);
+                sqlcomm.Parameters.AddWithValue("@EmailId", EmailId);
+                sqlcomm.Parameters.AddWithValue("@userId", userId);
+                sqlcomm.ExecuteNonQuery();
+
+            }
+        }
+
         /*********************************************************/
         public DataTable GetEmailAssignController(int EmailId)
         {
@@ -594,7 +625,7 @@ from (
         }
         public DataTable GetControllers()
         {
-            var sql = "SELECT ControllerId , ControllerName FROM [NPODB].[dbo].[Controller] WHERE (1 = 1) ";
+            var sql = "SELECT ControllerId , ControllerName FROM [dbo].[Controller] WHERE (1 = 1) ";
 
             DataTable dataTable = new DataTable();
             using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
@@ -616,13 +647,59 @@ from (
                 SqlCommand sqlcomm = new SqlCommand(sql, sqlConnection);
                 sqlcomm.Parameters.AddWithValue("@ControllerId", ControllerId);
                 sqlcomm.Parameters.AddWithValue("@EmailId", EmailId);
-
                 sqlcomm.ExecuteNonQuery();
 
             }
 
         }
+        public void UpdateIsAssign(int emailId , int IsAssign , int EmailStatus)
+        {
+            
+               var sql = "Update Email Set IsAssign = @IsAssign  ";
+            if (IsAssign == 0)
+            {
+                sql += ", EmailStatus=0 Where EmailId = @emailId";
+            }else if(IsAssign == 1 && EmailStatus == 0)
+            {
+                sql += ", EmailStatus = 1 Where EmailId = @emailId";
 
+            }else
+            {
+                sql += "Where EmailId = @emailId";
+
+            }
+
+            using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
+            {
+                sqlConnection.Open();
+                SqlCommand sqlcomm = new SqlCommand(sql, sqlConnection);
+                
+                sqlcomm.Parameters.AddWithValue("@emailId", emailId);
+                sqlcomm.Parameters.AddWithValue("@IsAssign", IsAssign);
+
+                sqlcomm.ExecuteNonQuery();
+
+            }
+        }
+        public int GetStatus(int emailId)
+        {
+            int emailStatus=-1;
+            var sql = "Select EmailStatus from Email where EmailId=@emailId";
+            using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
+            {
+                sqlConnection.Open();
+                SqlCommand sqlcomm = new SqlCommand(sql, sqlConnection);
+                sqlcomm.Parameters.AddWithValue("@emailId", emailId);
+                using(SqlDataReader dr = sqlcomm.ExecuteReader())
+                {
+                    if (dr.Read()) {
+                        emailStatus = Convert.ToInt32(dr["EmailStatus"]);
+                    }
+                }
+
+            }
+            return emailStatus;
+        }
         public void DeleteEmailController(int EmailConId)
         {
             var sql = "  DELETE  FROM EmailController WHERE EmailControllerId = @EmailControllerId ";

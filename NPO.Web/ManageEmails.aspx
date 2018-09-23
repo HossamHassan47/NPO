@@ -109,11 +109,12 @@
         BehaviorID="btnPanalAssign_ModalPopupExtender"
         TargetControlID="btnPanalAssign"
         ID="btnPanalAssign_ModalPopupExtender"
-        PopupControlID="PanalAssign"  BackgroundCssClass="ModalPopupBG"
-        CancelControlID="btnCancelAssign">
+        PopupControlID="PanalAssign"
+          BackgroundCssClass="ModalPopupBG"
+        >
     </ajaxToolkit:ModalPopupExtender>
-    <asp:Panel ID="PanalAssign" runat="server" BackColor="White" CssClass="PanalAssignStyle" Height="400px">
-        <asp:ImageButton ID="btnCancelAssign" runat="server" ImageUrl="~/Content/icExit.png" CssClass="PanelBodyStylebutton" />
+    <asp:Panel ID="PanalAssign" runat="server" BackColor="White" CssClass="PanalAssignStyle" Height="400px" Width="532px">
+        <asp:ImageButton ID="btnCancelAssign" runat="server" ImageUrl="~/Content/icExit.png" CssClass="PanelBodyStylebutton" OnClick="btnCancelAssign_Click"/>
         <asp:TextBox ID="txtEmailId" style="display:none" runat="server" Text="-1"></asp:TextBox>
         <asp:UpdatePanel ID="UpdatePanel1" runat="server">
             <ContentTemplate>
@@ -148,7 +149,7 @@
         
                            
                             <td><%#Eval("ControllerName")%></td>
-                           <td><asp:ImageButton ID="DeleteController" runat="server" ImageUrl="~/Content/icExit.png" OnClick="DeleteController_Click" CommandArgument='<%#Eval("EmailControllerId")%>'/> 
+                           <td><asp:ImageButton ID="DeleteController" runat="server" ImageUrl="~/Content/icExit.png" OnClick="DeleteController_Click" CommandArgument='<%#Eval("EmailControllerId")+ "," +Eval("ControllerId")%>'/> 
 
                            </td> 
                         </tr>
@@ -171,13 +172,14 @@
          TargetControlID="btnExAddUsers" 
         ID="btnExAddUsers_ModalPopupExtender"
         PopupControlID="PanalAddUsers"
+         BackgroundCssClass="ModalPopupBG"
+
         >
 
     </ajaxToolkit:ModalPopupExtender>
 
-    <asp:Panel ID="PanalAddUsers" runat="server" BackColor="White" CssClass="PanalAssignStyle" Height="400px">
-        <asp:ImageButton ID="ImageButton1" runat="server" ImageUrl="~/Content/icExit.png" CssClass="PanelBodyStylebutton" />
-        
+    <asp:Panel ID="PanalAddUsers" runat="server" BackColor="White" CssClass="PanalAssignStyle" Height="400px" Width="532px">
+        <asp:ImageButton ID="btnCancelAssignUsers" runat="server" ImageUrl="~/Content/icExit.png" CssClass="PanelBodyStylebutton" OnClick="btnCancelAssign_Click" />        
 
         <asp:UpdatePanel ID="UpdatePanel2" runat="server">
             <ContentTemplate>
@@ -252,7 +254,7 @@
             <asp:TemplateField>
                 <ItemTemplate>
                     <asp:ImageButton ID="btnAssign" runat="server" ImageUrl='<%#(bool)Eval("IsAssign") ? "~/Content/icAssigned.png":"~/Content/icNotAssign.png" %>' CommandName="Assign"
-                        CommandArgument='<%# Eval("EmailId").ToString()+","+Eval("IsAssign").ToString()%>'
+                        CommandArgument='<%# Eval("EmailId").ToString()%>'
                         AlternateText="Body" ToolTip="Assign" />
                       
                 </ItemTemplate>

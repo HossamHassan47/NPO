@@ -83,7 +83,7 @@
     <asp:Label ID="DoneOrNot" runat="server"></asp:Label>
     <br />
     <asp:Panel ID="PanelAdd" runat="server" Style="text-align: center; background-color: rgb(255, 251, 251);"
-        Width="470px" Height="500px" BackColor="#999999" BorderColor="#666666" BorderStyle="Solid">
+        Width="544px" Height="520px" BackColor="#999999" BorderColor="#666666" BorderStyle="Solid">
 
         <div style="background-color: #006699;">
             <asp:Label ID="l1" runat="server" ForeColor="White" Text="Add Site " Font-Bold="True"
@@ -202,19 +202,35 @@
 
                         </td>
                     </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>
+
+                            <asp:Button ID="btnSave" runat="server" CssClass="col-md-offset-0"
+                                Height="30px" Text="Save" Width="123px"
+                                Font-Bold="True" BackColor="#2471a3" ForeColor="White" OnClick="btnSave_Click" />
+
+                        </td>
+                        <td>
+                            <asp:Button ID="btnCancel" runat="server" Height="30px"
+                                Style="margin-left: 31px" Text="Cancel" Width="123px" Font-Bold="True" OnClick="btnCancel_Click" formnovalidate="formnovalidate" />
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td colspan="2">
+                            <asp:Label ID="lblErrorMsg" runat="server" Text=""></asp:Label>
+                        </td>
+                    </tr>
                 </table>
 
             </ContentTemplate>
         </asp:UpdatePanel>
 
 
-
-        <asp:Button ID="btnSave" runat="server" CssClass="col-md-offset-0"
-            Height="30px" Text="Save" Width="123px"
-            Font-Bold="True" BackColor="#2471a3" ForeColor="White" OnClick="btnSave_Click" />
-
-        <asp:Button ID="btnCancel" runat="server" Height="30px"
-            Style="margin-left: 31px" Text="Cancel" Width="123px" Font-Bold="True" OnClick="btnCancel_Click" />
 
     </asp:Panel>
 

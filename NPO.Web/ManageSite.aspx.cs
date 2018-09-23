@@ -246,6 +246,7 @@ namespace NPO.Web
             txtAddSiteName.Text = "";
             txtAddSiteCode.Text = "";
             ddlAddCityName.SelectedIndex = 0;
+            ddlType.SelectedIndex = 0;
             ddlAddCityZone.SelectedIndex = 0;
             ddlControllers2g.Visible = false;
             ddlControllers3g.Visible = false;
@@ -348,13 +349,70 @@ namespace NPO.Web
         protected void btnSave_Click(object sender, EventArgs e)
         {
             SiteRepository siteRep = new SiteRepository();
+            if (string.IsNullOrWhiteSpace(txtAddSiteCode.Text.ToString().Trim()))
+            {
+                lblErrorMsg.Text = "Site must have code";
+                txtAddSiteCode.Focus();
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(txtAddSiteName.Text.ToString().Trim()))
+            {
+                lblErrorMsg.Text = "Site must have name";
+
+                txtAddSiteName.Focus();
+                return;
+            }
+            if (ddlAddCityName.SelectedIndex == 0)
+            {
+                lblErrorMsg.Text = "Site must have city";
+
+                ddlAddCityName.Focus();
+                return;
+            }
+            if (ddlAddCityZone.SelectedIndex == 0)
+            {
+                lblErrorMsg.Text = "Site must have cityZone";
+
+                ddlAddCityZone.Focus();
+                return;
+            }
+            if (ddlType.SelectedIndex == 0)
+            {
+                lblErrorMsg.Text = "Site must have type";
+
+                ddlType.Focus();
+                return;
+            }
+            if (txt2G.Checked && ddlControllers2g.SelectedIndex == 0)
+            {
+                lblErrorMsg.Text = "Site must have contoller2g name ";
+
+                ddlControllers2g.Focus();
+                return;
+            }
+            if (txt3G.Checked && ddlControllers3g.SelectedIndex == 0)
+            {
+                lblErrorMsg.Text = "Site must have contoller3g name ";
+
+                ddlControllers2g.Focus();
+                return;
+            }
+            if (txt4G.Checked && ddlControllers4g.SelectedIndex == 0)
+            {
+                lblErrorMsg.Text = "Site must have contoller4g name ";
+
+                ddlControllers2g.Focus();
+                return;
+            }
             int id = Convert.ToInt32(txtid.Text);
             if (id < 0)
             {
+               
                 int siteid = siteRep.InsertNewSite(GetVaules());
                 if (siteid > 0)
                 {
-                    gvSites.DataBind();
+                    Page.Response.Redirect(Page.Request.Url.ToString(), true);
+                    DoneOrNot.Text = "Site added successfully";
                     setTextBoxesNull();
                 }
                 else
@@ -371,8 +429,8 @@ namespace NPO.Web
 
                 if (siteid)
                 {
-                    gvSites.DataBind();
-                    DoneOrNot.Text = "Done";
+                    Page.Response.Redirect(Page.Request.Url.ToString(), true);
+                    DoneOrNot.Text = "Site updated successfully";
                     setTextBoxesNull();
                 }
                 else
@@ -386,6 +444,8 @@ namespace NPO.Web
 
         protected void btnCancel_Click(object sender, EventArgs e)
         {
+            Page.Response.Redirect(Page.Request.Url.ToString(), true);
+
             setTextBoxesNull();
 
         }
@@ -441,10 +501,7 @@ namespace NPO.Web
         }
         #endregion
 
-
-
-
-
+        #region uploadExelFile
         private bool IsTemplateValid(DataTable sitesTemplate, out string message)
         {
             if (!sitesTemplate.Columns.Contains("Site_Code"))
@@ -559,7 +616,9 @@ namespace NPO.Web
         {
 
             SiteRepository siteRep = new SiteRepository();
-            sites.Columns.Add("Result", typeof(string));
+            if (!sites.Columns.Contains("Result")) {
+                sites.Columns.Add("Result", typeof(string));
+            }
             foreach (DataRow row in sites.Rows)
             {
 
@@ -602,7 +661,18 @@ namespace NPO.Web
                 site._3g = Convert.ToBoolean((row["3G"]));
                 site._4g = Convert.ToBoolean((row["LTE"]));
 
+                if (string.IsNullOrEmpty(site.SiteCode))
+                {
+                    row["Result"] = "Site code must not equal null";
+                    continue;
 
+                }
+                if (string.IsNullOrEmpty(site.SiteName))
+                {
+                    row["Result"] = "Site name must not equal null";
+                    continue;
+
+                }
                 if (site.RegionId < 0)
                 {
                     row["Result"] = "Missing region";
@@ -673,5 +743,6 @@ namespace NPO.Web
             down.ExporttoExcel(sites, "Sheet1");
             return true;
         }
+        #endregion
     }
 }

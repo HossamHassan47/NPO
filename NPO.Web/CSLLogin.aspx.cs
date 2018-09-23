@@ -63,16 +63,10 @@ namespace NPO.Web
 
         protected void SendMail_Click(object sender, EventArgs e)
         {
-            bool CheckMailVaild = new EmailAddressAttribute().IsValid(txtEmail.Text.ToString().Trim());
-
-            if (!CheckMailVaild)
-            {
-                LabelErrorMsg.Text = "Email Address isn't correct please confirm and try again";
-                return;
-            }
+          
             if (string.IsNullOrWhiteSpace(txtEmail.Text.ToString().Trim()))
             {
-                LabelErrorMsg.Text = "Please enter your email address";
+                LabelErrorMsg.Text = "Please enter your nokia user name";
                 LabelErrorMsg.Visible = true;
                 txtEmail.Focus();
                 return;
@@ -80,7 +74,6 @@ namespace NPO.Web
 
             LoginRepository login = new LoginRepository();
             int sended =login.SendEmail(txtEmail.Text.ToString());
-       //     LabelErrorMsg.Visible = false;
 
             System.Threading.Thread.Sleep(1000);
 
@@ -92,19 +85,13 @@ namespace NPO.Web
                
 
             }
-            else if (sended == 2)
-            {
-                LabelErrorMsg.Text = "Internet connction Error";
-                LabelErrorMsg.Visible = true;
-
-            }
             else 
             {
-                LabelErrorMsg.Text = "Email address not correct please try again";
+                LabelErrorMsg.Text = "User name not exist or Internet connction Error";
                 LabelErrorMsg.Visible = true;
 
             }
-           
+          
 
         }
 
@@ -114,7 +101,7 @@ namespace NPO.Web
         {
             if (string.IsNullOrWhiteSpace(txtEmailAddress.Value.ToString().Trim())) 
             {
-                ErrorMsg.Text = "Please enter your email address";
+                ErrorMsg.Text = "Please enter your Nokia user name";
                 ErrorMsg.Visible = true;
                 txtEmailAddress.Focus();
                 return;

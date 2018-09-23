@@ -32,7 +32,7 @@ from (
             [2g],
             [3g],
             [4g]
-    FROM [NPODB].[dbo].[Site]  
+    FROM [dbo].[Site]  
     WHERE (1 = 1)  ";
 
             sql += getFilterString(filter);

@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="LoginCSL.aspx.cs" Inherits="NPO.Web.ManageLogin" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="CSLLogin.aspx.cs" Inherits="NPO.Web.ManageLogin" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
 <!DOCTYPE html>
@@ -39,7 +39,7 @@
         </div>
         <div class="wrap">
 
-            <input type="text" placeholder="User Name" runat="server" id="txtEmailAddress">
+            <input placeholder="User Name" runat="server" id="txtEmailAddress">
             
             <br />
             <input type="password" placeholder="Password" runat="server" id="txtPassword">
@@ -75,7 +75,7 @@
             <asp:UpdatePanel ID="UpdatePanel1" runat="server" style="height: 300px;">
                 <ContentTemplate>
                     <asp:Label ID="l1" runat="server" ForeColor="Black" Text="Your Email :  " Font-Bold="True"></asp:Label>
-                    <asp:TextBox ID="txtEmail" runat="server" Width="300px" Height="29px" placeholder="Email address"></asp:TextBox>
+                    <asp:TextBox ID="txtEmail" runat="server" Width="300px" Height="29px" placeholder="User name"></asp:TextBox>
                   
                     <br />
                    

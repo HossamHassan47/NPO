@@ -36,7 +36,7 @@ namespace NPO.Code.Repository
 
         private string getSelectStatment(UserFilter filter)
         {
-            var Sql = "SELECT * FROM [NPODB].[dbo].[User] WHERE (1 = 1) ";
+            var Sql = "SELECT * FROM [dbo].[User] WHERE (1 = 1) ";
 
             if (!string.IsNullOrEmpty(filter.FullName))
             {

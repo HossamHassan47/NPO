@@ -83,7 +83,7 @@ namespace NPO.Web
             }
             if (e.CommandName == "UserAdd")
             {
-                txtEId.Text = e.CommandArgument.ToString();
+                txtEmailId.Text = e.CommandArgument.ToString();
 
                 BindDDlUser();
                 BindRepeater();
@@ -94,19 +94,11 @@ namespace NPO.Web
                 if ((bool)Session["isAdmin"])
                 {
                     // 1212,32,1
-                    var values = e.CommandArgument.ToString().Split(',');
 
-                    txtEmailId.Text = Convert.ToInt32(values[0]).ToString();
+                    txtEmailId.Text = Convert.ToInt32(e.CommandArgument).ToString();
                     BindDDlController();
                     BindControllerRepeater();
-                    if (values[1] == "1")
-                    {
-                    }
-                    else
-                    {
-
-                    }
-
+  
                     btnPanalAssign_ModalPopupExtender.Show();
                 }
             }
@@ -198,64 +190,13 @@ namespace NPO.Web
 
         }
 
-        protected void btnAssign_Click(object sender, EventArgs e)
-        {
-            //   int emailId= Convert.ToInt32(txtEmailId.Text);
-            //    int controllerId = Convert.ToInt32(DropDownListControllers.SelectedValue);
-            //    EmailRepository emailReb = new EmailRepository();
-            //    string EmailRef = "NPO#" + emailId;
-            //    bool updated = emailReb.UpdateControllerId(controllerId,emailId, EmailRef);
-            //    gvEmails.DataBind();
-            //    DataTable dataTable= emailReb.GetControllerAssignUsers(Convert.ToInt32(DropDownListControllers.SelectedValue));
-            //    string emails = "";
-            //    for (int i = 0; i < dataTable.Rows.Count; i++)
-            //    {
-            //        emails += dataTable.Rows[i][2].ToString() + ",";
-
-            //    }
-
-            //    EntityEmail email = new EntityEmail();
-
-            //    email.To = emails;
-            //    email.Body = "you have a new Assign search By Email Reference : " +  EmailRef;
-            //    email.Subject = "NPO Tool";
-
-            //    MailHelper.SendMail(email);
 
 
-        }
-
-        protected void btnAssign1_Click(object sender, EventArgs e)
-        {
-            int EmailId = Convert.ToInt32(txtEId.Text);
-            // int UserID = Convert.ToInt32(ddlUsers.SelectedValue);
-            EmailRepository emailReb = new EmailRepository();
-            // bool updated = emailReb.UpdateControllerId(UserId, EmailId);
-            gvEmails.DataBind();
-            DataTable dataTable = emailReb.GetEmailAssignUsers(EmailId);
-            string emails = "";
-            for (int i = 0; i < dataTable.Rows.Count; i++)
-            {
-                emails += dataTable.Rows[i][2].ToString() + ",";
-
-            }
-
-            EntityEmail email = new EntityEmail();
-
-            email.To = emails;
-            email.Body = "you have a new Assign";
-            email.Subject = "NPO Tool";
-
-            MailHelper.SendMail(email);
-
-
-        }
-
-
+        #region btnUsersAssign
         private void BindRepeater()
         {
             EmailRepository EmailUserReb = new EmailRepository();
-            DataTable dataTable = EmailUserReb.GetEmailAssignUsers(Convert.ToInt32(txtEId.Text));
+            DataTable dataTable = EmailUserReb.GetEmailAssignUsers(Convert.ToInt32(txtEmailId.Text));
             RepeaterUsersEmail.DataSource = dataTable;
             RepeaterUsersEmail.DataBind();
 
@@ -274,19 +215,50 @@ namespace NPO.Web
         protected void AddUserEmail_Click(object sender, EventArgs e)
         {
             EmailRepository EmailUserReb = new EmailRepository();
-            EmailUserReb.AddUserEmail(Convert.ToInt32(ddlUsers.SelectedValue), Convert.ToInt32(txtEId.Text));
+            EmailUserReb.AddUserEmail(Convert.ToInt32(ddlUsers.SelectedValue), Convert.ToInt32(txtEmailId.Text));
             BindRepeater();
         }
-
         protected void DeleteUserEmail_Click(object sender, ImageClickEventArgs e)
         {
             var btn = (ImageButton)sender;
             int EmailUserId = Convert.ToInt32(btn.CommandArgument);
             EmailRepository EmailUserReb = new EmailRepository();
             EmailUserReb.DeleteUserEmail(EmailUserId);
+            
             BindRepeater();
         }
+        protected void btnAssign_Click(object sender, EventArgs e)
+        {
+            int emailId = Convert.ToInt32(txtEmailId.Text);
+            EmailRepository emailReb = new EmailRepository();
+            string emailRef = "NPO#" + emailId;
+            DataTable dataTable = emailReb.GetEmailAssignUsers(emailId);
+            string emails = "";
+            for (int i = 0; i < dataTable.Rows.Count; i++)
+            {
+                emails += dataTable.Rows[i][2].ToString() + ",";
 
+            }
+
+            EntityEmail email = new EntityEmail();
+
+            email.To = emails;
+            email.Body = "you have a new Assign search By Email Reference : " + emailRef;
+            email.Subject = "NPO Tool";
+
+            if (MailHelper.SendMail(email))
+            {
+                emailReb.UpdateIsAssign(emailId, 1, 0);
+            }
+
+            Page.Response.Redirect(Page.Request.Url.ToString(), true);
+
+
+
+        }
+        #endregion
+
+        #region btnControllersAssign
         private void BindControllerRepeater()
         {
             EmailRepository EmailControllerReb = new EmailRepository();
@@ -295,7 +267,6 @@ namespace NPO.Web
             RepeaterController.DataBind();
 
         }
-
         private void BindDDlController()
         {
             EmailRepository controllers = new EmailRepository();
@@ -307,21 +278,87 @@ namespace NPO.Web
             ddlContrcoller.DataBind();
             ddlContrcoller.Items.Insert(0, "--Select Controller--");
         }
-
         protected void AddController_Click(object sender, EventArgs e)
         {
             EmailRepository ControllerReb = new EmailRepository();
             ControllerReb.AddEmailController(Convert.ToInt32(ddlContrcoller.SelectedValue), Convert.ToInt32(txtEmailId.Text));
+            DataTable Users = ControllerReb.GetControllerAssignUsers(Convert.ToInt32(ddlContrcoller.SelectedValue));
+            foreach (DataRow item in Users.Rows)
+            {
+                ControllerReb.AddUserEmail(Convert.ToInt32(item["UserId"]), Convert.ToInt32(txtEmailId.Text));
+            }
+
+
             BindControllerRepeater();
         }
         protected void DeleteController_Click(object sender, ImageClickEventArgs e)
         {
             var btn = (ImageButton)sender;
-            int EmailConId = Convert.ToInt32(btn.CommandArgument);
+            var arg = btn.CommandArgument.ToString().Split(',');
+            int EmailConId = Convert.ToInt32(arg[0]);
             EmailRepository EmailControllerReb = new EmailRepository();
             EmailControllerReb.DeleteEmailController(EmailConId);
+            DataTable Users = EmailControllerReb.GetControllerAssignUsers(Convert.ToInt32(arg[1]));
+            foreach (DataRow item in Users.Rows)
+            {
+                EmailControllerReb.DeleteUserEmail( Convert.ToInt32(txtEmailId.Text), Convert.ToInt32(item["UserId"]));
+            }
             BindControllerRepeater();
 
         }
+        protected void btnAssign1_Click(object sender, EventArgs e)
+        {
+            int EmailId = Convert.ToInt32(txtEmailId.Text);
+            EmailRepository emailReb = new EmailRepository();
+            gvEmails.DataBind();
+            string emailRef = "NPO#" + EmailId;
+
+            DataTable dataTable = emailReb.GetEmailAssignUsers(EmailId);
+            string emails = "";
+            for (int i = 0; i < dataTable.Rows.Count; i++)
+            {
+                emails += dataTable.Rows[i][2].ToString() + ",";
+
+            }
+
+            EntityEmail email = new EntityEmail();
+
+            email.To = emails;
+            email.Body = "you have a new Assign search By Email Reference : " + emailRef;
+            email.Subject = "NPO Tool";
+
+            if (MailHelper.SendMail(email))
+            {
+                emailReb.UpdateIsAssign(EmailId, 1, 0);
+            }
+
+            Page.Response.Redirect(Page.Request.Url.ToString(), true);
+
+
+        }
+
+        #endregion
+
+
+        protected void btnCancelAssign_Click(object sender, ImageClickEventArgs e)
+        {
+           
+            EmailRepository EmailAssign = new EmailRepository();
+            DataTable con = EmailAssign.GetEmailAssignController(Convert.ToInt32(txtEmailId.Text));
+            DataTable users = EmailAssign.GetEmailAssignUsers(Convert.ToInt32(txtEmailId.Text));
+            if (con.Rows.Count == 0 && users.Rows.Count == 0)
+            {
+                EmailAssign.UpdateIsAssign(Convert.ToInt32(txtEmailId.Text), 0,0);
+            }
+            else
+            {
+                int emailStatus = EmailAssign.GetStatus(Convert.ToInt32(txtEmailId.Text));
+                EmailAssign.UpdateIsAssign(Convert.ToInt32(txtEmailId.Text), 1, emailStatus);
+
+            }
+            Page.Response.Redirect(Page.Request.Url.ToString(), true);
+        }
+
+ 
     }
 }

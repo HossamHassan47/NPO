@@ -49,9 +49,8 @@ div.image {
     font-family: Lato;
     font-weight: 700;
     display: block;
-    height: 89px;
     outline: none;
-    width: calc(100% - 24px);
+    width: 350px;
     padding: 6px 12px 6px 12px;
     margin-left: auto;
     margin-right: auto;
@@ -73,11 +72,17 @@ div.image {
     }
 
 .wrap input[type="text"] {
-    border-radius: 7px 7px 0px 0px;
+    border-radius: 7px 7px 7px 7px;
+    margin-left:15px;
+        height:50px;
+
 }
 
 .wrap input[type="password"] {
-    border-radius: 0px 0px 7px 7px;
+    border-radius: 7px 7px 7px 7px;
+    width: 325px;
+    height:40px;
+
 }
 
 .forgot_link {
@@ -106,19 +111,26 @@ div.image {
 }
 
 .btnLogin {
-    width: 100%;
     border-radius: 7px;
     background: #b6ee65;
-    border: none;
     color: #51771a;
-    margin-top: -5px;
     padding-top: 14px;
     padding-bottom: 14px;
     outline: none;
     font-size: 13px;
     border-bottom: 3px solid #307d63;
     cursor: pointer;
-}
+    border-left-style: none;
+    border-left-color: inherit;
+    border-left-width: medium;
+    border-right-style: none;
+    border-right-color: inherit;
+    border-right-width: medium;
+    border-top-style: none;
+    border-top-color: inherit;
+    border-top-width: medium;
+   
+    }
 
 .modalBackground {
     background-color: Black;
@@ -138,7 +150,6 @@ div.image {
 }
 
 input[type=text] {
-    width: 101%;
     border: 2px solid #aaa;
     border-radius: 4px;
     margin: 8px 0;

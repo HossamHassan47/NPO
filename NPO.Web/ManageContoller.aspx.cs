@@ -60,13 +60,29 @@ namespace NPO.Web
 
 
             int id = Convert.ToInt32(hdnId.Value);
+            if (string.IsNullOrWhiteSpace(txtConName.Text.ToString().Trim()))
+            {
+                lblErrorMsg.Text = "Controller must have name";
 
+                txtConName.Focus();
+                return;
+            }
+        
+            if (ddlTechnology.SelectedIndex == 0)
+            {
+                lblErrorMsg.Text = "Controller must have Technology";
+
+                ddlTechnology.Focus();
+                return;
+            }
+         
             if (id < 0)
             {
+
                 int idController = controllerRep.InsertNewController(GetVaules());
                 if (idController > 0)
                 {
-                    gvControllers.DataBind();
+                    Page.Response.Redirect(Page.Request.Url.ToString(), true);
                     setTextBoxesNull();
                 }
                 else
@@ -82,7 +98,7 @@ namespace NPO.Web
 
                 if (idController)
                 {
-                    gvControllers.DataBind(); 
+                    Page.Response.Redirect(Page.Request.Url.ToString(), true);
                     DoneOrNot.Text = "Done";
                     setTextBoxesNull();
                 }
@@ -97,6 +113,8 @@ namespace NPO.Web
 
         protected void btnCancel_Click(object sender, EventArgs e)
         {
+            Page.Response.Redirect(Page.Request.Url.ToString(), true);
+
             setTextBoxesNull();
         }
 
@@ -150,6 +168,7 @@ namespace NPO.Web
         private void setTextBoxesNull()
         {
             hdnId.Value = "-1";
+            ddlTechnology.SelectedValue= "0";
             txtConName.Text = "";
             ddlTechnology.Text = "";
            
@@ -160,7 +179,7 @@ namespace NPO.Web
             gvControllers.DataBind();
         }
 
-        // Fixed Colume Width  gridView
+        // Fixed Column Width  gridView
         protected void gvControllers_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)

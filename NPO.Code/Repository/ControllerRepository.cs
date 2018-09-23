@@ -132,7 +132,7 @@ where (1=1)" + getFilterString(filter);
 
         public DataTable GetUsers()
         {
-            var sql = "SELECT UserID , FullName , EmailAddress FROM [NPODB].[dbo].[User] WHERE (1 = 1) ";
+            var sql = "SELECT UserID , FullName , EmailAddress FROM [dbo].[User] WHERE (1 = 1) ";
 
             DataTable dataTable = new DataTable();
             using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))

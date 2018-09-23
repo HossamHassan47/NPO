@@ -46,7 +46,7 @@
     <br />
     <asp:Panel ID="PanelAdd" runat="server"
         Style="background-color: rgb(255, 251, 251);"
-        Width="450px" Height="230px" BackColor="#999999" BorderColor="#666666" BorderStyle="Solid">
+        Width="450px" Height="290px" BackColor="#999999" BorderColor="#666666" BorderStyle="Solid">
 
         <div style="height: 30px; background-color: #2471a3;  width: 100%; text-align: center;">
             <asp:Label ID="labelController" runat="server" ForeColor="White" Text="Add Controller " Font-Bold="True" Font-Size="X-Large"></asp:Label>
@@ -54,7 +54,9 @@
 
         <br />
         <asp:HiddenField ID="hdnId" runat="server" value="-1"></asp:HiddenField>
-        <table class="zebra" style="width:98%; margin:5px;">
+        <asp:UpdatePanel runat="server">
+            <ContentTemplate>
+              <table class="zebra" style="width:98%; margin:5px;">
             <tr>
                 <td>
                     <asp:Label ID="l1" runat="server" Text="Controller Name:"></asp:Label>
@@ -72,10 +74,10 @@
                 </td>
                 <td>
                     <asp:DropDownList ID="ddlTechnology" runat="server" Width="200px">
-                        <asp:ListItem Text="-- Select --" Value="-1"></asp:ListItem>
-                        <asp:ListItem Text="2G" Value="1"></asp:ListItem>
-                        <asp:ListItem Text="3G" Value="2"></asp:ListItem>
-                        <asp:ListItem Text="4G" Value="3"></asp:ListItem>
+                        <asp:ListItem Text="-- Select --" Value="0"></asp:ListItem>
+                        <asp:ListItem Text="2G" Value="2"></asp:ListItem>
+                        <asp:ListItem Text="3G" Value="3"></asp:ListItem>
+                        <asp:ListItem Text="4G" Value="4"></asp:ListItem>
                     </asp:DropDownList>
                 </td>
             </tr>
@@ -83,9 +85,19 @@
                 <td></td>
                 <td>
                     <asp:Button ID="btnSave" runat="server" Text="Save" Width="120px" CssClass="btn btn-default btnSave" OnClick="btnSave_Click" />
-                    <asp:Button ID="btnCancel" runat="server" Text="Cancel" Width="120px" CssClass="btn btn-default btnCancel"  OnClick="btnCancel_Click" /></td>
+                    <asp:Button ID="btnCancel" runat="server" Text="Cancel" Width="120px" CssClass="btn btn-default btnCancel"  OnClick="btnCancel_Click" formnovalidate="formnovalidate"  /></td>
             </tr>
+                   <tr>
+                       <td></td>
+                        <td >
+                            <asp:Label ID="lblErrorMsg" runat="server" Text=""></asp:Label>
+                        </td>
+                    </tr>
         </table>
+                         </ContentTemplate>
+
+        </asp:UpdatePanel>
+      
 
 
 

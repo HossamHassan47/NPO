@@ -71,7 +71,7 @@ namespace NPO.Web
            
             if (Session["CurrentUser"] == null)
             {
-                Response.Redirect("~/ManageLogin", false);
+                Response.Redirect("~/CSLLogin", false);
             }else
             {
                 UserName.Text = Session["UserName"].ToString();
@@ -93,7 +93,7 @@ namespace NPO.Web
         {
             Session["CurrentUser"] = null;
 
-            Response.Redirect("LoginCSL.aspx");
+            Response.Redirect("CSLLogin.aspx");
         }
 
     }
