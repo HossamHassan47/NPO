@@ -10,19 +10,19 @@
                 <span><span style="color: #000000; background-color: #FFFFFF">From</span><span style="color: #000000">:</span></span>
             </td>
             <td>
-                <asp:TextBox ID="txtEmailFrom" runat="server" Width="300px"></asp:TextBox>
+                <asp:TextBox ID="txtEmailFrom" runat="server" Width="300px"  onkeydown = "return (event.keyCode!=13);"></asp:TextBox>
             </td>
             <td>
-                <asp:Label ID="Label1" runat="server" Text="To:" Style="color: #000000"></asp:Label>
+                <asp:Label ID="Label1" runat="server" Text="To:" Style="color: #000000" ></asp:Label>
             </td>
             <td>
-                <asp:TextBox ID="txtEmailTo" runat="server" Width="300px"></asp:TextBox>
+                <asp:TextBox ID="txtEmailTo" runat="server" Width="300px" onkeydown = "return (event.keyCode!=13);"></asp:TextBox>
             </td>
             <td>
                 <asp:Label ID="Label4" runat="server" Text="Reference :" Style="color: #000000"></asp:Label>
             </td>
             <td>
-                <asp:TextBox ID="txtEmailRef" runat="server" Width="150px"></asp:TextBox>
+                <asp:TextBox ID="txtEmailRef" runat="server" Width="150px" onkeydown = "return (event.keyCode!=13);"></asp:TextBox>
             </td>
 
         </tr>
@@ -31,7 +31,7 @@
                 <asp:Label ID="Label2" runat="server" Text="Subject:" Style="color: #000000"></asp:Label>
             </td>
             <td>
-                <asp:TextBox ID="txtEmailSub" runat="server" Width="299px"></asp:TextBox>
+                <asp:TextBox ID="txtEmailSub" runat="server" Width="299px" onkeydown = "return (event.keyCode!=13);"></asp:TextBox>
             </td>
             <td>
                 <asp:Label ID="Label3" runat="server" Text="Date:" Style="color: #000000"></asp:Label>
@@ -46,7 +46,7 @@
                     <asp:ListItem Text="<"><</asp:ListItem>
                     <asp:ListItem Text=">">></asp:ListItem>
                 </asp:DropDownList>
-                <asp:TextBox ID="txtEmailDate" runat="server"></asp:TextBox>
+                <asp:TextBox ID="txtEmailDate" runat="server" onkeydown = "return (event.keyCode!=13);"></asp:TextBox>
                 <ajaxToolkit:CalendarExtender ID="CalendarExtender1" runat="server" TargetControlID="txtEmailDate" Format="MM-dd-yyyy" />
             </td>
 
@@ -76,11 +76,15 @@
             <td></td>
             <td></td>
             <td></td>
-            <td></td>
+            <td>
+                <asp:Button ID="btnSearch" runat="server" Text="Search" Width="120px"
+                    CssClass="btn btn-default btnSearch" OnClick="btnSearch_Click" />
+
+            </td>
 
             <td>
-                <asp:Button ID="Button1" runat="server" Text="Search" Width="120px"
-                    CssClass="btn btn-default btnSearch" OnClick="btnSearch_Click" />
+                <asp:Button ID="btnExport" runat="server" Text="Export" Width="120px"
+                    CssClass="btn btn-default" OnClick="btnExport_Click" />
 
             </td>
         </tr>

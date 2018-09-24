@@ -150,6 +150,56 @@ namespace NPO.Code.Repository
             }
 
         }
+
+        public int CheckNokiaUserName(string noikaUserName)
+
+        {
+            var sql = "Select UserId from [User] where NokiaUserName=@noikaUserName";
+            int uId = -1;
+
+            using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
+            {
+                SqlCommand cmd = new SqlCommand(sql, sqlConnection);
+                cmd.Parameters.AddWithValue("@noikaUserName", noikaUserName);
+                sqlConnection.Open();
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    if (dr.Read()) {
+                        uId = Convert.ToInt32(dr["UserId"]);
+                        return uId;
+                    }
+                }
+
+              
+            }
+            return uId;
+        }
+
+        public int CheckEmailAddress(string emailAddress)
+        {
+            var sql = "Select UserId from [User] where EmailAddress=@emailAddress";
+            int uId = -1;
+
+            using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
+            {
+                SqlCommand cmd = new SqlCommand(sql, sqlConnection);
+                cmd.Parameters.AddWithValue("@emailAddress", emailAddress);
+                sqlConnection.Open();
+
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    if (dr.Read())
+                    {
+                        uId = Convert.ToInt32(dr["UserId"]);
+                        return uId;
+                    }
+                }
+
+
+            }
+            return uId;
+        }
+
         public bool DeleteUser(User user)
         {
             SqlCommand cmd = new SqlCommand();

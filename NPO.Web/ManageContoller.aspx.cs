@@ -176,6 +176,7 @@ namespace NPO.Web
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {
+            gvControllers.PageIndex = 0;
             gvControllers.DataBind();
         }
 

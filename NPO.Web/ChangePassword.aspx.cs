@@ -8,18 +8,19 @@ namespace NPO.Web
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            btnDone.Focus();
         }
 
         protected void btnDone_Click(object sender, EventArgs e)
         {
             UserRepository rep = new UserRepository();
-            if (txtNewPassword.Value.ToString() == txtConPassword.Value.ToString()) {
+            if (txtNewPassword.Value.ToString() == txtConPassword.Value.ToString())
+            {
                 bool change = rep.ChangePassword(txtOldPassword.Value.ToString(), txtNewPassword.Value.ToString(),Convert.ToInt32(Session["UserId"]));
                 if (change)
                 {
                     Session["CurrentUser"] = null;
-                    Response.Redirect("ManageLogin.aspx");
+                    Response.Redirect("CSLLogin.aspx");
                 }else
                 {
                     ErrorMsg.Text = "Password not correct";

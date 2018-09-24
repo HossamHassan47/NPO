@@ -35,15 +35,5 @@ namespace NPO.Service
                 Thread.Sleep(20000);
             }
         }
-
-        protected override void OnStart(string[] args)
-        {
-            EmailRepository repository = new EmailRepository();
-            repository.InsertNewEmail(new Email());
-        }
-
-        protected override void OnStop()
-        {
-        }
     }
 }

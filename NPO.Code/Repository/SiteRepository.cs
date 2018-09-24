@@ -284,7 +284,7 @@ from (
             {
                 SqlCommand com = new SqlCommand(@"
                     Select CityName ,CityId
-                    From City", conDatabase);
+                    From City order by CityName", conDatabase);
                 com.Connection = conDatabase;
                 conDatabase.Open();
 

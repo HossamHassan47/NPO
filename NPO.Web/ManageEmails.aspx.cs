@@ -59,6 +59,7 @@ namespace NPO.Web
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {
+            gvEmails.PageIndex = 0;
             gvEmails.DataBind();
 
         }
@@ -91,16 +92,14 @@ namespace NPO.Web
             }
             if (e.CommandName == "Assign")
             {
-                if ((bool)Session["isAdmin"])
-                {
-                    // 1212,32,1
+               
+                        txtEmailId.Text = Convert.ToInt32(e.CommandArgument).ToString();
+                        BindDDlController();
+                        BindControllerRepeater();
 
-                    txtEmailId.Text = Convert.ToInt32(e.CommandArgument).ToString();
-                    BindDDlController();
-                    BindControllerRepeater();
-  
-                    btnPanalAssign_ModalPopupExtender.Show();
-                }
+                        btnPanalAssign_ModalPopupExtender.Show();
+                
+                
             }
             if (e.CommandName == "changestatus")
             {
@@ -359,6 +358,13 @@ namespace NPO.Web
             Page.Response.Redirect(Page.Request.Url.ToString(), true);
         }
 
- 
+
+        protected void btnExport_Click(object sender, EventArgs e)
+        {
+            EmailRepository emailRep = new EmailRepository();
+            DataTable db = emailRep.ExportGetEmails(GetFilter(), Convert.ToInt32(Session["UserId"]), (bool)Session["IsAdmin"]);
+            EppLusExcel epp = new EppLusExcel();
+            epp.ExporttoExcel(db, "Emails","ExportEmails");
+        }
     }
 }

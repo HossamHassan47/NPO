@@ -12,13 +12,13 @@
             </td>
 
             <td>
-                <asp:TextBox ID="txtSiteCode" runat="server" Width="299px"></asp:TextBox>
+                <asp:TextBox ID="txtSiteCode" runat="server" Width="299px" onkeydown = "return (event.keyCode!=13);"></asp:TextBox>
             </td>
             <td>
                 <asp:Label ID="Label1" runat="server" Text="Site Name : "></asp:Label>
             </td>
             <td>
-                <asp:TextBox ID="txtSiteName" runat="server" Width="300px"></asp:TextBox>
+                <asp:TextBox ID="txtSiteName" runat="server" Width="300px" onkeydown = "return (event.keyCode!=13);"></asp:TextBox>
             </td>
 
         </tr>
@@ -44,15 +44,14 @@
 
         </tr>
         <tr>
-            <td>
-                <asp:Label ID="Label6" runat="server" Text="Upload Excel File"></asp:Label>
-
-            </td>
-            <td>
-                <asp:FileUpload ID="FileUpload1" runat="server" Font-Bold="True" accept=".xlsx" />
-
-            </td>
             <td></td>
+            <td >
+                <asp:FileUpload ID="FileUpload1" runat="server" Font-Bold="True" accept=".xlsx" BorderColor="Black" BorderStyle="Solid" BorderWidth="1px" />
+            </td>
+            <td>
+                <asp:Button ID="Button2" runat="server" Font-Bold="True" Text="Upload" OnClick="Button1_Click" CssClass="btn btn-default"  />
+                <asp:Label ID="lblUploadResult" runat="server"></asp:Label>
+            </td>
             <td>
                 <asp:Button ID="btnSearch" runat="server" Text="Search" Width="120px"
                     CssClass="btn btn-default btnSearch" OnClick="btnSearch_Click" />
@@ -63,13 +62,7 @@
 
         </tr>
 
-        <tr>
-            <td></td>
-            <td style="height: 49px">
-
-                <asp:Button ID="Button1" runat="server" Font-Bold="True" Text="Upload" OnClick="Button1_Click" />
-                <asp:Label ID="lblUploadResult" runat="server"></asp:Label>
-        </tr>
+        
     </table>
 
     <asp:Button ID="btnExtender" runat="server" Style="display: none" />
@@ -254,7 +247,7 @@
 
             <asp:TemplateField>
                 <ItemTemplate>
-                    <asp:ImageButton ID="btnDelete" runat="server" ImageUrl="~/Content/icDelete.png" CommandName="deletesite" CommandArgument='<%#Eval("SiteId")%>' OnClientClick="return confirm('Are you sure you want to delete this User?');"
+                    <asp:ImageButton ID="btnDelete" runat="server" ImageUrl="~/Content/icDelete.png" CommandName="deletesite" CommandArgument='<%#Eval("SiteId")%>' OnClientClick="return confirm('Are you sure you want to delete this Site?');"
                         AlternateText="Delete" />
                     <asp:ImageButton ID="btnEdit" runat="server" ImageUrl="~/Content/icEdit.png" CommandName="editsite" CommandArgument='<%#Eval("SiteId")%>' />
                 </ItemTemplate>

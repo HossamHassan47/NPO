@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -122,46 +123,89 @@ namespace NPO.Web
         }
 
 
-      private void SendMailPassword()
+        private void SendMailPassword(User user)
         {
-            User user = GetVaules();
             if (txtEmailAddressAdd.ToString().Trim() != string.Empty)
             {
                 EntityEmail email = new EntityEmail();
-                email.To = txtEmailAddressAdd.Text.ToString().Trim();
+                email.To = user.EmailAddress.Trim();
                 email.Subject = "Welcome into NPO tool";
                 email.Body = @"
                                 Welcome " +
                               user.FullName + @"
                               , you have now new account in NPO tool <br/> EmailAddress :
-                            " + txtEmailAddressAdd.Text.ToString().Trim() + @"<br/> 
+                            " + user.NokiaUserName.Trim() + @"<br/> 
                             password :" + user.Password;
                 MailHelper.SendMail(email);
-               
+
             }
         }
         protected void btnSave_Click(object sender, EventArgs e)
         {
+
+            if (string.IsNullOrWhiteSpace(txtNameAdd.Text.ToString().Trim()))
+            {
+                lblCheckEmail.Text = "User must have Name";
+                lblCheckEmail.Font.Bold = true;
+                lblCheckEmail.ForeColor = Color.Red;
+                txtNameAdd.Focus();
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(txtNokiaNameAdd.Text.ToString().Trim()))
+            {
+                lblCheckEmail.Text = "User must have Nokia user name";
+                lblCheckEmail.Font.Bold = true;
+                lblCheckEmail.ForeColor = Color.Red;
+                txtNokiaNameAdd.Focus();
+                return;
+            }
             bool CheckMailVaild = new EmailAddressAttribute().IsValid(txtEmailAddressAdd.Text.ToString().Trim());
-            
+
             if (!CheckMailVaild)
             {
                 lblCheckEmail.Text = "Email Address isn't correct please confirm and try again";
+                lblCheckEmail.Font.Bold = true;
+                lblCheckEmail.ForeColor = Color.Red;
                 return;
             }
 
             UserRepository userRep = new UserRepository();
+
+            int nokiaId =  userRep.CheckNokiaUserName(txtNokiaNameAdd.Text.ToString().Trim());
+            if (nokiaId != -1)
+            {
+                lblCheckEmail.Text = "Nokia user name must be unique ";
+                txtNokiaNameAdd.Focus();
+                lblCheckEmail.ForeColor = Color.Red;
+                lblCheckEmail.Visible = true;
+                return;
+            }
+
+            int emailAddId = userRep.CheckEmailAddress(txtEmailAddressAdd.Text.ToString().Trim());
+            if (emailAddId != -1)
+            {
+                lblCheckEmail.Text = "Email address must be unique ";
+                txtEmailAddressAdd.Focus();
+                lblCheckEmail.ForeColor = Color.Red;
+                lblCheckEmail.Visible = true;
+                return;
+
+            }
+
             User user = GetVaules();
 
             int id = Convert.ToInt32(txtid.Text);
             if (id < 0)
             {
+
                 int idUser = userRep.InsertNewUser(user);
                 if (idUser > 0)
                 {
                     BindUsersGrid();
-                    SendMailPassword();
+                    SendMailPassword(user);
                     lblCheckEmail.Text = "User add successfuly.";
+                    lblCheckEmail.Font.Bold = true;
+                    lblCheckEmail.ForeColor = Color.Blue;
                     setTextBoxesNull();
                 }
                 else
@@ -272,6 +316,7 @@ namespace NPO.Web
             txtEmailAddressAdd.Text = "";
             //txtPasswordAdd.Text = "";
         }
+
         // Fixed Colume Width  gridView
         protected void gvUsers_RowDataBound(object sender, GridViewRowEventArgs e)
         {

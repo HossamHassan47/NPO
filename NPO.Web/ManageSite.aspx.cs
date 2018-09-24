@@ -63,7 +63,7 @@ namespace NPO.Web
             entity.SiteName = txtAddSiteName.Text.ToString();
             entity.SiteCode = txtAddSiteCode.Text.ToString();
             entity.RegionId = 5;
-            if (ddlType.SelectedIndex != 0) entity.CityId = Convert.ToInt32(ddlType.SelectedValue);
+            if (ddlType.SelectedIndex != 0) entity.SiteType = Convert.ToInt32(ddlType.SelectedValue);
             else { entity.SiteType = 0; }
             if (ddlAddCityName.SelectedIndex != 0) entity.CityId = Convert.ToInt32(ddlAddCityName.SelectedValue);
             else { entity.CityId = 0; }
@@ -159,7 +159,7 @@ namespace NPO.Web
                 }
                 if (Convert.ToUInt32(dataTable.Rows[index][6]) == 0)
                 {
-                    ddlAddCityName.SelectedIndex = 0;
+                    ddlType.SelectedIndex = 0;
                 }
                 else
                 {
@@ -333,6 +333,8 @@ namespace NPO.Web
         #region btnClick
         protected void btnSearch_Click(object sender, EventArgs e)
         {
+            gvSites.PageIndex = 0;
+
             gvSites.DataBind();
 
         }
@@ -352,55 +354,64 @@ namespace NPO.Web
             if (string.IsNullOrWhiteSpace(txtAddSiteCode.Text.ToString().Trim()))
             {
                 lblErrorMsg.Text = "Site must have code";
+                lblErrorMsg.Font.Bold = true;
+                lblErrorMsg.ForeColor = Color.Red;
                 txtAddSiteCode.Focus();
                 return;
             }
             if (string.IsNullOrWhiteSpace(txtAddSiteName.Text.ToString().Trim()))
             {
                 lblErrorMsg.Text = "Site must have name";
-
+                lblErrorMsg.Font.Bold = true;
+                lblErrorMsg.ForeColor = Color.Red;
                 txtAddSiteName.Focus();
                 return;
             }
             if (ddlAddCityName.SelectedIndex == 0)
             {
                 lblErrorMsg.Text = "Site must have city";
-
+                lblErrorMsg.Font.Bold = true;
+                lblErrorMsg.ForeColor = Color.Red;
                 ddlAddCityName.Focus();
                 return;
             }
             if (ddlAddCityZone.SelectedIndex == 0)
             {
                 lblErrorMsg.Text = "Site must have cityZone";
-
+                lblErrorMsg.Font.Bold = true;
+                lblErrorMsg.ForeColor = Color.Red;
                 ddlAddCityZone.Focus();
                 return;
             }
             if (ddlType.SelectedIndex == 0)
             {
                 lblErrorMsg.Text = "Site must have type";
-
+                lblErrorMsg.Font.Bold = true;
+                lblErrorMsg.ForeColor = Color.Red;
                 ddlType.Focus();
                 return;
             }
             if (txt2G.Checked && ddlControllers2g.SelectedIndex == 0)
             {
                 lblErrorMsg.Text = "Site must have contoller2g name ";
-
+                lblErrorMsg.Font.Bold = true;
+                lblErrorMsg.ForeColor = Color.Red;
                 ddlControllers2g.Focus();
                 return;
             }
             if (txt3G.Checked && ddlControllers3g.SelectedIndex == 0)
             {
                 lblErrorMsg.Text = "Site must have contoller3g name ";
-
+                lblErrorMsg.Font.Bold = true;
+                lblErrorMsg.ForeColor = Color.Red;
                 ddlControllers2g.Focus();
                 return;
             }
             if (txt4G.Checked && ddlControllers4g.SelectedIndex == 0)
             {
                 lblErrorMsg.Text = "Site must have contoller4g name ";
-
+                lblErrorMsg.Font.Bold = true;
+                lblErrorMsg.ForeColor = Color.Red;
                 ddlControllers2g.Focus();
                 return;
             }
@@ -609,6 +620,8 @@ namespace NPO.Web
             }
             // display upload result
             lblUploadResult.Text = message;
+            lblUploadResult.ForeColor = Color.Red;
+            lblUploadResult.Font.Bold = true;
 
         }
 
@@ -740,7 +753,7 @@ namespace NPO.Web
             lblUploadResult.Text = message;
             gvSites.DataBind();
             EppLusExcel down = new EppLusExcel();
-            down.ExporttoExcel(sites, "Sheet1");
+            down.ExporttoExcel(sites, "Sheet1","SitesUploadResult");
             return true;
         }
         #endregion

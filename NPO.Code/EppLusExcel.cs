@@ -291,7 +291,7 @@ public class EppLusExcel
             pck.Save();
         }
     }
-    public void ExporttoExcel(DataTable table, string filename)
+    public void ExporttoExcel(DataTable table, string filename , string ExcelName)
     {
         HttpContext.Current.Response.Clear();
         HttpContext.Current.Response.ClearContent();
@@ -300,7 +300,7 @@ public class EppLusExcel
         HttpContext.Current.Response.ContentEncoding = System.Text.Encoding.UTF8;
         HttpContext.Current.Response.Cache.SetCacheability(HttpCacheability.NoCache);
         HttpContext.Current.Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-        HttpContext.Current.Response.AddHeader("content-disposition", "attachment;filename=SitesUploadResult.xlsx");
+        HttpContext.Current.Response.AddHeader("content-disposition", "attachment;filename="+ ExcelName + ".xlsx");
 
 
         using (ExcelPackage pack = new ExcelPackage())

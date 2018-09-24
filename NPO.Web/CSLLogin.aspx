@@ -1,4 +1,5 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="CSLLogin.aspx.cs" Inherits="NPO.Web.ManageLogin" %>
+﻿
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="CSLLogin.aspx.cs" Inherits="NPO.Web.ManageLogin" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
 <!DOCTYPE html>
@@ -74,7 +75,7 @@
 
             <asp:UpdatePanel ID="UpdatePanel1" runat="server" style="height: 300px;">
                 <ContentTemplate>
-                    <asp:Label ID="l1" runat="server" ForeColor="Black" Text="Your Email :  " Font-Bold="True"></asp:Label>
+                    <asp:Label ID="l1" runat="server" ForeColor="Black" Text="Nokia user name :  " Font-Bold="True"></asp:Label>
                     <asp:TextBox ID="txtEmail" runat="server" Width="300px" Height="29px" placeholder="User name"></asp:TextBox>
                   
                     <br />

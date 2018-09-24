@@ -7,16 +7,16 @@
         <tr>
             <td>Controller Name:</td>
             <td>
-                <asp:TextBox ID="txtControllerName" runat="server" Width="300px"></asp:TextBox>
+                <asp:TextBox ID="txtControllerName" runat="server" Width="300px" onkeydown = "return (event.keyCode!=13);"></asp:TextBox>
             </td>
             <td>Technology Name :
             </td>
             <td>
                 <asp:DropDownList ID="DropDownListTech" runat="server" CssClass="col-md-offset-0" Width="200px">
                     <asp:ListItem Text="-- Select --" Value="-1"></asp:ListItem>
-                    <asp:ListItem Text="2G" Value="1"></asp:ListItem>
-                    <asp:ListItem Text="3G" Value="2"></asp:ListItem>
-                    <asp:ListItem Text="4G" Value="3"></asp:ListItem>
+                    <asp:ListItem Text="2G" Value="2"></asp:ListItem>
+                    <asp:ListItem Text="3G" Value="3"></asp:ListItem>
+                    <asp:ListItem Text="4G" Value="4"></asp:ListItem>
                 </asp:DropDownList>
             </td>
         </tr>
@@ -198,6 +198,7 @@
         <SortedDescendingCellStyle BackColor="#CAC9C9" />
         <SortedDescendingHeaderStyle BackColor="#000065" />
          <AlternatingRowStyle BackColor="#E5E8E8" />
+        <PagerStyle CssClass="pagination-ys" />
 
     </asp:GridView>
     <asp:ObjectDataSource ID="DsGvCon" OnSelecting="DsGvcon_Selecting"

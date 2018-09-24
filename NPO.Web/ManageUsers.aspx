@@ -12,13 +12,13 @@
             </td>
 
             <td>
-                <asp:TextBox ID="txtMemberNokiaUserName" runat="server" Width="299px"></asp:TextBox>
+                <asp:TextBox ID="txtMemberNokiaUserName" runat="server" Width="299px" onkeydown = "return (event.keyCode!=13);"></asp:TextBox>
             </td>
             <td>
                 <asp:Label ID="Label4" runat="server" Text="Full Name : " ></asp:Label>
                 
             </td>
-            <td><asp:TextBox ID="txtFullName" runat="server" Width="300px"></asp:TextBox></td>
+            <td><asp:TextBox ID="txtFullName" runat="server" Width="300px" onkeydown = "return (event.keyCode!=13);"></asp:TextBox></td>
 
         </tr>
         <tr>
@@ -26,7 +26,7 @@
                 <asp:Label ID="Label3" runat="server" Text="Email Address : " ></asp:Label>
             </td>
             <td>
-                <asp:TextBox ID="TxtEmailAddress" runat="server" Width="300px"></asp:TextBox>
+                <asp:TextBox ID="TxtEmailAddress" runat="server" Width="300px" onkeydown = "return (event.keyCode!=13);"></asp:TextBox>
             </td>
 
             <td>
