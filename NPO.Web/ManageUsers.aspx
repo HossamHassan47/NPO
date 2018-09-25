@@ -1,8 +1,8 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ManageUsers.aspx.cs" Inherits="NPO.Web.ManageUsers" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ManageUsers.aspx.cs" Inherits="NPO.Web.ManageUsers"%>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
+<asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server" >
 
     <table class="zebra">
 
@@ -12,13 +12,13 @@
             </td>
 
             <td>
-                <asp:TextBox ID="txtMemberNokiaUserName" runat="server" Width="299px" onkeydown = "return (event.keyCode!=13);"></asp:TextBox>
+                <asp:TextBox ID="txtMemberNokiaUserName" runat="server" Width="299px"></asp:TextBox>
             </td>
             <td>
                 <asp:Label ID="Label4" runat="server" Text="Full Name : " ></asp:Label>
                 
             </td>
-            <td><asp:TextBox ID="txtFullName" runat="server" Width="300px" onkeydown = "return (event.keyCode!=13);"></asp:TextBox></td>
+            <td><asp:TextBox ID="txtFullName" runat="server" Width="300px"></asp:TextBox></td>
 
         </tr>
         <tr>
@@ -26,7 +26,7 @@
                 <asp:Label ID="Label3" runat="server" Text="Email Address : " ></asp:Label>
             </td>
             <td>
-                <asp:TextBox ID="TxtEmailAddress" runat="server" Width="300px" onkeydown = "return (event.keyCode!=13);"></asp:TextBox>
+                <asp:TextBox ID="TxtEmailAddress" runat="server" Width="300px"></asp:TextBox>
             </td>
 
             <td>
@@ -129,8 +129,9 @@
         <Columns>
             <asp:TemplateField>
                 <ItemTemplate>
-                    <asp:ImageButton ID="btnDelete" runat="server" ImageUrl="~/Content/icDelete.png" CommandName="deleteuser" CommandArgument='<%#Eval("UserID")%>' OnClientClick="return confirm('Are you sure you want to delete this User?');"
-                        AlternateText="Delete" />
+                    <asp:ImageButton ID="btnDelete" runat="server" ImageUrl="~/Content/icDelete.png" CommandName="deleteuser" 
+                        CommandArgument='<%#Eval("UserID")%>' OnClientClick="return confirm('Are you sure you want to delete this User?');"
+                        AlternateText="Delete" Visible='<%# Eval("NokiaUserName").ToString() != "admin" %>' />
                     <asp:ImageButton ID="btnEdit" runat="server" ImageUrl="~/Content/icEdit.png" CommandName="edituser" CommandArgument='<%#Eval("UserID")%>' />
                 </ItemTemplate>
             </asp:TemplateField>

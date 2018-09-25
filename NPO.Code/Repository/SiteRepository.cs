@@ -14,12 +14,8 @@ namespace NPO.Code.Repository
 {
     public class SiteRepository
     {
-
-
-
         #region ObjectDataSource
         public static DataTable GetSites(SiteFilter filter, int maximumRows, int startRowIndex)
-
         {
             DataTable dataTable = new DataTable();
             var sql = @"
@@ -50,6 +46,46 @@ from (
             return dataTable;
         }
 
+        public DataTable GetSitesForExcel(SiteFilter filter)
+        {
+            DataTable dataTable = new DataTable();
+            var sql = @"
+SELECT  dbo.Region.RegionName AS 'Region' ,
+        dbo.[Site].SiteCode AS 'Site_Code',
+        dbo.[Site].SiteName AS 'Site_Name',
+        dbo.City.CityName AS 'City',
+		dbo.Zone.ZoneName AS 'City_Zone',
+        dbo.SiteType.[Type],
+		Controller_2g.ControllerName AS 'BSC',
+		Controller_3g.ControllerName AS 'RNC',
+		Controller_4g.ControllerName AS 'LTE_City',
+        CONVERT(NVARCHAR(1), dbo.[Site].[2g]) AS '2g',
+		CONVERT(NVARCHAR(1), dbo.[Site].[3g]) AS '3g',
+		CONVERT(NVARCHAR(1), dbo.[Site].[4g]) AS 'LTE'
+FROM [dbo].[Site]  
+INNER JOIN dbo.Region ON dbo.[Site].RegionId = dbo.Region.RegionId
+INNER JOIN dbo.City ON dbo.[Site].CityId = dbo.City.CityId
+INNER JOIN dbo.Zone ON dbo.Site.ZoneId = dbo.Zone.ZoneId
+INNER JOIN dbo.SiteType ON dbo.Site.SiteType = dbo.SiteType.TypeId
+LEFT OUTER JOIN dbo.Controller AS Controller_2g ON Controller_2g.ControllerId = dbo.Site.ControlerId2g
+LEFT OUTER JOIN dbo.Controller AS Controller_3g ON Controller_3g.ControllerId = dbo.Site.ControlerId3g
+LEFT OUTER JOIN dbo.Controller AS Controller_4g ON Controller_4g.ControllerId = dbo.Site.ControlerId4g 
+
+WHERE (1 = 1)  ";
+
+            sql += getFilterString(filter);
+
+            sql += " ORDER BY dbo.Site.SiteCode";
+
+            using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
+            {
+                sqlConnection.Open();
+                SqlDataAdapter sqlAdapter = new SqlDataAdapter(sql, sqlConnection);
+                sqlAdapter.Fill(dataTable);
+            }
+
+            return dataTable;
+        }
 
         public static int GetSitesCount(SiteFilter filter)
         {
@@ -84,27 +120,27 @@ from (
 
             if (!string.IsNullOrEmpty(filter.SiteCode))
             {
-                sql += " AND [SiteCode] LIKE '%" + filter.SiteCode + "%'";
+                sql += " AND dbo.[Site].[SiteCode] LIKE '%" + filter.SiteCode + "%'";
             }
             if (!string.IsNullOrEmpty(filter.SiteName))
             {
-                sql += " AND [SiteName] LIKE '%" + filter.SiteName + "%'";
+                sql += " AND dbo.[Site].[SiteName] LIKE '%" + filter.SiteName + "%'";
             }
             if (!(filter.CityId == 0))
             {
-                sql += " AND [CityId] LIKE '%" + filter.CityId + "%'";
+                sql += " AND dbo.[Site].[CityId] LIKE '%" + filter.CityId + "%'";
             }
             if (filter._2g)
             {
-                sql += " AND [2g] = " + 1;
+                sql += " AND dbo.[Site].[2g] = " + 1;
             }
             if (filter._3g)
             {
-                sql += " AND [3g] = " + 1;
+                sql += " AND dbo.[Site].[3g] = " + 1;
             }
             if (filter._4g)
             {
-                sql += " AND [4g] = " + 1;
+                sql += " AND dbo.[Site].[4g] = " + 1;
             }
 
 
@@ -204,6 +240,7 @@ from (
                 cmd.Parameters.Add("@SiteId", SqlDbType.NVarChar).Value = site.SiteId;
                 cmd.Parameters.Add("@SiteName", SqlDbType.NVarChar).Value = site.SiteName;
                 cmd.Parameters.Add("@SiteCode", SqlDbType.NVarChar).Value = site.SiteCode;
+                cmd.Parameters.Add("@RegionId", SqlDbType.Int).Value = site.RegionId;
                 cmd.Parameters.Add("@CityId", SqlDbType.Int).Value = site.CityId;
                 cmd.Parameters.Add("@ZoneId", SqlDbType.Int).Value = site.ZoneId;
                 cmd.Parameters.Add("@2g", SqlDbType.Bit).Value = site._2g;
@@ -284,7 +321,7 @@ from (
             {
                 SqlCommand com = new SqlCommand(@"
                     Select CityName ,CityId
-                    From City order by CityName", conDatabase);
+                    From City", conDatabase);
                 com.Connection = conDatabase;
                 conDatabase.Open();
 
@@ -334,6 +371,7 @@ from (
 
             return dataTable;
         }
+
         public List<Site> GetAllSites()
         {
             List<Site> liSites = new List<Site>();

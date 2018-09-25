@@ -4,6 +4,7 @@ using NPO.Code.Repository;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -15,6 +16,8 @@ namespace NPO.Web
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            this.Form.DefaultButton = this.btnSearch.UniqueID;
+
             if (!IsPostBack)
             {
                 gvControllers.DataBind();
@@ -63,7 +66,8 @@ namespace NPO.Web
             if (string.IsNullOrWhiteSpace(txtConName.Text.ToString().Trim()))
             {
                 lblErrorMsg.Text = "Controller must have name";
-
+                lblErrorMsg.ForeColor = Color.Red;
+                lblErrorMsg.Font.Bold = true;
                 txtConName.Focus();
                 return;
             }
@@ -71,7 +75,8 @@ namespace NPO.Web
             if (ddlTechnology.SelectedIndex == 0)
             {
                 lblErrorMsg.Text = "Controller must have Technology";
-
+                lblErrorMsg.ForeColor = Color.Red;
+                lblErrorMsg.Font.Bold = true;
                 ddlTechnology.Focus();
                 return;
             }
@@ -223,6 +228,12 @@ namespace NPO.Web
             ControllerRepository conUserReb = new ControllerRepository();
             conUserReb.DeleteUserController(conUserId);
             BindRepeater();
+        }
+
+        protected void btnExportToXls_Click(object sender, EventArgs e)
+        {
+            var dtControllers = new ControllerRepository().GetControllersForExcel(GetFilter());
+            new EppLusExcel().ExporttoExcel(dtControllers, "Controller", "NPO_Controllers");
         }
     }
 }

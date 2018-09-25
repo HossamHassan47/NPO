@@ -12,13 +12,13 @@
             </td>
 
             <td>
-                <asp:TextBox ID="txtSiteCode" runat="server" Width="299px" onkeydown = "return (event.keyCode!=13);"></asp:TextBox>
+                <asp:TextBox ID="txtSiteCode" runat="server" Width="299px"></asp:TextBox>
             </td>
             <td>
                 <asp:Label ID="Label1" runat="server" Text="Site Name : "></asp:Label>
             </td>
             <td>
-                <asp:TextBox ID="txtSiteName" runat="server" Width="300px" onkeydown = "return (event.keyCode!=13);"></asp:TextBox>
+                <asp:TextBox ID="txtSiteName" runat="server" Width="300px"></asp:TextBox>
             </td>
 
         </tr>
@@ -41,7 +41,6 @@
                 <asp:CheckBox ID="_4g" runat="server" Text="4G" Checked="false" Font-Bold="True"></asp:CheckBox>
 
             </td>
-
         </tr>
         <tr>
             <td></td>
@@ -49,10 +48,12 @@
                 <asp:FileUpload ID="FileUpload1" runat="server" Font-Bold="True" accept=".xlsx" BorderColor="Black" BorderStyle="Solid" BorderWidth="1px" />
             </td>
             <td>
-                <asp:Button ID="Button2" runat="server" Font-Bold="True" Text="Upload" OnClick="Button1_Click" CssClass="btn btn-default"  />
+                <asp:Button ID="Button1" runat="server" Font-Bold="True" Text="Upload" OnClick="Button1_Click" CssClass="btn btn-default"  />
                 <asp:Label ID="lblUploadResult" runat="server"></asp:Label>
             </td>
-            <td>
+            <td >
+                <asp:Button ID="btnExportToXls" runat="server" Text="Export" Width="120px"
+                    CssClass="btn btn-default btnExportExcel" OnClick="btnExportToXls_Click" />
                 <asp:Button ID="btnSearch" runat="server" Text="Search" Width="120px"
                     CssClass="btn btn-default btnSearch" OnClick="btnSearch_Click" />
                 <asp:Button ID="btnAdd" runat="server" Text="ADD" Width="120px"
@@ -61,8 +62,7 @@
             </td>
 
         </tr>
-
-        
+       
     </table>
 
     <asp:Button ID="btnExtender" runat="server" Style="display: none" />

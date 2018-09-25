@@ -19,10 +19,13 @@ namespace NPO.Web
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            this.Form.DefaultButton = this.btnSearch.UniqueID;
+
             DoneOrNot.Text = "";
             if (!IsPostBack)
             {
                 BindUsersGrid();
+
 
             }
         }
@@ -123,7 +126,7 @@ namespace NPO.Web
         }
 
 
-        private void SendMailPassword(User user)
+      private void SendMailPassword(User user)
         {
             if (txtEmailAddressAdd.ToString().Trim() != string.Empty)
             {
@@ -137,75 +140,84 @@ namespace NPO.Web
                             " + user.NokiaUserName.Trim() + @"<br/> 
                             password :" + user.Password;
                 MailHelper.SendMail(email);
-
+               
             }
         }
         protected void btnSave_Click(object sender, EventArgs e)
         {
+            int id = Convert.ToInt32(txtid.Text);
 
             if (string.IsNullOrWhiteSpace(txtNameAdd.Text.ToString().Trim()))
             {
                 lblCheckEmail.Text = "User must have Name";
-                lblCheckEmail.Font.Bold = true;
                 lblCheckEmail.ForeColor = Color.Red;
+                lblCheckEmail.Font.Bold = true;
+                lblCheckEmail.Visible = true;
                 txtNameAdd.Focus();
                 return;
             }
             if (string.IsNullOrWhiteSpace(txtNokiaNameAdd.Text.ToString().Trim()))
             {
                 lblCheckEmail.Text = "User must have Nokia user name";
-                lblCheckEmail.Font.Bold = true;
                 lblCheckEmail.ForeColor = Color.Red;
+                lblCheckEmail.Font.Bold = true;
+                lblCheckEmail.Visible = true;
                 txtNokiaNameAdd.Focus();
                 return;
             }
             bool CheckMailVaild = new EmailAddressAttribute().IsValid(txtEmailAddressAdd.Text.ToString().Trim());
-
+            
             if (!CheckMailVaild)
             {
                 lblCheckEmail.Text = "Email Address isn't correct please confirm and try again";
+                lblCheckEmail.ForeColor = Color.Red;
                 lblCheckEmail.Font.Bold = true;
-                lblCheckEmail.ForeColor = Color.Red;
-                return;
-            }
-
-            UserRepository userRep = new UserRepository();
-
-            int nokiaId =  userRep.CheckNokiaUserName(txtNokiaNameAdd.Text.ToString().Trim());
-            if (nokiaId != -1)
-            {
-                lblCheckEmail.Text = "Nokia user name must be unique ";
-                txtNokiaNameAdd.Focus();
-                lblCheckEmail.ForeColor = Color.Red;
                 lblCheckEmail.Visible = true;
                 return;
+            }
+            
+            UserRepository userRep = new UserRepository();
+
+            int nokiaId = userRep.CheckNokiaUserName(txtNokiaNameAdd.Text.ToString().Trim());
+            if (nokiaId != -1)
+            {
+                if (nokiaId != id) {
+                    lblCheckEmail.Text = "Nokia user name must be unique ";
+                    txtNokiaNameAdd.Focus();
+                    lblCheckEmail.ForeColor = Color.Red;
+                    lblCheckEmail.Font.Bold = true;
+                    lblCheckEmail.Visible = true;
+                    return;
+                }
             }
 
             int emailAddId = userRep.CheckEmailAddress(txtEmailAddressAdd.Text.ToString().Trim());
             if (emailAddId != -1)
             {
-                lblCheckEmail.Text = "Email address must be unique ";
-                txtEmailAddressAdd.Focus();
-                lblCheckEmail.ForeColor = Color.Red;
-                lblCheckEmail.Visible = true;
-                return;
+                if (emailAddId != id)
+                {
+                    lblCheckEmail.Text = "Email address must be unique ";
+                    txtEmailAddressAdd.Focus();
+                    lblCheckEmail.ForeColor = Color.Red;
+                    lblCheckEmail.Font.Bold = true;
+                    lblCheckEmail.Visible = true;
+                    return;
+                }
 
             }
 
             User user = GetVaules();
 
-            int id = Convert.ToInt32(txtid.Text);
             if (id < 0)
             {
-
                 int idUser = userRep.InsertNewUser(user);
                 if (idUser > 0)
                 {
                     BindUsersGrid();
                     SendMailPassword(user);
                     lblCheckEmail.Text = "User add successfuly.";
+                    lblCheckEmail.ForeColor = Color.Green;
                     lblCheckEmail.Font.Bold = true;
-                    lblCheckEmail.ForeColor = Color.Blue;
                     setTextBoxesNull();
                 }
                 else
@@ -221,7 +233,9 @@ namespace NPO.Web
                 if (idUser)
                 {
                     BindUsersGrid();
-                    DoneOrNot.Text = "Done";
+                    lblCheckEmail.Text = "User Updated successfuly.";
+                    lblCheckEmail.ForeColor = Color.Green;
+                    lblCheckEmail.Font.Bold = true;
                     setTextBoxesNull();
                 }
                 else
@@ -284,13 +298,9 @@ namespace NPO.Web
             {
                 UserRepository userRep = new UserRepository();
                 int id = Convert.ToInt32(e.CommandArgument);
-                if (id == 30)
-                {
-                    DoneOrNot.Text = "you cannot delete this user because he is tool admin";
 
-                }
-                else
-                {
+             
+              
                     bool isUser = userRep.DeleteUser(GetUpdateVaules(id));
                     if (isUser)
                     {
@@ -302,7 +312,7 @@ namespace NPO.Web
                         BindUsersGrid();
                         DoneOrNot.Text = "You have problem";
                     }
-                }
+                
 
             }
 

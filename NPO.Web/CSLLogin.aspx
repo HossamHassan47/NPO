@@ -1,5 +1,4 @@
-﻿
-<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="CSLLogin.aspx.cs" Inherits="NPO.Web.ManageLogin" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="CSLLogin.aspx.cs" Inherits="NPO.Web.ManageLogin" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
 <!DOCTYPE html>

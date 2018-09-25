@@ -19,18 +19,27 @@ namespace NPO.Code.Repository
             DataTable dataTable = new DataTable();
             var sql = @"
 SELECT * from (
-    SELECT ROW_NUMBER() OVER ( ORDER BY ControllerId  ) ROWNUMBER,
+    SELECT ROW_NUMBER() OVER ( ORDER BY dbo.Technology.TechnologyID, dbo.Controller.ControllerName  ) ROWNUMBER,
             [dbo].[Controller].[ControllerId],
             [dbo].[Controller].[ControllerName] ,
             [dbo].[Controller].[TechnologyId],
-			dbo.Technology.TechnologyName
+			dbo.Technology.TechnologyName,
+            STUFF(( SELECT ', '+ dbo.[User].EmailAddress
+                 FROM dbo.[User]
+                 JOIN dbo.ControllerUser ON ControllerUser.UserId = dbo.[User].UserID
+                 WHERE dbo.ControllerUser.ControllerId = dbo.Controller.ControllerId
+                FOR XML PATH('')), 1, 1, '') AS 'Assigned_Users'
     FROM [dbo].[Controller]
-left outer join dbo.Technology on [dbo].[Controller].TechnologyId = dbo.Technology.TechnologyId
+left outer join dbo.Technology on [dbo].[Controller].TechnologyId = dbo.Technology.TechnologyID
 	WHERE (1 = 1)  ";
 
             sql += getFilterString(filter);
 
+         //   sql += " ORDER BY dbo.Technology.TechnologyID, dbo.Controller.ControllerName ";
+
             sql += ") As query where  query.ROWNUMBER > " + startRowIndex + " AND query.ROWNUMBER <= " + (startRowIndex + maximumRows);
+
+      
 
             using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
             {
@@ -324,6 +333,35 @@ where (1=1)" + getFilterString(filter);
 
             return conId;
         }
-     
+
+        public DataTable GetControllersForExcel(ControllerFilter filter)
+        {
+            DataTable dataTable = new DataTable();
+            var sql = @"
+    SELECT dbo.Technology.TechnologyName,
+           dbo.Controller.ControllerName,
+           STUFF(( SELECT ', '+ dbo.[User].EmailAddress
+                 FROM dbo.[User]
+                 JOIN dbo.ControllerUser ON ControllerUser.UserId = dbo.[User].UserID
+                 WHERE dbo.ControllerUser.ControllerId = dbo.Controller.ControllerId
+                FOR XML PATH('')), 1, 1, '') AS 'Assigned_Users'
+ FROM dbo.Controller
+ INNER JOIN dbo.Technology ON dbo.Controller.TechnologyId = dbo.Technology.TechnologyID
+WHERE (1 = 1)  ";
+
+            sql += getFilterString(filter);
+
+            sql += " ORDER BY dbo.Technology.TechnologyID, dbo.Controller.ControllerName ";
+
+            using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
+            {
+                sqlConnection.Open();
+                SqlDataAdapter sqlAdapter = new SqlDataAdapter(sql, sqlConnection);
+                sqlAdapter.Fill(dataTable);
+            }
+
+            return dataTable;
+        }
+
     }
 }

@@ -32,7 +32,6 @@ namespace NPO.Code.Repository
             return dataTable;
         }
 
-       
 
         private string getSelectStatment(UserFilter filter)
         {
@@ -164,13 +163,14 @@ namespace NPO.Code.Repository
                 sqlConnection.Open();
                 using (SqlDataReader dr = cmd.ExecuteReader())
                 {
-                    if (dr.Read()) {
+                    if (dr.Read())
+                    {
                         uId = Convert.ToInt32(dr["UserId"]);
                         return uId;
                     }
                 }
 
-              
+
             }
             return uId;
         }
@@ -226,12 +226,12 @@ namespace NPO.Code.Repository
             }
 
         }
-        public bool ChangePassword(string oldPassword, string newPassword,int userID)
+        public bool ChangePassword(string oldPassword, string newPassword, int userID)
         {
             int userId = CheckoldPassword(oldPassword, userID);
-            if (userId != -1 )
+            if (userId != -1)
             {
-                var sql = "Update [User] Set Password = '" + newPassword + "' Where UserID = " + userId; 
+                var sql = "Update [User] Set Password = '" + newPassword + "' Where UserID = " + userId;
                 using (SqlConnection con = new SqlConnection(DBHelper.strConnString))
                 {
                     SqlCommand sqlcomm = new SqlCommand(sql, con);
@@ -245,20 +245,20 @@ namespace NPO.Code.Repository
             return false;
         }
 
-        private int CheckoldPassword(string oldPassword , int userID)
+        private int CheckoldPassword(string oldPassword, int userID)
         {
-            var sql = "Select UserID from [User] where Password = '" + oldPassword + "' AND UserID = "+ userID ;
-            int emailId = -1; 
-            using(SqlConnection con = new SqlConnection(DBHelper.strConnString))
+            var sql = "Select UserID from [User] where Password = '" + oldPassword + "' AND UserID = " + userID;
+            int emailId = -1;
+            using (SqlConnection con = new SqlConnection(DBHelper.strConnString))
             {
-                SqlCommand sqlcomm = new SqlCommand(sql,con);
+                SqlCommand sqlcomm = new SqlCommand(sql, con);
                 con.Open();
                 using (SqlDataReader dr = sqlcomm.ExecuteReader())
                 {
                     if (dr.Read())
                     {
                         emailId = Convert.ToInt32(dr["UserID"]);
-                        return emailId; 
+                        return emailId;
                     }
                 }
             }

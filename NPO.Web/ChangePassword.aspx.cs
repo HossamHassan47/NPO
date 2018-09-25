@@ -8,7 +8,8 @@ namespace NPO.Web
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            btnDone.Focus();
+            this.Form.DefaultButton = this.btnDone.UniqueID;
+
         }
 
         protected void btnDone_Click(object sender, EventArgs e)

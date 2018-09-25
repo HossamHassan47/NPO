@@ -12,6 +12,7 @@ namespace NPO.Web
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            this.Form.DefaultButton = this.btnSearch.UniqueID;
 
             if (!IsPostBack)
             {
@@ -62,7 +63,7 @@ namespace NPO.Web
 
             entity.SiteName = txtAddSiteName.Text.ToString();
             entity.SiteCode = txtAddSiteCode.Text.ToString();
-            entity.RegionId = 5;
+            entity.RegionId = 1;
             if (ddlType.SelectedIndex != 0) entity.SiteType = Convert.ToInt32(ddlType.SelectedValue);
             else { entity.SiteType = 0; }
             if (ddlAddCityName.SelectedIndex != 0) entity.CityId = Convert.ToInt32(ddlAddCityName.SelectedValue);
@@ -338,6 +339,13 @@ namespace NPO.Web
             gvSites.DataBind();
 
         }
+
+        protected void btnExportToXls_Click(object sender, EventArgs e)
+        {
+            var dtSites = new SiteRepository().GetSitesForExcel(GetFilter());
+            new EppLusExcel().ExporttoExcel(dtSites, "Sites", "NPO_Sites");
+        }
+
         protected void btnAdd_Click(object sender, EventArgs e)
         {
             BindControllersList();
@@ -354,76 +362,77 @@ namespace NPO.Web
             if (string.IsNullOrWhiteSpace(txtAddSiteCode.Text.ToString().Trim()))
             {
                 lblErrorMsg.Text = "Site must have code";
-                lblErrorMsg.Font.Bold = true;
-                lblErrorMsg.ForeColor = Color.Red;
+
                 txtAddSiteCode.Focus();
                 return;
             }
             if (string.IsNullOrWhiteSpace(txtAddSiteName.Text.ToString().Trim()))
             {
                 lblErrorMsg.Text = "Site must have name";
-                lblErrorMsg.Font.Bold = true;
                 lblErrorMsg.ForeColor = Color.Red;
+                lblErrorMsg.Font.Bold = true;
                 txtAddSiteName.Focus();
                 return;
             }
             if (ddlAddCityName.SelectedIndex == 0)
             {
                 lblErrorMsg.Text = "Site must have city";
-                lblErrorMsg.Font.Bold = true;
                 lblErrorMsg.ForeColor = Color.Red;
+                lblErrorMsg.Font.Bold = true;
                 ddlAddCityName.Focus();
                 return;
             }
             if (ddlAddCityZone.SelectedIndex == 0)
             {
                 lblErrorMsg.Text = "Site must have cityZone";
-                lblErrorMsg.Font.Bold = true;
                 lblErrorMsg.ForeColor = Color.Red;
+                lblErrorMsg.Font.Bold = true;
                 ddlAddCityZone.Focus();
                 return;
             }
             if (ddlType.SelectedIndex == 0)
             {
                 lblErrorMsg.Text = "Site must have type";
-                lblErrorMsg.Font.Bold = true;
                 lblErrorMsg.ForeColor = Color.Red;
+                lblErrorMsg.Font.Bold = true;
                 ddlType.Focus();
                 return;
             }
             if (txt2G.Checked && ddlControllers2g.SelectedIndex == 0)
             {
                 lblErrorMsg.Text = "Site must have contoller2g name ";
-                lblErrorMsg.Font.Bold = true;
                 lblErrorMsg.ForeColor = Color.Red;
+                lblErrorMsg.Font.Bold = true;
                 ddlControllers2g.Focus();
                 return;
             }
             if (txt3G.Checked && ddlControllers3g.SelectedIndex == 0)
             {
                 lblErrorMsg.Text = "Site must have contoller3g name ";
-                lblErrorMsg.Font.Bold = true;
                 lblErrorMsg.ForeColor = Color.Red;
+                lblErrorMsg.Font.Bold = true;
                 ddlControllers2g.Focus();
                 return;
             }
             if (txt4G.Checked && ddlControllers4g.SelectedIndex == 0)
             {
                 lblErrorMsg.Text = "Site must have contoller4g name ";
-                lblErrorMsg.Font.Bold = true;
                 lblErrorMsg.ForeColor = Color.Red;
+                lblErrorMsg.Font.Bold = true;
                 ddlControllers2g.Focus();
                 return;
             }
             int id = Convert.ToInt32(txtid.Text);
             if (id < 0)
             {
-               
+
                 int siteid = siteRep.InsertNewSite(GetVaules());
                 if (siteid > 0)
                 {
                     Page.Response.Redirect(Page.Request.Url.ToString(), true);
                     DoneOrNot.Text = "Site added successfully";
+                    lblErrorMsg.ForeColor = Color.Green;
+                    lblErrorMsg.Font.Bold = true;
                     setTextBoxesNull();
                 }
                 else
@@ -442,11 +451,15 @@ namespace NPO.Web
                 {
                     Page.Response.Redirect(Page.Request.Url.ToString(), true);
                     DoneOrNot.Text = "Site updated successfully";
+                    DoneOrNot.ForeColor = Color.Green;
+                    DoneOrNot.Font.Bold = true;
                     setTextBoxesNull();
                 }
                 else
                 {
                     DoneOrNot.Text = "You have problem";
+                    DoneOrNot.ForeColor = Color.Red;
+                    DoneOrNot.Font.Bold = true;
                     setTextBoxesNull();
                 }
 
@@ -592,6 +605,7 @@ namespace NPO.Web
             {
                 lblUploadResult.Text = "Please, select file to upload.";
                 lblUploadResult.ForeColor = Color.Red;
+                lblUploadResult.Font.Bold = true;
                 return;
             }
 
@@ -622,21 +636,22 @@ namespace NPO.Web
             lblUploadResult.Text = message;
             lblUploadResult.ForeColor = Color.Red;
             lblUploadResult.Font.Bold = true;
-
         }
 
         public bool UpdateDB_ExcelData(DataTable sites, out string message)
         {
 
             SiteRepository siteRep = new SiteRepository();
-            if (!sites.Columns.Contains("Result")) {
+            if (!sites.Columns.Contains("Result"))
+            {
                 sites.Columns.Add("Result", typeof(string));
             }
+
             foreach (DataRow row in sites.Rows)
             {
 
                 Site site = new Site();
-              
+
                 site.RegionId = siteRep.GetRegionId(row["Region"].ToString().Trim());
                 site.SiteName = row["Site_Name"].ToString().Trim();
                 site.SiteCode = row["Site_Code"].ToString().Trim();
@@ -652,6 +667,7 @@ namespace NPO.Web
                 {
                     site.ControlerId2g = siteRep.GetCOntrollerId_2G(row["BSC"].ToString());
                 }
+
                 if (row["RNC"].ToString().Trim() == "#N/A" || row["RNC"].ToString().Trim() == "" || row["RNC"].ToString().Trim() == "NaN")
                 {
                     site.ControlerId3g = 0;
@@ -669,10 +685,10 @@ namespace NPO.Web
                 {
                     site.ControlerId4g = siteRep.GetCOntrollerId_4G(row["LTE_City"].ToString());
                 }
-
-                site._2g = Convert.ToBoolean((row["2G"]));
-                site._3g = Convert.ToBoolean((row["3G"]));
-                site._4g = Convert.ToBoolean((row["LTE"]));
+                
+                site._2g = row["2G"] == null ? false : (row["2G"].ToString() == "1");
+                site._3g = row["3G"] == null ? false : (row["3G"].ToString() == "1");
+                site._4g = row["LTE"] == null ? false : (row["LTE"].ToString() == "1");
 
                 if (string.IsNullOrEmpty(site.SiteCode))
                 {
@@ -753,7 +769,7 @@ namespace NPO.Web
             lblUploadResult.Text = message;
             gvSites.DataBind();
             EppLusExcel down = new EppLusExcel();
-            down.ExporttoExcel(sites, "Sheet1","SitesUploadResult");
+            down.ExporttoExcel(sites, "Sheet1", "SitesUploadResult");
             return true;
         }
         #endregion

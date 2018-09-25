@@ -3,19 +3,19 @@
 
     <asp:Label runat="server" ID="l1" Text="Old password"></asp:Label>
             <br />
-            <input type="password" placeholder="Old Password" runat="server" id="txtOldPassword" onkeydown = "return (event.keyCode!=13);" />
+            <input type="password" placeholder="Old Password" runat="server" id="txtOldPassword" />
             <br />
         <asp:Label runat="server" ID="l2" Text="New password"></asp:Label>
 
     <br />
-            <input type="password" placeholder="New password" runat="server" id="txtNewPassword" onkeydown = "return (event.keyCode!=13);">
+            <input type="password" placeholder="New password" runat="server" id="txtNewPassword">
 
             <br />
 
      <asp:Label runat="server" ID="l3" Text="Confirm new password"></asp:Label>
 
     <br />
-            <input type="password" placeholder="Confirm new password" runat="server" id="txtConPassword" onkeydown = "return (event.keyCode!=13);">
+            <input type="password" placeholder="Confirm new password" runat="server" id="txtConPassword">
 
             <br />
 

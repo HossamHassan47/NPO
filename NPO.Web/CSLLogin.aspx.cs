@@ -1,5 +1,4 @@
-﻿
-using NPO.Code.Entity;
+﻿using NPO.Code.Entity;
 using NPO.Code.Repository;
 using System;
 using System.Collections.Generic;
@@ -136,7 +135,7 @@ namespace NPO.Web
             }
             else
             {
-                ErrorMsg.Text = "Your username or your password isn't correct please try again later";
+                ErrorMsg.Text = "Your Email Address Or Your Password isn't Correct Please try again later";
                 ErrorMsg.Visible = true;
 
             }

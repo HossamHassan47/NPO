@@ -17,6 +17,8 @@ namespace NPO.Web
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            this.Form.DefaultButton = this.btnSearch.UniqueID;
+
             if (Session["isAdmin"] != null)
             {
                 if ((bool)Session["isAdmin"])
@@ -27,6 +29,8 @@ namespace NPO.Web
                 {
                     gvEmails.Columns[0].Visible = false;
                     gvEmails.Columns[1].Visible = false;
+                    gvEmails.Columns[10].Visible = false;
+
                 }
             }
             if (!IsPostBack)
@@ -73,7 +77,7 @@ namespace NPO.Web
 
                 Literal ltrDyn = new Literal();
                 ltrDyn.Text = htmlBody.GetHtmlBody(id);
-                PanalBody.Controls.Add(ltrDyn);
+                Body.Controls.Add(ltrDyn);
                 btnExtendBody_ModalPopupExtender.Show();
             }
             if (e.CommandName == "download")
@@ -114,6 +118,11 @@ namespace NPO.Web
                         gvEmails.DataBind();
                     }
                 }
+            }
+            if (e.CommandName == "addParentRef")
+            {
+                txtEmailId.Text = Convert.ToInt32(e.CommandArgument).ToString() ;
+                btnAddParentRef_ModalPopupExtender.Show();
             }
 
         }
@@ -365,6 +374,24 @@ namespace NPO.Web
             DataTable db = emailRep.ExportGetEmails(GetFilter(), Convert.ToInt32(Session["UserId"]), (bool)Session["IsAdmin"]);
             EppLusExcel epp = new EppLusExcel();
             epp.ExporttoExcel(db, "Emails","ExportEmails");
+        }
+
+        protected void btnAddParentrefDone_Click(object sender, EventArgs e)
+        {
+            EmailRepository emailRep = new EmailRepository();
+            int emailPerantId = emailRep.GetEmailPerantId(txtParentEmailRef.Text.ToString().Trim());
+            if (emailPerantId == -1)
+            {
+                txtParentEmailRef.Text = "";
+                return;
+            }
+            else
+            {
+                emailRep.AddParentEmailId(Convert.ToInt32(txtEmailId.Text), emailPerantId);
+                txtParentEmailRef.Text = "";
+                gvEmails.DataBind();
+
+            }
         }
     }
 }

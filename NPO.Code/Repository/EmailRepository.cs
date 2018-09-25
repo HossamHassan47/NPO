@@ -10,7 +10,6 @@ namespace NPO.Code.Repository
 {
     public class EmailRepository
     {
-
         #region ObjectDataSource
         public static DataTable GetEmails(EmailFilter filter, int maximumRows, int startRowIndex, int userId, bool isAdmin)
         {
@@ -40,7 +39,7 @@ WHERE [dbo].[Email].ParentEmailId IS NULL ";
             {
                 sql += @" AND EXISTS (SELECT 1 FROM EmailUser WHERE EmailUser.EmailId = Email.EmailId AND [EmailUser].[UserId] = " + userId + ")";
             }
-           
+
 
 
             sql += ") As query where  query.ROWNUMBER > " + startRowIndex + " AND query.ROWNUMBER <= " + (startRowIndex + maximumRows);
@@ -249,8 +248,6 @@ WHERE [dbo].[Email].ParentEmailId IS NULL ";
 
         }
 
-
-
         public int UpdateEmail(Email email)
         {
             // Update email then return the ID
@@ -415,6 +412,44 @@ WHERE [dbo].[Email].ParentEmailId IS NULL ";
             }
 
             return -1;
+        }
+
+        public void AddParentEmailId(int emailId, int emailPerantId)
+        {
+            var sql = "Update Email set ParentEmailId=@emailPerantId where EmailId=@emailId";
+            using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
+            {
+                sqlConnection.Open();
+                SqlCommand sqlcomm = new SqlCommand(sql, sqlConnection);
+                sqlcomm.Parameters.AddWithValue("@emailPerantId", emailPerantId);
+                sqlcomm.Parameters.AddWithValue("@emailId", emailId);
+
+                sqlcomm.ExecuteNonQuery();
+            }
+        }
+
+        public int GetEmailPerantId(string emailRef)
+        {
+            int emailId = -1;
+            var sql = "Select EmailId from Email where EmailRef = @emailRef";
+            using (SqlConnection sqlConnection = new SqlConnection(DBHelper.strConnString))
+            {
+                sqlConnection.Open();
+                SqlCommand sqlcomm = new SqlCommand(sql, sqlConnection);
+                sqlcomm.Parameters.AddWithValue("@emailRef", emailRef);
+                using (SqlDataReader reader = sqlcomm.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        emailId = Convert.ToInt32(reader["EmailId"]);
+                    }
+
+                }
+            }
+
+            return emailId;
+
+
         }
 
         public List<string> GetAllSubjects()

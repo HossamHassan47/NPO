@@ -7,7 +7,7 @@
         <tr>
             <td>Controller Name:</td>
             <td>
-                <asp:TextBox ID="txtControllerName" runat="server" Width="300px" onkeydown = "return (event.keyCode!=13);"></asp:TextBox>
+                <asp:TextBox ID="txtControllerName" runat="server" Width="300px"></asp:TextBox>
             </td>
             <td>Technology Name :
             </td>
@@ -24,6 +24,8 @@
             <td></td>
             <td></td>
             <td colspan="2">
+                  <asp:Button ID="btnExportToXls" runat="server" Text="Export" Width="120px"
+                    CssClass="btn btn-default btnExportExcel" OnClick="btnExportToXls_Click" />
                 <asp:Button ID="btnSearch" runat="server" Text="Search" Width="120px"
                     CssClass="btn btn-default btnSearch" OnClick="btnSearch_Click" />
                 <asp:Button ID="btnAdd" runat="server" Text="ADD" Width="120px"
@@ -138,6 +140,7 @@
                    
                 </table>
                 <br />
+                <div style="overflow-y:scroll; height: 200px;">
                 <asp:Repeater ID="RepeaterUsersControllers" runat="server">
                     <HeaderTemplate>
                         <table class="zebra">
@@ -160,7 +163,7 @@
                         </table>
                     </FooterTemplate>
                 </asp:Repeater>
-
+                </div>
             </ContentTemplate>
         </asp:UpdatePanel>
 
@@ -186,6 +189,9 @@
 
             <asp:BoundField DataField="ControllerName" HeaderText="Controller Name" />
             <asp:BoundField DataField="TechnologyName" HeaderText="Technology Name" SortExpression="TechnologyName" />
+            <asp:BoundField DataField="Assigned_Users" HeaderText="Assigned Users" SortExpression="TechnologyName" />
+
+            
         </Columns>
        
         <FooterStyle BackColor="White" ForeColor="Black" BorderStyle="None" />
@@ -198,8 +204,7 @@
         <SortedDescendingCellStyle BackColor="#CAC9C9" />
         <SortedDescendingHeaderStyle BackColor="#000065" />
          <AlternatingRowStyle BackColor="#E5E8E8" />
-        <PagerStyle CssClass="pagination-ys" />
-
+         <PagerStyle CssClass="pagination-ys" />
     </asp:GridView>
     <asp:ObjectDataSource ID="DsGvCon" OnSelecting="DsGvcon_Selecting"
         EnablePaging="True" runat="server"
